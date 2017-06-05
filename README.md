@@ -20,15 +20,15 @@ http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html#network-
 
 
 ### Start the project
-1. Install the project dependencies with the following command. 
+# 1. Install the project dependencies with the following command. 
 
 `npm install`
 
 This will download all dependencies required for the build, such as 
-** coffee script (java script compiler - http://coffeescript.org/): If you use sublime text 2, you can add syntax highlighting, see http://www.kaspertidemann.com/adding-coffeescript-highlighting-to-sublime-text-2/
-** express and 
-** hfc (hyperledger fabric node sdk - http://fabric-sdk-node.readthedocs.io/en/latest/node-sdk-indepth/)
+* coffee script (java script compiler - http://coffeescript.org/): If you use sublime text 2, you can add syntax highlighting, see http://www.kaspertidemann.com/adding-coffeescript-highlighting-to-sublime-text-2/
+* express and 
+* hfc (hyperledger fabric node sdk - http://fabric-sdk-node.readthedocs.io/en/latest/node-sdk-indepth/)
 
-2. Start the http server with the following command.
+# 2. Start the http server with the following command.
 
 `npm start`
