@@ -1,0 +1,27 @@
+{
+  "name": "chained-voting",
+  "version": "1.0.0",
+  "description": "Chained voting via the hyperledger foundation fabric v1.0.0-alpha2",
+  "main": "server.coffee",
+  "scripts": {
+    "start": "coffee server.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.ng.bluemix.net:gbs_dach_blockchain/chained_voting.git"
+  },
+  "keywords": [
+    "blockchain",
+    "hyperleder",
+    "foundation",
+    "fabric",
+    "chained",
+    "voting"
+  ],
+  "author": "Richard Holzeis",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "coffeescript": "^1.12.6",
+    "express": "^4.15.3"
+  }
+}
