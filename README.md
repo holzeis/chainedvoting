@@ -20,7 +20,7 @@ http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html#network-
 
 
 ### Start the project
-Install the project dependencies with the following command. 
+1. Install the project dependencies with the following command. 
 
 `npm install`
 
@@ -29,6 +29,6 @@ This will download all dependencies required for the build, such as
 * express and 
 * hfc (hyperledger fabric node sdk - http://fabric-sdk-node.readthedocs.io/en/latest/node-sdk-indepth/)
 
-Start the http server with the following command.
+2. Start the http server with the following command.
 
 `npm start`
