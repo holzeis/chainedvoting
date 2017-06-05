@@ -2,25 +2,25 @@
 
 https://app.mural.ly/t/blockchaingbs7092/m/blockchaingbs7092/1493976234740
 
-### User story: As a user I am only available on certain dates only if specific person(s) are also attending on the same date.
+## User story: As a user I am only available on certain dates only if specific person(s) are also attending on the same date.
 
 Eventually, this results into a chained voting, meaning that specific persons can vote with lent votes, if the vote is within the agreed dates..
 
-### Applied on the blockchain: 
+## Applied on the blockchain: 
 
  1. Lending a vote: Available dates & representatives are picked and placed as chaincode onto the blockchain.
  2. Regular voting: When voting for a date the smart contract is evaluated and executed if a lend vote applies.
 
 # project setup
 
-### Setup hyperledger fabric alpha-1.0.0-alpha2
+## Setup hyperledger fabric alpha-1.0.0-alpha2
 TODO: until then please refere to 
 
 http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html#network-setup
 
 
-### Start the project
-# 1. Install the project dependencies with the following command. 
+## Start the project
+### 1. Install the project dependencies with the following command. 
 
 `npm install`
 
@@ -29,6 +29,6 @@ This will download all dependencies required for the build, such as
 * express and 
 * hfc (hyperledger fabric node sdk - http://fabric-sdk-node.readthedocs.io/en/latest/node-sdk-indepth/)
 
-# 2. Start the http server with the following command.
+### 2. Start the http server with the following command.
 
 `npm start`
