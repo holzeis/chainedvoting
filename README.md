@@ -32,15 +32,4 @@ This will start 5 containers
 4. cli - also a peer and used as command line interface towards the blockchain
 5. app - the node js application (not yet connected to the blockchain)
 
-### APP: Installs the project dependencies with the following command. 
-
-`npm install`
-
-This will download all dependencies required for the build, such as 
-* coffee script (java script compiler - http://coffeescript.org/): If you use sublime text 2, you can add syntax highlighting, see http://www.kaspertidemann.com/adding-coffeescript-highlighting-to-sublime-text-2/
-* express and 
-* hfc (hyperledger fabric node sdk - http://fabric-sdk-node.readthedocs.io/en/latest/node-sdk-indepth/)
-
-### APP: Starts the http server with the following command.
-
-`npm start`
+Check the node js application on http://<docker-machine-ip>:3000/ 
