@@ -11,6 +11,11 @@ Eventually, this results into a chained voting, meaning that specific persons ca
  1. Lending a vote: Available dates & representatives are picked and placed as chaincode onto the blockchain.
  2. Regular voting: When voting for a date the smart contract is evaluated and executed if a lend vote applies.
 
+# project modelling
+
+ 1. We will use https://www.draw.io/ for our additional software documentation
+ 2. We will provide all our models as an editable xml and also as an image file
+
 # project setup
 
 ## Setup hyperledger fabric alpha-1.0.0-alpha2

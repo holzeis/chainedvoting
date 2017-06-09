@@ -5,3 +5,4 @@ node_modules/*
 bin/*
 crypto-config/*
 channel-artifacts/*
+/.project
