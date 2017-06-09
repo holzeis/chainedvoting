@@ -1,0 +1,8 @@
+app/node_modules/*
+*.log
+.DS_Store
+
+bin/*
+crypto-config/*
+channel-artifacts/*
+/.project
