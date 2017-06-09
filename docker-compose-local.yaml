@@ -102,3 +102,13 @@ services:
     depends_on:
       - orderer.chained-voting.com
       - peer0.org.chained-voting.com
+
+  app:
+    container_name: app
+    image: registry.ng.bluemix.net/smarterdispatch/app:latest
+    working_dir: /usr/src/app
+    command: npm start
+    volumes:
+      - ./app/:/usr/src/app
+    ports:
+      - "3000:3000"
