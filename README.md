@@ -20,9 +20,13 @@ http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html#network-
 
 ## Start the project
 
-The docker images are setup and uploaded to my private repository space on bluemix "smarterdispatch".
+The docker images are setup and uploaded to my private repository space on dockerhub "richardholzeis".
 
-`docker-compose -f docker-compose-local up -d`
+start services
+`docker-compose -f docker-compose-local.yaml up -d`
+
+stop services
+`docker-compose -f docker-compose-local.yaml down`
 
 This will start 5 containers
 
@@ -32,4 +36,4 @@ This will start 5 containers
 4. cli - also a peer and used as command line interface towards the blockchain
 5. app - the node js application (not yet connected to the blockchain)
 
-Check the node js application on `http://<docker-machine-ip>:3000/ `
+Check the node js application on `http://<docker-machine-ip>:3000/ 
