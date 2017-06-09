@@ -32,4 +32,4 @@ This will start 5 containers
 4. cli - also a peer and used as command line interface towards the blockchain
 5. app - the node js application (not yet connected to the blockchain)
 
-Check the node js application on http://<docker-machine-ip>:3000/ 
+Check the node js application on `http://<docker-machine-ip>:3000/ `
