@@ -11,11 +11,6 @@ Eventually, this results into a chained voting, meaning that specific persons ca
  1. Lending a vote: Available dates & representatives are picked and placed as chaincode onto the blockchain.
  2. Regular voting: When voting for a date the smart contract is evaluated and executed if a lend vote applies.
 
-# project modelling
-
- 1. We will use https://www.draw.io/ for our additional software documentation
- 2. We will provide all our models as an editable xml and also as an image file
-
 # project setup
 
 ## Setup hyperledger fabric alpha-1.0.0-alpha2
@@ -23,9 +18,21 @@ TODO: until then please refere to
 
 http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html#network-setup
 
-
 ## Start the project
-### 1. Install the project dependencies with the following command. 
+
+The docker images are setup and uploaded to my private repository space on bluemix "smarterdispatch".
+
+`docker-compose -f docker-compose-local up -d`
+
+This will start 5 containers
+
+1. ca0 - fabric certification authority 
+2. orderer.chained-voting.com - orderer service
+3. peer0.org.chained-voting.com - endorser for chaincode
+4. cli - also a peer and used as command line interface towards the blockchain
+5. app - the node js application (not yet connected to the blockchain)
+
+### APP: Installs the project dependencies with the following command. 
 
 `npm install`
 
@@ -34,6 +41,6 @@ This will download all dependencies required for the build, such as
 * express and 
 * hfc (hyperledger fabric node sdk - http://fabric-sdk-node.readthedocs.io/en/latest/node-sdk-indepth/)
 
-### 2. Start the http server with the following command.
+### APP: Starts the http server with the following command.
 
 `npm start`
