@@ -162,7 +162,7 @@ createChannel
 
 ## Join all the peers to the channel
 echo "Having all peers join the channel..."
-#joinChannel
+joinChannel
 
 echo
 echo "===================== All GOOD, Hyperledger Fabric started successfully ===================== "
