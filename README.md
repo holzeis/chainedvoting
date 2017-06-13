@@ -11,13 +11,6 @@ Eventually, this results into a chained voting, meaning that specific persons ca
  1. Lending a vote: Available dates & representatives are picked and placed as chaincode onto the blockchain.
  2. Regular voting: When voting for a date the smart contract is evaluated and executed if a lend vote applies.
 
-# project setup
-
-## Setup hyperledger fabric alpha-1.0.0-alpha2
-TODO: until then please refere to 
-
-http://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html#network-setup
-
 ## Start the project
 
 The docker images are setup and uploaded to my private repository space on dockerhub "richardholzeis".
@@ -36,4 +29,4 @@ This will start 5 containers
 4. cli - also a peer and used as command line interface towards the blockchain
 5. app - the node js application (not yet connected to the blockchain)
 
-Check the node js application on `http://<docker-machine-ip>:3000/`
+Check the node js application on `http://<docker-machine-ip>:3000/
