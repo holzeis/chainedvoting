@@ -16,10 +16,10 @@ Eventually, this results into a chained voting, meaning that specific persons ca
 The docker images are setup and uploaded to my private repository space on dockerhub "richardholzeis".
 
 start services
-`docker-compose -f docker-compose-local.yaml up -d`
+`docker-compose up -d`
 
 stop services
-`docker-compose -f docker-compose-local.yaml down`
+`docker-compose down`
 
 This will start 5 containers
 
