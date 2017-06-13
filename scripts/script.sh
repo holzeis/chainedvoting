@@ -26,7 +26,6 @@ verifyResult () {
 }
 
 setGlobals () {
-
 	CORE_PEER_LOCALMSPID="OrgMSP"
 	CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org.chained-voting.com/peers/peer0.org.chained-voting.com/tls/ca.crt
 	CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp
