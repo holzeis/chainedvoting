@@ -31,6 +31,7 @@ This will start 5 containers
 
 Check the node js application on `http://<docker-machine-ip>:3000/`
 
+## Generate crypto-config & channel artifacts
 This is how the crypto-config & channel artifacts are generated.
 
 1. Generate certificates using cryptogen tool
