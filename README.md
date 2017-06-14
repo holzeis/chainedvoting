@@ -47,7 +47,7 @@ This is how the crypto-config & channel artifacts are generated.
 $CRYPTOGEN generate --config=./crypto-config.yaml
 ```
 
-2. Replace the private key of the ca in the docker-compose.yaml with the *_sk in  crypto-config/peerOrganizations/org1.example.com/ca/
+2. Replace the private key of the ca in the docker-compose.yaml with the *_sk in  crypto-config/peerOrganizations/org.chained-voting.com/ca/
 
 3. Generating Orderer Genesis block
 ```bash
