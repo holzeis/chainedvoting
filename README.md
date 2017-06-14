@@ -30,3 +30,15 @@ This will start 5 containers
 5. app - the node js application (not yet connected to the blockchain)
 
 Check the node js application on `http://<docker-machine-ip>:3000/`
+
+This is how the crypto-config & channel artifacts are generated.
+
+1. Generate certificates using cryptogen tool
+`$CRYPTOGEN generate --config=./crypto-config.yaml`
+2. Replace the private key of the ca in the docker-compose.yaml with the *_sk in  crypto-config/peerOrganizations/org1.example.com/ca/
+3. Generating Orderer Genesis block
+`$CONFIGTXGEN -profile OrdererGenesis -outputBlock ./channel-artifacts/genesis.block`
+4. Generating channel configuration transaction 'channel.tx'
+`$CONFIGTXGEN -profile Channel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID default`
+5. Generating anchor peer update for Org1MSP 
+`$CONFIGTXGEN -profile Channel -outputAnchorPeersUpdate ./channel-artifacts/OrgMSPanchors.tx -channelID default -asOrg OrgMSP`
