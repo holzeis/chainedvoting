@@ -7,8 +7,8 @@ describe('chained-voting App', function() {
     page = new ChainedVotingPage();
   });
 
-  it('should display message saying app works', () => {
+  it('should display message saying hello blockchain taskforce', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('app works!');
+    expect(page.getParagraphText()).toEqual('Hello Blockchain Taskforce!');
   });
 });
