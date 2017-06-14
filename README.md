@@ -16,10 +16,10 @@ Eventually, this results into a chained voting, meaning that specific persons ca
 The docker images are setup and uploaded to my private repository space on dockerhub "richardholzeis".
 
 start services
-`docker-compose -f docker-compose-local.yaml up -d`
+`docker-compose up -d`
 
 stop services
-`docker-compose -f docker-compose-local.yaml down`
+`docker-compose down`
 
 This will start 5 containers
 
@@ -29,4 +29,17 @@ This will start 5 containers
 4. cli - also a peer and used as command line interface towards the blockchain
 5. app - the node js application (not yet connected to the blockchain)
 
-Check the node js application on `http://<docker-machine-ip>:3000/
+Check the node js application on `http://<docker-machine-ip>:4200/`
+
+## Generate crypto-config & channel artifacts
+This is how the crypto-config & channel artifacts are generated.
+
+1. Generate certificates using cryptogen tool
+`$CRYPTOGEN generate --config=./crypto-config.yaml`
+2. Replace the private key of the ca in the docker-compose.yaml with the *_sk in  crypto-config/peerOrganizations/org1.example.com/ca/
+3. Generating Orderer Genesis block
+`$CONFIGTXGEN -profile OrdererGenesis -outputBlock ./channel-artifacts/genesis.block`
+4. Generating channel configuration transaction 'channel.tx'
+`$CONFIGTXGEN -profile Channel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID default`
+5. Generating anchor peer update for Org1MSP 
+`$CONFIGTXGEN -profile Channel -outputAnchorPeersUpdate ./channel-artifacts/OrgMSPanchors.tx -channelID default -asOrg OrgMSP`
