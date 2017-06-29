@@ -1,0 +1,45 @@
+{
+  "name": "chained-voting",
+  "version": "0.0.1",
+  "description": "Webapplication built on top of Hyperledger Fabric",
+  "main": "docker-compose up",
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "engines": {
+    "npm": "~3.10.8",
+    "node": "~6.9.1"
+  },
+  "scripts": {
+    "start": "docker-compose down && VERSION=$(date +%Y%m%d%H%M%s) docker-compose up --build --force-recreate",
+    "install": "npm run getbaseimage && npm run govend && docker-compose pull && docker-compose build",
+    "getbaseimage": "docker pull hyperledger/fabric-ccenv:x86_64-1.0.0-beta && docker tag hyperledger/fabric-ccenv:x86_64-1.0.0-beta hyperledger/fabric-ccenv:latest",
+    "govend": "docker-compose run --rm utils bash -c 'cd blockchain/src && GOPATH=$(pwd)/.. govend -rv -i moby' && sudo chown -R $USER blockchain",
+    "gobuild": "cd src/main && GOPATH=$(pwd)/../.. && go build chaincode.go",
+    "test-go": "docker-compose run --rm utils bash -c 'cd src/build-chaincode && GOPATH=$(pwd)/../.. go test $(ls -d1 ./*/ | grep -v vendor | tr \"\n\" \" \" ) ./'",
+    "test-server": "docker-compose build server && docker-compose run --rm server bash -c 'npm test'",
+    "test-client": "docker-compose run --rm -p 9876:9876 client bash -c 'npm test'",
+    "test-e2e": "docker-compose exec server bash -c 'npm run e2e'",
+    "test": "npm -s run test-server && npm -s run test-go",
+    "cf": "docker build --tag cf . && docker run -it --rm -v $(pwd)/server/resources:/usr/src/app/server/resources cf"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@git.ng.bluemix.net:gbs_dach_blockchain/chained_voting.git"
+  },
+  "keywords": [
+    "hyperledger",
+    "fabric",
+    "nodejs",
+    "angular",
+    "typescript",
+    "blockchain"
+  ],
+  "author": "IBM GBS DACH Blockchain Task Force",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://git.ng.bluemix.net/gbs_dach_blockchain/chained_voting/issues"
+  },
+  "homepage": "https://git.ng.bluemix.net/gbs_dach_blockchain/chained_voting"
+}
