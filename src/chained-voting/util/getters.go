@@ -4,7 +4,7 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"errors"
 	"encoding/json"
-	"main/entities"
+	"chained-voting/entities"
 )
 
 func GetUserAsBytesByID(stub shim.ChaincodeStubInterface, email string) ([]byte, error) {

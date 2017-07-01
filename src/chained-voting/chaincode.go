@@ -1,8 +1,8 @@
 package main
 
 import (
-	"main/entities"
-	"main/util"
+	"chained-voting/entities"
+	"chained-voting/util"
 	"encoding/json"
 	"errors"
 	"fmt"
