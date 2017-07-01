@@ -107,10 +107,3 @@ services:
       - ./app/:/usr/src/app
     ports:
       - "4200:4200"
-  utils:
-    image: cesarev/fabric-boilerplate
-    environment:
-    - GOPATH=/usr/src/app
-    volumes:
-    - .:/usr/src/app
-    command: "true"
