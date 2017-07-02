@@ -7,7 +7,7 @@ type ECertResponse struct {
 }
 
 type TestData struct {
-	Users      []User      `json:"users"`
+	Users []User `json:"users"`
 }
 
 type TestDataElement interface {
@@ -15,36 +15,33 @@ type TestDataElement interface {
 }
 
 type User struct {
-	Email  			string		`json:"email"`
-	MyVotes    		[]Vote		`json:"myVotes"`
-	DelegatedVotes	[]Vote		`json:"delegatedVotes"`
-	MyVotings		[]Voting	`json:"myVotings"`	
+	Email     string   `json:"email"`
+	MyVotings []Voting `json:"myVotings"`
 }
 
 type Vote struct {
-	VoteID			string		`json:"voteID"`
-	Description		string		`json:"description"`
-	Timestamp		time.Time	`json:"timestamp"`
-	Voter			string		`json:"voter"`
-	OptionID		string  	`json:"optionID"`
-	DelegatedVoter  string		`json:"delegatedVoter"`
-	Voting			Voting		`json:"voting"`
+	VoteID         string    `json:"voteID"`
+	Description    string    `json:"description"`
+	Timestamp      time.Time `json:"timestamp"`
+	Voter          string    `json:"voter"`
+	OptionID       string    `json:"optionID"`
+	DelegatedVoter string    `json:"delegatedVoter"`
 }
 
 type Voting struct {
-	VotingID		string		`json:"votingID"`
-	Name			string		`json:"name"`
-	Description		string		`json:"description"`
-	Owner			string		`json:"owner"`
-	ValidFrom		time.Time	`json:"validFrom"`
-	ValidTo			time.Time	`json:"validTo"`
-	Options			[]Option	`json:"options"`
-	Votes			[]Vote		`json:"votes"`
+	VotingID    string    `json:"votingID"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Owner       string    `json:"owner"`
+	ValidFrom   time.Time `json:"validFrom"`
+	ValidTo     time.Time `json:"validTo"`
+	Options     []Option  `json:"options"`
+	Votes       []Vote    `json:"votes"`
 }
 
 type Option struct {
-	OptionID		string		`json:"optionID"`
-	Description		string		`json:"description"`
+	OptionID    string `json:"optionID"`
+	Description string `json:"description"`
 }
 
 func (t *User) ID() string {

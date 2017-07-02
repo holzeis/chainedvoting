@@ -10,13 +10,17 @@ import (
 	"time"
 )
 
+var like = entities.Option{
+	OptionID:    "like",
+	Description: "The one and only option",
+}
+
 var vote1 = entities.Vote{
 	VoteID:      "vote1",
 	Description: "This is my first vote",
 	Timestamp:   time.Now(),
 	Voter:       "johndoe@us.ibm.com",
 	OptionID:    "like",
-	Voting:      voting1,
 }
 
 var vote2 = entities.Vote{
@@ -26,7 +30,6 @@ var vote2 = entities.Vote{
 	Voter:          "mustermann@us.ibm.com",
 	OptionID:       "like",
 	DelegatedVoter: "johndoe@us.ibm.com",
-	Voting:         voting1,
 }
 
 var vote3 = entities.Vote{
@@ -35,21 +38,6 @@ var vote3 = entities.Vote{
 	Timestamp:   time.Now(),
 	Voter:       "mustermann@us.ibm.com",
 	OptionID:    "like",
-	Voting:      voting1,
-}
-
-var user1 = entities.User{
-	Email:          "johndoe@us.ibm.com",
-	MyVotes:        []entities.Vote{vote1, vote2},
-	DelegatedVotes: []entities.Vote{vote2},
-	MyVotings:      []entities.Voting{voting1},
-}
-
-var user2 = entities.User{
-	Email:          "mustermann@us.ibm.com",
-	MyVotes:        []entities.Vote{vote2},
-	DelegatedVotes: []entities.Vote{},
-	MyVotings:      []entities.Voting{},
 }
 
 var voting1 = entities.Voting{
@@ -63,9 +51,15 @@ var voting1 = entities.Voting{
 	Votes:       []entities.Vote{vote1, vote2},
 }
 
-var like = entities.Option{
-	OptionID:    "like",
-	Description: "The one and only option",
+var user1 = entities.User{
+	Email:     "johndoe@us.ibm.com",
+	MyVotings: []entities.Voting{voting1},
+}
+
+var user2 = entities.User{
+	Email:     "mustermann@us.ibm.com",
+	MyVotings: []entities.Voting{},
+}
 
 func Test_WillCreateUserDirectly(t *testing.T) {
 	stub := shim.NewMockStub("ex02", new(Chaincode))
@@ -89,31 +83,13 @@ func Test_WillCreateVotingDirectly(t *testing.T) {
 func Test_WillCreateVotesDirectly(t *testing.T) {
 	stub := shim.NewMockStub("ex02", new(Chaincode))
 	stub.MockTransactionStart("CreateVotesDirectlyTx")
-	if err := createVote(stub, vote1); err != nil {
+	if err := createVote(stub, &vote1); err != nil {
 		t.Error(err)
 	}
-	if err := createVote(stub, vote2); err != nil {
+	if err := createVote(stub, &vote2); err != nil {
 		t.Error(err)
 	}
 	stub.MockTransactionEnd("CreateVotesDirectlyTx")
-}
-
-func Test_WillInvokeCreateVote(t *testing.T) {
-	stub := shim.NewMockStub("ex02", new(Chaincode))
-	addAllTestData(stub)
-
-	stub.MockTransactionStart("InvokeCreateVoteTx")
-	if err := createUser(stub); err != nil {
-		t.Error(err)
-	}
-
-	payload, _ := json.Marshal(vote3)
-
-	response := stub.MockInvoke("createVote", [][]byte{[]byte(""), []byte("createVote"), []byte(payload)})
-	if response.Status == shim.ERROR {
-		t.Error(response.Message)
-	}
-	stub.MockTransactionEnd("InvokeCreateVoteTx")
 }
 
 func getVote(stub *shim.MockStub, voteId string) (entities.Vote, error) {
@@ -155,7 +131,7 @@ func getVoting(stub *shim.MockStub, votingID string) (entities.Voting, error) {
 }
 
 func getUser(stub *shim.MockStub, email string) (entities.User, error) {
-	key, err := stub.CreateCompositeKey(util.UsersIndexName, []string{user.email})
+	key, err := stub.CreateCompositeKey(util.UsersIndexName, []string{email})
 	if err != nil {
 		return entities.User{}, err
 	}
@@ -175,15 +151,15 @@ func getUser(stub *shim.MockStub, email string) (entities.User, error) {
 }
 
 func createUser(stub *shim.MockStub) error {
-	userAsBytes, _ := json.Marshal(user)
-	util.StoreObjectInChain(stub, user.UserID, util.UsersIndexName, userAsBytes)
+	userAsBytes, _ := json.Marshal(user1)
+	util.StoreObjectInChain(stub, user1.Email, util.UsersIndexName, userAsBytes)
 
-	storedUser, err := getUser(stub, user.UserID)
+	storedUser, err := getUser(stub, user1.Email)
 	if err != nil {
 		return err
 	}
 
-	if user.UserID != storedUser.UserID {
+	if user1.Email != storedUser.Email {
 		return errors.New("Stored ID not the same")
 	}
 	return nil
@@ -228,8 +204,6 @@ func createVote(stub *shim.MockStub, vote *entities.Vote) error {
 func addAllTestData(stub *shim.MockStub) {
 	stub.MockTransactionStart("AddTestDataTx")
 	createVoting(stub)
-	createVote(stub, vote1)
-	createVote(stub, vote2)
 	createUser(stub)
 	stub.MockTransactionEnd("AddTestDataTx")
 
