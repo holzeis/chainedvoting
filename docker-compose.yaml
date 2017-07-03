@@ -98,12 +98,24 @@ services:
       - orderer.chained-voting.com
       - peer0.org.chained-voting.com
 
-  app:
-    container_name: app
-    image: richardholzeis/chained-voting:latest
+  client:
+    container_name: client
+    build: client
     working_dir: /usr/src/app
     command: bash -c "ng lint && ng serve --host 0.0.0.0"
     volumes:
-      - ./app/:/usr/src/app
+      - ./client/:/usr/src/app
     ports:
       - "4200:4200"
+      
+  server:
+    container_name: server
+    build: server
+    working_dir: /usr/src/app
+    command:
+    volumes:
+      - ./server/:/usr/src/app
+    links:
+      - ca0
+      - orderer.chained-voting.com
+      - peer0.org.chained-voting.com

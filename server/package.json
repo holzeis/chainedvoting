@@ -10,6 +10,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "fabric-ca-client": "1.0.0-beta",
+    "fabric-client": "1.0.0-beta"
   }
 }
