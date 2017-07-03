@@ -97,6 +97,18 @@ services:
     depends_on:
       - orderer.chained-voting.com
       - peer0.org.chained-voting.com
+      
+  server:
+    container_name: server
+    build: server
+    working_dir: /usr/src/app
+    command: bash -c "sleep 800000" 
+    volumes:
+      - ./server/:/usr/src/app
+    depends_on:
+      - ca0
+      - orderer.chained-voting.com
+      - peer0.org.chained-voting.com
 
   client:
     container_name: client
@@ -105,17 +117,7 @@ services:
     command: bash -c "ng lint && ng serve --host 0.0.0.0"
     volumes:
       - ./client/:/usr/src/app
+    depends_on:
+      - server
     ports:
       - "4200:4200"
-      
-  server:
-    container_name: server
-    build: server
-    working_dir: /usr/src/app
-    command:
-    volumes:
-      - ./server/:/usr/src/app
-    links:
-      - ca0
-      - orderer.chained-voting.com
-      - peer0.org.chained-voting.com
