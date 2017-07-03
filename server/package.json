@@ -1,0 +1,15 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.ng.bluemix.net:gbs_dach_blockchain/chained_voting.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
