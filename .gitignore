@@ -8,3 +8,8 @@ bin/*
 
 */.tscache/*
 */dist/*
+**/.baseDir.ts
+
+
+.vscode/*
+*/.vscode/*

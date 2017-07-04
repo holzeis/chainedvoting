@@ -17,7 +17,7 @@ export class UserComponent implements OnInit {
   public register(email: string) {
     this._userService.register(email).subscribe( result => {
       console.log(result);
-    })
+    });
   }
 
 }

@@ -18,7 +18,8 @@
     "nodemon": "^1.11.0",
     "reflect-metadata": "^0.1.10",
     "routing-controllers": "^0.6.7",
-    "tslint": "^5.4.3"
+    "tslint": "^5.4.3",
+    "cors": "^2.8.1"
   },
   "devDependencies": {
     "grunt": "^1.0.1",
