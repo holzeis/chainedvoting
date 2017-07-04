@@ -1,5 +1,9 @@
 'use strict';
-import {JsonController, Get, Post, Res, Body} from "routing-controllers";
+import {JsonController, Post, Body} from "routing-controllers";
+
+export interface Response {
+    message : string;
+}
 
 class UserParams {
     public email: string;
@@ -7,13 +11,6 @@ class UserParams {
 
 @JsonController()
 export class UserController {
-
-    @Get("/")
-    public welcome() {
-        return <Response> {
-            message: "welcome"
-        }
-    }
 
     @Post("/register")
     public register(@Body() userParams: UserParams) : Response {
@@ -24,6 +21,3 @@ export class UserController {
     }
 }
 
-export interface Response {
-    message : string;
-}
