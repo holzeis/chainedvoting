@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { PollComponent } from './components/poll/poll.component';
-import { UserComponent } from './user/user.component';
+import { UserComponent } from './components/user/user.component';
 
 @NgModule({
   declarations: [
