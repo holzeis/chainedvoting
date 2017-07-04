@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "declaration": false,
+        "removeComments": true,
+        "sourceMap": true,
+        "noLib": false,
+        "outDir": "dist",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "files": [
+        "src/controllers/user.controller.ts",
+        "src/app.ts"
+    ]
+}
