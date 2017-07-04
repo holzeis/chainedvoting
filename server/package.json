@@ -12,14 +12,15 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/node": "^8.0.7",
+    "cors": "^2.8.1",
     "express": "^4.15.3",
     "fabric-ca-client": "1.0.0-beta",
     "fabric-client": "1.0.0-beta",
     "nodemon": "^1.11.0",
     "reflect-metadata": "^0.1.10",
     "routing-controllers": "^0.6.7",
-    "tslint": "^5.4.3",
-    "cors": "^2.8.1"
+    "tslint": "^5.4.3"
   },
   "devDependencies": {
     "grunt": "^1.0.1",
