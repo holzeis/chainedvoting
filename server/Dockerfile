@@ -1,6 +1,5 @@
 FROM node:boron
 
-RUN npm install -g grunt --loglevel error
 RUN mkdir -p /usr/src/app/
 
 # use cached layer for node modules
@@ -11,5 +10,6 @@ RUN npm cache clear
 ADD . /usr/src/app
 WORKDIR /usr/src/app
 
+RUN npm run grunt
 
 EXPOSE 3000

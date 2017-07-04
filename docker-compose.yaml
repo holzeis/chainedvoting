@@ -79,11 +79,11 @@ services:
     environment:
       - GOPATH=/usr/src/blockchain
     volumes:
-      - ./server/src/:/usr/src/app
-      - ./blockchain/crypto-config:/usr/src/app/resources/crypto-config
-      - ./blockchain/channel-artifacts:/usr/src/app/resources/channel-artifacts
-      - ./blockchain/chaincode:/usr/src/blockchain/src
-      - $GOPATH/src:/usrc/src/blockchain/src
+      - ./server:/usr/src/app
+      - ./blockchain/crypto-config:/usr/blockchain/crypto-config
+      - ./blockchain/channel-artifacts:/usr/blockchain/channel-artifacts
+      - ./blockchain/chaincode:/usr/blockchain/chaincode
+      - $GOPATH/src:/usr/blockchain/chaincode
     depends_on:
       - ca0
       - orderer.chained-voting.com
