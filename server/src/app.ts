@@ -3,17 +3,18 @@ import {useExpressServer} from 'routing-controllers';
 import * as express from 'express';
 import * as cors from 'cors';
 
-import {UserController} from './controllers/user.controller';
-
-
 class App {
 
     public async run(): Promise<void> {
+        // initialize http server
         const app = express();
+
+        // needed for cross resource referencing
         app.use(cors());
 
         // initialize routing
         useExpressServer(app, {
+            // add all constrollers in folder controllers
             controllers: [__dirname + "/controllers/*.js"]
         });
 
@@ -21,5 +22,5 @@ class App {
     }
 }
 
-
+// start client application
 new App().run();
