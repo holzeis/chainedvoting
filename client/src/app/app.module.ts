@@ -13,7 +13,7 @@ import {UserService} from './services/user.service';
 
 const appRoutes: Routes = [
     { path: 'register', component: UserComponent }
-]
+];
 
 @NgModule({
   declarations: [

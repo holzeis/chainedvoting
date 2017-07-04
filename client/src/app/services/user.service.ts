@@ -7,15 +7,15 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class UserService {
 
-    public actionUrl : string;
+    public actionUrl: string;
 
     public constructor(private _http: Http, private _configuration: Configuration) {
         this.actionUrl = `${_configuration.host}register`;
     }
 
-    public register(email : string) : Observable<any> {
+    public register(email: string): Observable<any> {
         return this._http.post(this.actionUrl, {email: email}).map((response: Response) => {
             return response;
-        });//.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    } 
+        }); // .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    }
 }
