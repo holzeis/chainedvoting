@@ -3,7 +3,9 @@ server/node_modules/*
 *.log
 .DS_Store
 
-bin/*
+bin/configtxgen
+bin/cryptogen
+
 /.project
 
 */.tscache/*

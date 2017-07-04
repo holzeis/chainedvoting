@@ -71,40 +71,18 @@ services:
       - 7051:7051
       - 7053:7053
 
-  cli:
-    container_name: cli
-    image: hyperledger/fabric-peer:x86_64-1.0.0-beta
-    tty: true
-    environment:
-      - GOPATH=/opt/gopath
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_PEER_ID=cli
-      - CORE_PEER_ADDRESS=peer0.org.chained-voting.com:7051
-      - CORE_PEER_LOCALMSPID=OrgMSP
-      - CORE_PEER_TLS_ENABLED=true
-      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org.chained-voting.com/peers/peer0.org.chained-voting.com/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org.chained-voting.com/peers/peer0.org.chained-voting.com/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org.chained-voting.com/peers/peer0.org.chained-voting.com/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: /bin/bash -c './scripts/script.sh default; while true; do sleep 20; done'
-    volumes:
-        - /var/run/:/host/var/run/
-        - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
-        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
-        - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
-    depends_on:
-      - orderer.chained-voting.com
-      - peer0.org.chained-voting.com
-
   server:
     container_name: server
     build: server
     working_dir: /usr/src/app
-    command: bash -c "npm start" 
+    command: bash -c "npm start"
+    environment:
+      - GOPATH=/usr/src/blockchain
     volumes:
-      - ./server/:/usr/src/app
+      - ./server/src/:/usr/src/app
+      - ./server/resources:/usr/src/app/resources
+      - ./chaincode:/usr/src/blockchain/src
+      - $GOPATH/src:/usrc/src/blockchain/src
     depends_on:
       - ca0
       - orderer.chained-voting.com
