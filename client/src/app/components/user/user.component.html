@@ -1,3 +1,12 @@
-<p>
-  user works!
-</p>
+<div class="container">
+  <div class="row">
+    <div>
+      <h1>Register</h1>
+      <div>
+        <label for="email" class="control-label">email</label>
+        <input id="email" type="text" placeholder="e-mail" autofocus [(ngModel)]="email">
+        <button (click)="register(email)" class="btn btn-primary btn-md">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

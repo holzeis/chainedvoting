@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { UserService } from '../../services/user.service'
+
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _userService : UserService) { }
 
   ngOnInit() {
+  }
+
+  public register(email: string) {
+    this._userService.register(email).subscribe( result => {
+      console.log(result);
+    })
   }
 
 }
