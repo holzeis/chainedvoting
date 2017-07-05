@@ -3,6 +3,7 @@ import {useExpressServer} from 'routing-controllers';
 import * as express from 'express';
 import * as cors from 'cors';
 import * as path from 'path';
+import {Container} from 'typedi';
 
 import {Blockchain, DeployPolicy} from './blockchain/blockchain'
 import {BlockchainClient} from './blockchain/client/blockchain.client'
@@ -17,14 +18,17 @@ class App {
         // needed for cross resource referencing
         app.use(cors());
 
+        // used for dependency injection
+        app.use(Container);
+
+        // initialize blockchain
+        Container.set(BlockchainClient, await this.initializeBlockchain());
+
         // initialize routing
         useExpressServer(app, {
             // add all constrollers in folder controllers
             controllers: [__dirname + "/controllers/*.js"]
         });
-
-        // initialize blockchain
-        await this.initializeBlockchain();
 
         app.listen(3000);
     }
