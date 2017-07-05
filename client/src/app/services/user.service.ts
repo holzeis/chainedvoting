@@ -14,6 +14,7 @@ export class UserService {
     }
 
     public register(email: string): Observable<any> {
+        console.log("registering: " + email);
         return this._http.post(this.actionUrl, {email: email}).map((response: Response) => {
             return response;
         }); // .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
