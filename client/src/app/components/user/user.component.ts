@@ -9,6 +9,8 @@ import { UserService } from '../../services/user.service';
 })
 export class UserComponent implements OnInit {
 
+  public email: string;
+
   constructor(private _userService: UserService) { }
 
   ngOnInit() {
