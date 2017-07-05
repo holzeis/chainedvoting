@@ -38,6 +38,8 @@ func (t *Chaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	fmt.Println(args)
 
 	if functionName == "register" {
+		fmt.Println("registering " + args[0])
+
 		var user entities.User
 		err := json.Unmarshal([]byte(args[0]), &user)
 		if err != nil {
