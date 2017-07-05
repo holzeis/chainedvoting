@@ -12,6 +12,7 @@ bin/cryptogen
 */dist/*
 **/.baseDir.ts
 
+/server/resources
 
 .vscode/*
 */.vscode/*

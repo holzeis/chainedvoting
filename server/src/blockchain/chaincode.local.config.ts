@@ -17,7 +17,7 @@ export class ChaincodeLocalConfig {
         ca:    {
           ca: {
             url: 'https://ca0:7054',
-            name: 'ca-org1'
+            name: 'ca-org'
           }
         },
         orderer: <OrdererConfig>{
@@ -39,14 +39,14 @@ export class ChaincodeLocalConfig {
       },
       chaincode: {
         keyValStorePath: '/tmp/hfc-test-kvs-org1',
-        chaincodeID: 'mychaincode',
-        chaincodePath: 'chaincode',
+        chaincodeID: 'chained-voting',
+        chaincodePath: 'chained-voting',
         chaincodeVersion: 'v1'
       },
       channels : <ChannelConfig[]>[
         {
-          name: 'default',
-          path: 'channel/default.tx'
+          name: 'channel',
+          path: 'channel-artifacts/channel.tx'
         }
       ]
     };

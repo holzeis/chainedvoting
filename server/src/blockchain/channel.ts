@@ -28,7 +28,7 @@ export class Channel {
   }
 
   public async initChannel(deployPolicy: DeployPolicy): Promise<void> {
-    this.channel = await this.client.newChain(this.channelConfig.name);
+    this.channel = await this.client.newChannel(this.channelConfig.name);
     await this.createOrgAdminUser();
     await this.addOrderer();
     await this.addEventHubsAndPeers();
@@ -54,14 +54,14 @@ export class Channel {
   private async createOrgAdminUser(): Promise<void> {
     console.log('Going to set the org admin user');
 
-    let keyPath = path.join(__dirname, '../../resources/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/keystore');
+    let keyPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/keystore');
     let keyPEM = Buffer.from(this.readAllFiles(keyPath)[0]).toString();
-    let certPath = path.join(__dirname, '../../resources/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/signcerts');
+    let certPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/signcerts');
     let certPEM = this.readAllFiles(certPath)[0];
 
     this.orgAdminUser = await this.client.createUser({
-      username: 'peerorg1Admin',
-      mspid: 'Org1MSP',
+      username: 'peerorgAdmin',
+      mspid: 'OrgMSP',
       cryptoContent: {
         privateKeyPEM: keyPEM.toString(),
         signedCertPEM: certPEM.toString()
@@ -147,7 +147,7 @@ export class Channel {
     signatures.push(this.client.signChannelConfig(config));
 
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID(); // buildTransactionID(nonce, this.orgAdminUser)
 
     let request = {
       name: this.channelConfig.name,
@@ -194,7 +194,7 @@ export class Channel {
     console.info('Joining channel', this.channelConfig.name);
 
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, this.orgAdminUser);
 
     let getBlockRequest = {
       txId : 	txId,
@@ -203,8 +203,8 @@ export class Channel {
 
     let genesisBlock = await this.channel.getGenesisBlock(getBlockRequest);
 
-    nonce = hfcUtil.getNonce();
-    txId = Client.buildTransactionID(nonce, this.orgAdminUser);
+    // nonce = hfcUtil.getNonce();
+    txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, this.orgAdminUser);
 
     let joinChannelRequest = {
       targets: this.channel.getPeers(),
@@ -231,7 +231,7 @@ export class Channel {
     console.info('Going to install chaincode');
 
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, this.orgAdminUser);
 
     let request = {
       targets: this.channel.getPeers(),
@@ -251,7 +251,7 @@ export class Channel {
     console.info('Going to instantiate chaincode');
 
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, this.orgAdminUser);
 
     let request = {
       chaincodePath: chaincodePath,
@@ -318,7 +318,7 @@ export class Channel {
   public async query(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string, args: string[], userName: string): Promise<any> {
     console.info('Querying ' + this.channelConfig.name + ' with function name ' + chaincodeFunctionName);
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, await this.setAndGetUserContext(userName));
+    let txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, await this.setAndGetUserContext(userName));
 
     args.unshift(chaincodeFunctionName);
 
@@ -385,7 +385,7 @@ export class Channel {
   public async invoke(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string, args: string[], userName: string): Promise<InvokeReponse> {
     console.info('Invoking ' + this.channelConfig.name + ' with function name ' + chaincodeFunctionName);
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, await this.setAndGetUserContext(userName));
+    let txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, await this.setAndGetUserContext(userName));
 
     args.unshift(chaincodeFunctionName);
 

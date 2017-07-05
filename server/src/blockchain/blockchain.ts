@@ -26,7 +26,7 @@ export class Blockchain {
     await this.setKeyStore();
     await this.setCertificateAuthority();
     await this.registerAdminUser();
-    await this.registerAndEnrollUsers();
+    // await this.registerAndEnrollUsers();
     await this.setupChannels(deployPolicy);
   }
 

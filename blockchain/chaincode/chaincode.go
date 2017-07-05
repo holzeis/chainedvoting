@@ -1,14 +1,15 @@
 package main
 
 import (
-	"chained-voting/entities"
-	"chained-voting/util"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
+
+	"chained-voting/entities"
+
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
-	"os"
 )
 
 var logger = shim.NewLogger("chained-voting")
@@ -36,23 +37,41 @@ func (t *Chaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Infof("Invoke is running " + functionName)
 	fmt.Println(args)
 
-	if functionName == "addTestdata" {
-		err := t.addTestdata(stub, args[0])
+	if functionName == "register" {
+		var user entities.User
+		err := json.Unmarshal([]byte(args[0]), &user)
 		if err != nil {
 			return shim.Error(err.Error())
 		}
+		StoreObjectInChain(stub, user.Email, "user", []byte(args[0]))
 
 		return shim.Success(nil)
-	} else if functionName == "getUser" {
-		userAsBytes, err := util.GetUserAsBytesByID(stub, args[0])
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-
-		return shim.Success(userAsBytes)
 	}
 
 	return shim.Error(fmt.Sprintf("Received unknown invoke function name: '%s'", functionName))
+}
+
+func StoreObjectInChain(stub shim.ChaincodeStubInterface, objectID string, indexName string, object []byte) error {
+	compositeKey, err := stub.CreateCompositeKey(indexName, []string{objectID})
+	if err != nil {
+		return errors.New("Create composite key error: " + err.Error())
+	}
+
+	thingAsBytes, err := stub.GetState(compositeKey)
+	if err != nil {
+		return errors.New("Getstate error: " + err.Error())
+	}
+
+	if len(thingAsBytes) != 0 {
+		return errors.New("Object with ID " + objectID + " already exists")
+	}
+
+	err = stub.PutState(compositeKey, object)
+	if err != nil {
+		return errors.New("Putstate error: " + err.Error())
+	}
+
+	return nil
 }
 
 //======================================================================================================================
@@ -79,32 +98,6 @@ func (t *Chaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	fmt.Println("Chaincode initialized")
 
 	return shim.Success(nil)
-}
-
-//======================================================================================================================
-//  Invoke Functions
-//======================================================================================================================
-
-func (t *Chaincode) addTestdata(stub shim.ChaincodeStubInterface, testDataAsJson string) error {
-	var testData entities.TestData
-	err := json.Unmarshal([]byte(testDataAsJson), &testData)
-	if err != nil {
-		return errors.New("Error while unmarshalling testdata")
-	}
-
-	for _, user := range testData.Users {
-		userAsBytes, err := json.Marshal(user)
-		if err != nil {
-			return errors.New("Error marshalling testUser, reason: " + err.Error())
-		}
-
-		err = util.StoreObjectInChain(stub, user.Email, util.UsersIndexName, userAsBytes)
-		if err != nil {
-			return errors.New("error in storing object, reason: " + err.Error())
-		}
-	}
-
-	return nil
 }
 
 //======================================================================================================================

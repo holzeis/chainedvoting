@@ -23,6 +23,9 @@ class App {
             controllers: [__dirname + "/controllers/*.js"]
         });
 
+        // initialize blockchain
+        await this.initializeBlockchain();
+
         app.listen(3000);
     }
 
