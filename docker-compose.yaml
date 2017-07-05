@@ -90,6 +90,7 @@ services:
       - peer0.org.chained-voting.com
     ports:
      - "3000:3000"
+     - "5858:5858"
 
   client:
     container_name: client
