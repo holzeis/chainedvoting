@@ -11,6 +11,9 @@ export class UserComponent implements OnInit {
 
   public email: string;
 
+  public success: boolean;
+  public response: string;
+
   constructor(private _userService: UserService) { }
 
   ngOnInit() {
@@ -19,6 +22,8 @@ export class UserComponent implements OnInit {
   public register(email: string) {
     this._userService.register(email).subscribe( result => {
       console.log(result);
+      this.success = result.success;
+      this.response = result.response;
     });
   }
 
