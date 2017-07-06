@@ -40,9 +40,9 @@ var vote3 = entities.Vote{
 	OptionID:    "like",
 }
 
-var voting1 = entities.Voting{
-	VotingID:    "voting1",
-	Name:        "The first voting",
+var poll1 = entities.Poll{
+	PollID:      "poll1",
+	Name:        "The first poll",
 	Description: "only with one option 'like'",
 	Owner:       "johndoe@us.ibm.com",
 	ValidFrom:   time.Now(),
@@ -53,12 +53,12 @@ var voting1 = entities.Voting{
 
 var user1 = entities.User{
 	Email:     "johndoe@us.ibm.com",
-	MyVotings: []entities.Voting{voting1},
+	MyPolls: []entities.Poll{poll1},
 }
 
 var user2 = entities.User{
 	Email:     "mustermann@us.ibm.com",
-	MyVotings: []entities.Voting{},
+	MyPolls: []entities.Poll{},
 }
 
 func Test_WillCreateUserDirectly(t *testing.T) {
@@ -71,13 +71,13 @@ func Test_WillCreateUserDirectly(t *testing.T) {
 
 }
 
-func Test_WillCreateVotingDirectly(t *testing.T) {
+func Test_WillCreatePollDirectly(t *testing.T) {
 	stub := shim.NewMockStub("ex02", new(Chaincode))
-	stub.MockTransactionStart("CreateVotingDirectlyTx")
-	if err := createVoting(stub); err != nil {
+	stub.MockTransactionStart("CreatePollDirectlyTx")
+	if err := createPoll(stub); err != nil {
 		t.Error(err.Error())
 	}
-	stub.MockTransactionEnd("CreateVotingDirectlyTx")
+	stub.MockTransactionEnd("CreatePollDirectlyTx")
 }
 
 func Test_WillCreateVotesDirectly(t *testing.T) {
@@ -111,23 +111,23 @@ func getVote(stub *shim.MockStub, voteId string) (entities.Vote, error) {
 	return storedVote, nil
 }
 
-func getVoting(stub *shim.MockStub, votingID string) (entities.Voting, error) {
-	key, err := stub.CreateCompositeKey(util.VotingsIndexName, []string{votingID})
+func getPoll(stub *shim.MockStub, pollID string) (entities.Poll, error) {
+	key, err := stub.CreateCompositeKey(util.PollsIndexName, []string{pollID})
 	if err != nil {
-		return entities.Voting{}, err
+		return entities.Poll{}, err
 	}
 
 	bytes, err := stub.GetState(key)
 	if err != nil {
-		return entities.Voting{}, err
+		return entities.Poll{}, err
 	}
 
-	storedVoting := entities.Voting{}
-	err = json.Unmarshal(bytes, &storedVoting)
+	storedPoll := entities.Poll{}
+	err = json.Unmarshal(bytes, &storedPoll)
 	if err != nil {
-		return entities.Voting{}, err
+		return entities.Poll{}, err
 	}
-	return storedVoting, nil
+	return storedPoll, nil
 }
 
 func getUser(stub *shim.MockStub, email string) (entities.User, error) {
@@ -165,19 +165,19 @@ func createUser(stub *shim.MockStub) error {
 	return nil
 }
 
-func createVoting(stub *shim.MockStub) error {
-	votingAsBytes, _ := json.Marshal(voting1)
-	err := util.StoreObjectInChain(stub, voting1.VotingID, util.VotingsIndexName, votingAsBytes)
+func createPoll(stub *shim.MockStub) error {
+	PollAsBytes, _ := json.Marshal(poll1)
+	err := util.StoreObjectInChain(stub, poll1.PollID, util.PollsIndexName, pollAsBytes)
 	if err != nil {
 		return err
 	}
 
-	storedVoting, err := getVoting(stub, voting1.VotingID)
+	storedPoll, err := getPoll(stub, poll1.PollID)
 	if err != nil {
 		return err
 	}
 
-	if voting1.VotingID != storedVoting.VotingID {
+	if poll1.PollID != storedPoll.PollID {
 		return errors.New("Stored ID not the same")
 	}
 	return nil
@@ -203,8 +203,7 @@ func createVote(stub *shim.MockStub, vote *entities.Vote) error {
 
 func addAllTestData(stub *shim.MockStub) {
 	stub.MockTransactionStart("AddTestDataTx")
-	createVoting(stub)
+	createPoll(stub)
 	createUser(stub)
 	stub.MockTransactionEnd("AddTestDataTx")
-
 }
