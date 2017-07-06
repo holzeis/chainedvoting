@@ -21,43 +21,43 @@ func GetUserAsBytesByID(stub shim.ChaincodeStubInterface, email string) ([]byte,
 	return userAsBytes, nil
 }
 
-func GetVotingAsBytesByID(stub shim.ChaincodeStubInterface, votingID string) ([]byte, error) {
-	votingCompositeKey, err := stub.CreateCompositeKey(VotingsIndexName, []string{votingID})
+func GetPollAsBytesByID(stub shim.ChaincodeStubInterface, pollID string) ([]byte, error) {
+	pollCompositeKey, err := stub.CreateCompositeKey(PollsIndexName, []string{pollID})
 	if err != nil {
 		return nil, errors.New("Create composite key error: " + err.Error())
 	}
 
-	votingAsBytes, err := stub.GetState(votingCompositeKey)
+	pollAsBytes, err := stub.GetState(pollCompositeKey)
 	if err != nil {
 		return nil, errors.New("Getstate error: " + err.Error())
 	}
 
-	return votingAsBytes, nil
+	return pollAsBytes, nil
 }
 
 
-func GetAllVotingsAsBytes(stub shim.ChaincodeStubInterface) ([]byte, error) {
-	votingsResultsIterator, err := stub.GetStateByPartialCompositeKey(VotingsIndexName, []string{})
+func GetAllPollsAsBytes(stub shim.ChaincodeStubInterface) ([]byte, error) {
+	pollsResultsIterator, err := stub.GetStateByPartialCompositeKey(PollsIndexName, []string{})
 	if err != nil {
 		return []byte{}, err
 	}
-	defer votingsResultsIterator.Close()
+	defer pollsResultsIterator.Close()
 
-	votings := []entities.Voting{}
-	for votingsResultsIterator.HasNext() {
-		result, err := votingsResultsIterator.Next()
+	polls := []entities.Poll{}
+	for pollsResultsIterator.HasNext() {
+		result, err := pollsResultsIterator.Next()
 		if err != nil {
 			return []byte{}, err
 		}
 
-		var voting entities.Voting
-		err = json.Unmarshal(result.Value, &voting)
+		var poll entities.Poll
+		err = json.Unmarshal(result.Value, &poll)
 		if err != nil {
 			return []byte{}, err
 		}
 
-		votings = append(votings, voting)
+		polls = append(polls, poll)
 	}
 
-	return json.Marshal(votings)
+	return json.Marshal(polls)
 }
