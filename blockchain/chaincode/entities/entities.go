@@ -16,7 +16,7 @@ type TestDataElement interface {
 
 type User struct {
 	Email     string   `json:"email"`
-	MyVotings []Voting `json:"myVotings"`
+	MyPolls []Poll   `json:"myPolls"`
 }
 
 type Vote struct {
@@ -28,8 +28,8 @@ type Vote struct {
 	DelegatedVoter string    `json:"delegatedVoter"`
 }
 
-type Voting struct {
-	VotingID    string    `json:"votingID"`
+type Poll struct {
+	PollID      string    `json:"pollID"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Owner       string    `json:"owner"`
@@ -52,8 +52,8 @@ func (t *Vote) ID() string {
 	return t.VoteID
 }
 
-func (t *Voting) ID() string {
-	return t.VotingID
+func (t *Poll) ID() string {
+	return t.PollID
 }
 
 func (t *Option) ID() string {
