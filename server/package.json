@@ -1,6 +1,9 @@
 {
-  "name": "server",
-  "version": "0.0.0",
+  "name": "chained-voting-server",
+  "author": "GBS DACH Blockchain Taskforce",
+  "description": "This project aims at leveraging the Hyperledger fabric-Blockchain to showcase a simple voting app (server).",
+  "version": "0.1.0",
+  "license": "MIT",
   "scripts": {
     "grunt": "grunt",
     "prestart": "npm install --loglevel error",

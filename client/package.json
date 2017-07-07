@@ -1,6 +1,8 @@
 {
-  "name": "chained-voting",
-  "version": "0.0.0",
+  "name": "chained-voting-client",
+  "author": "GBS DACH Blockchain Taskforce",
+  "description": "This project aims at leveraging the Hyperledger fabric-Blockchain to showcase a simple voting app (client).",
+  "version": "0.1.0",
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
