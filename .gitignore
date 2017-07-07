@@ -1,6 +1,18 @@
-app/node_modules/*
+client/node_modules/*
+server/node_modules/*
 *.log
 .DS_Store
 
-bin/*
+bin/configtxgen
+bin/cryptogen
+
 /.project
+
+*/.tscache/*
+*/dist/*
+**/.baseDir.ts
+
+/server/resources
+
+.vscode/*
+*/.vscode/*

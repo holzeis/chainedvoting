@@ -1,0 +1,34 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "scripts": {
+    "grunt": "grunt",
+    "start": "nodemon --debug dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.ng.bluemix.net:gbs_dach_blockchain/chained_voting.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^8.0.7",
+    "cors": "^2.8.1",
+    "express": "^4.15.3",
+    "fabric-ca-client": "1.0.0-alpha2",
+    "fabric-client": "1.0.0-alpha2",
+    "grunt-ts": "^6.0.0-beta.16",
+    "nodemon": "^1.11.0",
+    "reflect-metadata": "^0.1.10",
+    "routing-controllers": "^0.6.7",
+    "tslint": "^5.4.3",
+    "typedi": "^0.5.2"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-ts": "^6.0.0-beta.16",
+    "typescript": "^2.4.1"
+  }
+}
