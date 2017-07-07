@@ -96,7 +96,7 @@ services:
     container_name: client
     build: client
     working_dir: /usr/src/app
-    command: bash -c "ng lint && ng serve --host 0.0.0.0"
+    command: bash -c "npm start"
     volumes:
       - ./client/:/usr/src/app
     depends_on:

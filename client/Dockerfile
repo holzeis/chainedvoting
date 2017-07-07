@@ -8,7 +8,6 @@ RUN npm install -g @angular/cli --loglevel error
 
 # Install app dependencies
 COPY package.json /usr/src/app
-RUN npm install --loglevel error
 
 # Bundle app source
 COPY . /usr/src/app/
