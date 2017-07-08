@@ -15,6 +15,7 @@ bin/cryptogen
 **/.baseDir.ts
 
 /server/resources
+server/package-lock.json
 
 .vscode/*
 */.vscode/*
