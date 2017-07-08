@@ -16,6 +16,7 @@ export class Blockchain {
   protected client: Client;
   private caClient: CopService;
   private channels: any[];
+  private user: Member;
 
   public constructor(protected serverDirectory: string,
                      protected config: ChaincodeEnvironmentConfiguration) {
@@ -25,7 +26,7 @@ export class Blockchain {
   public async init(deployPolicy: DeployPolicy): Promise<void> {
     await this.setKeyStore();
     await this.setCertificateAuthority();
-    await this.registerAdminUser();
+    this.user = await this.registerAdminUser();
     // await this.registerAndEnrollUsers();
     await this.setupChannels(deployPolicy);
   }

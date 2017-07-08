@@ -1,5 +1,7 @@
 client/node_modules/*
 server/node_modules/*
+blockchain/bin
+blockchain/pkg
 *.log
 .DS_Store
 
@@ -16,3 +18,7 @@ bin/cryptogen
 
 .vscode/*
 */.vscode/*
+
+blockchain/src/github.com
+blockchain/src/golang.org
+blockchain/src/gopkg.in

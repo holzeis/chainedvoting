@@ -1,9 +1,10 @@
 package util
 
 import (
-	"chaincode/entities"
 	"encoding/json"
 	"errors"
+
+	"chaincode/entities"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )

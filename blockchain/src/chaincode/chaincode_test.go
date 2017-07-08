@@ -1,12 +1,13 @@
 package main
 
 import (
-	"chaincode/entities"
-	"chaincode/util"
 	"encoding/json"
 	"errors"
 	"testing"
 	"time"
+
+	"chaincode/entities"
+	"chaincode/util"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
