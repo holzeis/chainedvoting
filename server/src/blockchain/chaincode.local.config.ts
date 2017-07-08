@@ -2,7 +2,7 @@ import { ChaincodeEnvironmentConfiguration, UserConfig, PeerConfig, OrdererConfi
 
 export class ChaincodeLocalConfig {
   public getConfiguration(): ChaincodeEnvironmentConfiguration {
-    const organization = 'org1';
+    const organization = 'org';
 
     return {
       network:   {
@@ -38,8 +38,8 @@ export class ChaincodeLocalConfig {
         appUsers: <UserConfig[]> {}
       },
       chaincode: {
-        keyValStorePath: '/tmp/hfc-test-kvs-org1',
-        chaincodeID: 'chaincode',
+        keyValStorePath: '/tmp/hfc-test-kvs-org',
+        chaincodeID: 'chained-voting',
         chaincodePath: 'chaincode',
         chaincodeVersion: 'v1'
       },

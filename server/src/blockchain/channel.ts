@@ -29,7 +29,7 @@ export class Channel {
 
 
   public async initChannel(deployPolicy: DeployPolicy): Promise<void> {
-    this.channel = await this.client.newChain(this.channelConfig.name);
+    this.channel = await this.client.newChannel(this.channelConfig.name);
     await this.createOrgAdminUser();
     await this.addOrderer();
     await this.addEventHubsAndPeers();
@@ -149,7 +149,7 @@ private async addOrderer(): Promise<void> {
     signatures.push(this.client.signChannelConfig(config));
 
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, this.orgAdminUser)
+    let txId = this.client.newTransactionID(nonce, this.orgAdminUser)
 
     let request = {
       name: this.channelConfig.name,
@@ -196,7 +196,7 @@ private async addOrderer(): Promise<void> {
     console.info('Joining channel', this.channelConfig.name);
 
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
 
     let getBlockRequest = {
       txId : 	txId,
@@ -206,7 +206,7 @@ private async addOrderer(): Promise<void> {
     let genesisBlock = await this.channel.getGenesisBlock(getBlockRequest);
 
     nonce = hfcUtil.getNonce();
-    txId = Client.buildTransactionID(nonce, this.orgAdminUser);
+    txId = this.client.newTransactionID(nonce, this.orgAdminUser);
 
     let joinChannelRequest = {
       targets: this.channel.getPeers(),
@@ -233,8 +233,9 @@ private async addOrderer(): Promise<void> {
     console.info('Going to install chaincode');
 
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, this.orgAdminUser);
-
+    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
+    console.info('Affected peers:');
+    console.dir(this.channel.getPeers());
     let request = {
       targets: this.channel.getPeers(),
       chaincodePath: chaincodePath,
@@ -253,7 +254,7 @@ private async addOrderer(): Promise<void> {
     console.info('Going to instantiate chaincode');
 
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
 
     let request = {
       chaincodePath: chaincodePath,
@@ -281,11 +282,14 @@ private async addOrderer(): Promise<void> {
       //   }
       // }
     };
-
-    let proposalResponse = await this.channel.sendInstantiateProposal(request);
+    console.info('Log the request:');
     console.dir(request);
-    let signedRequest = this.processProposal(proposalResponse, 'instantiate');
+    let proposalResponse = await this.channel.sendInstantiateProposal(request);
+    console.info('Log the proposalResponse:');
     console.dir(proposalResponse);
+    let signedRequest = this.processProposal(proposalResponse, 'instantiate');
+    console.info('Log the signedRequest:');
+    console.dir(signedRequest);
 
     let eventPromises = [];
     this.eventHubs.forEach((eh) => {
@@ -293,6 +297,9 @@ private async addOrderer(): Promise<void> {
     });
 
     let sendPromise = await this.channel.sendTransaction(signedRequest);
+    console.info('Log the sendPromise:');
+    console.dir(sendPromise);
+
     return Promise.all([sendPromise].concat(eventPromises))
       .then((results) => {
         console.info('Successfully instantiated the chaincode');
@@ -338,7 +345,7 @@ private async addOrderer(): Promise<void> {
   public async query(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string, args: string[], userName: string): Promise<any> {
     console.info('Querying ' + this.channelConfig.name + ' with function name ' + chaincodeFunctionName);
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, await this.setAndGetUserContext(userName));
+    let txId = this.client.newTransactionID(nonce, await this.setAndGetUserContext(userName));
 
     args.unshift(chaincodeFunctionName);
 
@@ -405,7 +412,7 @@ private async addOrderer(): Promise<void> {
   public async invoke(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string, args: string[], userName: string): Promise<InvokeReponse> {
     console.info('Invoking ' + this.channelConfig.name + ' with function name ' + chaincodeFunctionName);
     let nonce = hfcUtil.getNonce();
-    let txId = Client.buildTransactionID(nonce, await this.setAndGetUserContext(userName));
+    let txId = this.client.newTransactionID(nonce, await this.setAndGetUserContext(userName));
 
     args.unshift(chaincodeFunctionName);
 

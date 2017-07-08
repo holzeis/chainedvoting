@@ -1,1 +1,0 @@
-src/blockchain/chaincode.local.config.ts src/blockchain/.baseDir.ts --sourcemap --emitDecoratorMetadata --removeComments --experimentalDecorators --target ES6 --module commonjs --outDir dist
