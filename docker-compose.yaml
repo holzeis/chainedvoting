@@ -9,10 +9,10 @@ services:
       - FABRIC_CA_SERVER_CA_NAME=ca-org
       - FABRIC_CA_SERVER_TLS_ENABLED=true
       - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org.chained-voting.com-cert.pem
-      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/ddb9205c44f6bf0cb5307d3b990752621d444d9a4062ec3ff05ae393d558ee17_sk
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/71b8f88dfe632874832dc6256fac3a3e88f01c340e9cb13a668189a026f8567c_sk
     ports:
       - "7054:7054"
-    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org.chained-voting.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/ddb9205c44f6bf0cb5307d3b990752621d444d9a4062ec3ff05ae393d558ee17_sk -b admin:adminpw -d'
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org.chained-voting.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/71b8f88dfe632874832dc6256fac3a3e88f01c340e9cb13a668189a026f8567c_sk -b admin:adminpw -d'
     volumes:
       - ./blockchain/crypto-config/peerOrganizations/org.chained-voting.com/ca/:/etc/hyperledger/fabric-ca-server-config
   orderer.chained-voting.com:
@@ -31,13 +31,14 @@ services:
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
-      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt, /var/hyperledger/peer/tls/ca.crt]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
     - ./blockchain/channel-artifacts/genesis.block:/var/hyperledger/orderer/genesis.block
     - ./blockchain/crypto-config/ordererOrganizations/chained-voting.com/orderers/orderer.chained-voting.com/msp:/var/hyperledger/orderer/msp
     - ./blockchain/crypto-config/ordererOrganizations/chained-voting.com/orderers/orderer.chained-voting.com/tls:/var/hyperledger/orderer/tls
+    - ./blockchain/crypto-config/peerOrganizations/org.chained-voting.com/peers/peer0.org.chained-voting.com/tls:/var/hyperledger/peer/tls
     ports:
       - 7050:7050
 

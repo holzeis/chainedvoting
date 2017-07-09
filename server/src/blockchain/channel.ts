@@ -300,6 +300,8 @@ private async addOrderer(): Promise<void> {
     console.info('Log the sendPromise:');
     console.dir(sendPromise);
 
+    console.info('Log the eventPromises:');
+    console.dir(eventPromises);
     return Promise.all([sendPromise].concat(eventPromises))
       .then((results) => {
         console.info('Successfully instantiated the chaincode');
