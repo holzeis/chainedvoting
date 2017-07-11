@@ -1,11 +1,7 @@
 FROM node:boron
 
+# Create app directory
 RUN mkdir -p /usr/src/app/
-
-# use cached layer for node modules
-ADD package.json /usr/src/app/package.json
-RUN cd /usr/src/app/
-
 ADD . /usr/src/app
 WORKDIR /usr/src/app
 

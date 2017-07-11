@@ -74,12 +74,10 @@ services:
   server:
     container_name: server
     build: server
-    working_dir: /usr/src/app
     command: bash -c "npm start"
     environment:
       - GOPATH=/usr/src/blockchain
     volumes:
-      - ./server:/usr/src/app
       - ./blockchain/crypto-config:/usr/src/app/resources/crypto-config
       - ./blockchain/channel-artifacts:/usr/src/app/resources/channel-artifacts
       - ./blockchain/chaincode:/usr/src/blockchain/src/chained-voting
@@ -95,10 +93,7 @@ services:
   client:
     container_name: client
     build: client
-    working_dir: /usr/src/app
     command: bash -c "npm start"
-    volumes:
-      - ./client/:/usr/src/app
     depends_on:
       - server
     ports:
