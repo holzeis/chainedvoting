@@ -1,0 +1,9 @@
+<h1>
+  {{title}}
+</h1>
+
+<li *ngFor="let poll of polls">
+  <span class="poll">{{poll.id}}</span> {{poll.name}}
+</li>
+
+<router-outlet></router-outlet>
