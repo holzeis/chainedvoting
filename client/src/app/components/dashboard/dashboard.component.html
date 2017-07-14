@@ -1,1 +1,14 @@
-<a routerLink="/viewpolls">View all polls</a>
+<h1>
+  {{title}}
+</h1>
+
+<li *ngFor="let poll of polls">
+  <span class="poll">{{poll.id}}</span>
+  <span>{{poll.name}}</span>
+  <span>{{poll.description}}</span>
+  <span>{{poll.validTo}}</span>
+  <!-- <span (click)="onSelect(poll)">View details<span> -->
+
+</li>
+
+<router-outlet></router-outlet>

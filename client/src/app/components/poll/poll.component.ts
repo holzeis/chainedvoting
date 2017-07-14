@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+
+import { Poll } from '../../poll';
+import { PollService } from '../../services/poll.service'
 
 @Component({
   selector: 'app-poll',
@@ -7,9 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PollComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  poll: Poll;
+  ngOnInit(){}
 
 }

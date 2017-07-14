@@ -6,7 +6,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { PollComponent } from './components/poll/poll.component';
-import { PollsComponent } from './components/polls/polls.component';
 import { UserComponent } from './components/user/user.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component'
 
@@ -17,7 +16,7 @@ import { PollService } from './services/poll.service';
 const appRoutes: Routes = [
     { path: 'register', component: UserComponent },
     { path: 'dashboard', component: DashboardComponent },
-    { path: 'viewpolls', component: PollsComponent }
+    { path: 'poll/:id', component: PollComponent }
 ];
 
 @NgModule({
@@ -25,7 +24,6 @@ const appRoutes: Routes = [
     AppComponent,
     DashboardComponent,
     PollComponent,
-    PollsComponent,
     UserComponent
   ],
   imports: [

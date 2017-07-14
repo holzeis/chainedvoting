@@ -12,5 +12,17 @@ export const POLLS: Poll[] = [
       'Tom', 'Jerry'
     ],
     votes: []
+  },
+  {
+    id: '1235',
+    name: 'Class vice president',
+    description: 'Class vice president poll of 2017',
+    owner: 'Mr. Bert',
+    validFrom: 'tba',
+    validTo: '',
+    options: [
+      'Tom', 'Jerry'
+    ],
+    votes: []
   }
 ]
