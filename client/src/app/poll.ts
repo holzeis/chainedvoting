@@ -1,10 +1,13 @@
+import {Vote} from './vote';
+import {User} from './user'
+
 export class Poll {
   id: string;
   name: string;
   description: string;
-  owner: string;
+  owner: User;
   validFrom: string;
   validTo: string;
   options: string[];
-  votes: string[];
+  votes: Vote[];
 }

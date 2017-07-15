@@ -24,6 +24,12 @@ export class DashboardComponent {
     this.pollService.getPolls().then(polls => this.polls = polls);
   }
 
+  selectPoll(pollID: string):void {
+    this.router.navigate(['/poll', pollID]);
+  }
 
 
+  createPoll(): void {
+    this.router.navigate(['/create']);
+  }
 }
