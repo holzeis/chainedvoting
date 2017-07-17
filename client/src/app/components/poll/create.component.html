@@ -1,30 +1,47 @@
 <div class="container">
 <div class= "row">
-  <form class="form-horizontal">
+  <h3>Create a poll</h3>
+
+  <form class="form-horizontal" #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+    <label for="input-poll-name" class="col-sm-2 control-label">Poll name</label>
     <div class="col-sm-10">
-      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+      <input name="name" class="form-control" id="input-poll-name" placeholder="Poll name" ngModel required #inputpollname="ngModel">
     </div>
   </div>
   <div class="form-group">
-    <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+    <label for="input-description" class="col-sm-2 control-label">Description</label>
     <div class="col-sm-10">
-      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+      <input name="description" class="form-control" ngModel id="input-description" placeholder="Description">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="input-poll-from" class="col-sm-2 control-label">From</label>
+    <div class="col-sm-10">
+      <input name="validfrom" class="form-control" ngModel id="input-poll-from" placeholder="From">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="input-poll-till" class="col-sm-2 control-label">Till</label>
+    <div class="col-sm-10">
+      <input name="validto" class="form-control" ngModel id="input-poll-till" placeholder="Till">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="input-poll-options" class="col-sm-2 control-label">Options</label>
+    <div class="col-sm-10">
+      <input name="options" class="form-control" ngModel id="input-poll-options" placeholder="Options">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="input-poll-voters" class="col-sm-2 control-label">Participants</label>
+    <div class="col-sm-10">
+      <input name="voters" class="form-control" ngModel id="input-poll-voters" placeholder="Participants">
     </div>
   </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox"> Remember me
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-default">Sign in</button>
+      <button type="submit" class="btn btn-primary">Create poll</button>
     </div>
   </div>
 </form>

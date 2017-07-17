@@ -12,7 +12,8 @@ import { AppComponent } from './app.component';
 import { PollComponent } from './components/poll/poll.component';
 import { CreateComponent } from './components/poll/create.component';
 import { UserComponent } from './components/user/user.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component'
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DelegateComponent } from './components/poll/delegate.component';
 
 import {Configuration} from './app.constants';
 import {UserService} from './services/user.service';
@@ -20,10 +21,16 @@ import { PollService } from './services/poll.service';
 import { VoteService } from './services/vote.service';
 
 const appRoutes: Routes = [
-    { path: 'register', component: UserComponent },
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'poll/:id', component: PollComponent },
-    { path: 'create', component: CreateComponent}
+  {
+  path: '',
+  redirectTo: '/dashboard',
+  pathMatch: 'full'
+  },
+  { path: 'register', component: UserComponent },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'poll/:id', component: PollComponent },
+  { path: 'delegate', component: DelegateComponent}, 
+  { path: 'create', component: CreateComponent}
 ];
 
 @NgModule({
@@ -31,6 +38,7 @@ const appRoutes: Routes = [
     AppComponent,
     DashboardComponent,
     PollComponent,
+    DelegateComponent,
     CreateComponent,
     UserComponent
   ],

@@ -15,7 +15,7 @@
   <div class="col-xs-6 col-sm-2">{{poll.name}}</div>
   <div class="col-xs-6 col-sm-3">{{poll.description}}</div>
   <div class="col-xs-6 col-sm-1">{{poll.validTo}}</div>
-  <div class="col-xs-6 col-sm-1">{{poll.votes.length}}</div>
+  <div *ngIf="poll.votes" class="col-xs-6 col-sm-1">{{poll.votes.length}}</div>
   <div class="col-xs-6 col-sm-1"><button type="button" class="btn btn-default" (click)="selectPoll(poll.id)">Details</button></div>
 </div>
 

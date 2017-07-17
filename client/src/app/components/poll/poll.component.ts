@@ -15,16 +15,14 @@ import { VoteService } from '../../services/vote.service'
 })
 export class PollComponent implements OnInit {
 
-  pollID: string;
   poll: Poll;
-
   vote: Vote;
+  pollID: string;
+
 
   public constructor(private router: Router, private route: ActivatedRoute,
     private pollservice: PollService, private votenservice: VoteService) {
-      console.log("debugging poll service")
       this.route.params.subscribe(params => this.pollID = params['id']);
-
   }
 
   ngOnInit(){
@@ -32,18 +30,22 @@ export class PollComponent implements OnInit {
   }
 
   getPoll(pollID: string): void {
-    this.pollservice.getPoll(pollID).then(poll => this.poll = poll);
-    console.log("debugging poll service: success")
-    console.dir(this.poll);
+    this.pollservice.getPoll(pollID).then(poll => {
+      console.log("debugging poll service:")
+      console.dir(this.poll);
+      this.poll = poll;
+    });
+
   }
+
 
   setVote(option: string):void {
     this.vote = {
-      id: '',
-      voter: '',
+      id: '', //TODO vote id
+      voter: null, //TODO user id
       description: '',
       option: option,
-      delegate: '',
+      delegate: null,
       timestamp: new Date().getTime()
     }
     console.dir(this.vote);
@@ -52,10 +54,17 @@ export class PollComponent implements OnInit {
 
   submitVote():void {
     this.poll.votes.push(this.vote);
-    this.pollservice.updatePoll(this.poll, this.poll.id);
+    this.pollservice.updatePoll(this.poll, this.poll.id).then(res => console.log('Response ' + res));
     this.router.navigate(['/dashboard']);
     console.log("See poll obj");
     console.dir(this.poll);
   }
+
+  setDelegate():void {
+    this.router.navigate(['/delegate']);
+  }
+
+
+
 
 }

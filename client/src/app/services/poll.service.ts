@@ -35,8 +35,18 @@ export class PollService {
     .then(response => response.json().data as Poll[]).catch(this.handleError);;
   }
 
+  createPoll(poll: Poll):Promise<Poll> {
+    return this.http.post(this.pollsUrl, JSON.stringify(poll), {headers: this.headers})
+    .toPromise().then(res => {
+      res.json().data as Poll;
+      console.dir (res.json().data);
+    })
+    .catch(this.handleError);
+  }
+
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);
   }
+
 }

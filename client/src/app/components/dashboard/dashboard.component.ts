@@ -28,7 +28,6 @@ export class DashboardComponent {
     this.router.navigate(['/poll', pollID]);
   }
 
-
   createPoll(): void {
     this.router.navigate(['/create']);
   }
