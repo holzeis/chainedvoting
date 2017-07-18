@@ -1,7 +1,7 @@
-import {Vote} from './vote'
+import {Poll} from './poll'
 
 export class User {
-  id: String;
-  email: String;
-  votes: Vote[];
+  id: any;
+  email: string;
+  polls: string[];
 }

@@ -14,48 +14,50 @@ import { User } from '../../user';
 
 export class CreateComponent {
 
-  poll: Poll;
+  poll: Poll
+  lastPoll: Poll;
+  polls: Poll[];
 
   //Mock poll owner
   ownerUser: User = {
     id: '320932870732',
     email: 'tom@aol.com',
-    votes: null
+    polls: null
   }
 
   constructor(private pollservice: PollService, private router: Router) {}
 
   onSubmit(f: NgForm) {
 
-    this.poll = {
-      id: '1236',
-      name: f.value.name,
-      description: f.value.description,
-      owner: this.ownerUser,
-      validFrom: f.value.validfrom,
-      validTo: f.value.validto,
-      options: ['First', 'Second', 'Third'],
-      votes:
-        [
-          {
-            id: '32234',
-            voter: this.ownerUser,
-            description: '',
-            option: 'First',
-            delegate: null,
-            timestamp: 2349764123
-          }
-        ]
+    this.pollservice.getPolls().then(polls => {
 
-    }
+      this.lastPoll = polls[polls.length - 1 ];
+      console.dir(this.lastPoll);
+      this.poll = {
+        id: this.lastPoll.id + 1,
+        name: f.value.name,
+        description: f.value.description,
+        owner: this.ownerUser,
+        validFrom: f.value.validfrom,
+        validTo: f.value.validto,
+        options: ['First', 'Second', 'Third'],
+        votes:
+          [
+            {
+              id: '32234',
+              voter: this.ownerUser,
+              description: '',
+              option: 'First',
+              delegate: null,
+              timestamp: 2349764123
+            }
+          ]
+      }
+      this.pollservice.createPoll(this.poll)
+          .then(res => {
+            this.router.navigate(['/dashboard']);
+          }).catch(e => console.log("reject: " + e));
+    });
 
-    //console.log("Looking at new poll obj");  // { first: '', last: '' }
-    //console.dir(this.poll);  // false
-    console.log("Looking at response");  // { first: '', last: '' }
-
-    this.pollservice.createPoll(this.poll)
-    .then(res => {
-      this.router.navigate(['/dashboard']);
-    }).catch(e => console.log("reject: " + e));
   }
 }

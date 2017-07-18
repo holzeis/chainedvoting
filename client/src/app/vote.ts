@@ -1,10 +1,10 @@
 import {User} from './user';
 
 export class Vote {
-  id: string;
-  voter: User;
+  id: any;
+  voter: any;
   description: string;
   option: string;
-  delegate: User;
+  delegate: any;
   timestamp: number;
 }

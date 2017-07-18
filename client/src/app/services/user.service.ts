@@ -4,6 +4,8 @@ import {Configuration} from '../app.constants';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
+import { User } from '../user';
+
 @Injectable()
 export class UserService {
 
@@ -18,5 +20,15 @@ export class UserService {
         return this._http.post(this.actionUrl, {email: email}).map((response: Response) => {
             return response;
         }); // .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    }
+
+    getUser(userID: string): Promise<User> {
+      const url = `api/users/${userID}`;
+      return this._http.get(url).toPromise().then(res => res.json().data as User).catch(this.handleError);
+    }
+
+    private handleError(error: any): Promise<any> {
+      console.error('An error occurred', error); // for demo purposes only
+      return Promise.reject(error.message || error);
     }
 }

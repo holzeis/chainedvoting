@@ -1,15 +1,38 @@
 import { Injectable } from '@angular/core';
+import { Headers, Http } from '@angular/http';
 
-import { VOTE } from '../mockdata/mock-vote';
+
 import { Vote } from '../vote';
+import { User } from '../user'
 
 @Injectable()
 
 export class VoteService {
-  vote: Vote = VOTE;
 
-  setVote(pollID: string):Promise<Vote> {
+  private votesUrl = 'api/votes';
+  private headers = new Headers({'Content-Type': 'application/json'});
+  constructor(private http: Http) {}
 
-    return Promise.resolve(VOTE);
+  createVote(pollID: string, vote: Vote):Promise<Vote> {
+    return this.http.post(this.votesUrl, JSON.stringify(vote), {headers: this.headers})
+    .toPromise().then(res => res.json().data as Vote).catch(this.handleError);
+  }
+
+  updateVote(voteID: string, vote: Vote): Promise<Vote> {
+    const url = `${this.votesUrl}/${voteID}`;
+    return this.http.put(url, JSON.stringify(vote), {headers: this.headers})
+    .toPromise().then(() => vote)
+    .catch(this.handleError);
+      //TODO: implement
+  }
+
+  getVotes(): Promise<Vote[]> {
+    return this.http.get(this.votesUrl).toPromise()
+    .then(response => response.json().data as Vote[]).catch(this.handleError);;
+  }
+
+  private handleError(error: any): Promise<any> {
+    console.error('An error occurred', error); // for demo purposes only
+    return Promise.reject(error.message || error);
   }
 }

@@ -13,6 +13,7 @@ import { PollComponent } from './components/poll/poll.component';
 import { CreateComponent } from './components/poll/create.component';
 import { UserComponent } from './components/user/user.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { VoteComponent } from './components/vote/vote.component';
 import { DelegateComponent } from './components/poll/delegate.component';
 
 import {Configuration} from './app.constants';
@@ -29,7 +30,8 @@ const appRoutes: Routes = [
   { path: 'register', component: UserComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'poll/:id', component: PollComponent },
-  { path: 'delegate', component: DelegateComponent}, 
+  { path: 'vote/:id', component: VoteComponent },
+  { path: 'delegate/:id', component: DelegateComponent},
   { path: 'create', component: CreateComponent}
 ];
 
@@ -38,6 +40,7 @@ const appRoutes: Routes = [
     AppComponent,
     DashboardComponent,
     PollComponent,
+    VoteComponent,
     DelegateComponent,
     CreateComponent,
     UserComponent

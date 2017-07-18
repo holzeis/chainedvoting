@@ -3,7 +3,6 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { POLLS } from '../mockdata/mock-polls';
 import { Poll } from '../poll';
 import { Vote } from '../vote';
 
@@ -32,7 +31,7 @@ export class PollService {
 
   getPolls(): Promise<Poll[]> {
     return this.http.get(this.pollsUrl).toPromise()
-    .then(response => response.json().data as Poll[]).catch(this.handleError);;
+    .then(response => response.json().data as Poll[]).catch(this.handleError);
   }
 
   createPoll(poll: Poll):Promise<Poll> {
