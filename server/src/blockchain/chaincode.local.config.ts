@@ -8,10 +8,10 @@ export class ChaincodeLocalConfig {
       network:   {
         peers: <PeerConfig[]>[
           {
-            requests: 'grpcs://peer0.org.chained-voting.com:7051',
-            events: 'grpcs://peer0.org.chained-voting.com:7053',
-            server_hostname: 'peer0.org.chained-voting.com',
-            tls_cacerts: '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/peers/peer0.org.chained-voting.com/msp/cacerts/ca.org.chained-voting.com-cert.pem'
+            requests: 'grpcs://peer0.org1.chained-voting.com:7051',
+            events: 'grpcs://peer0.org1.chained-voting.com:7053',
+            server_hostname: 'peer0.org1.chained-voting.com',
+            tls_cacerts: '../../resources/crypto-config/peerOrganizations/org1.chained-voting.com/peers/peer0.org1.chained-voting.com/msp/cacerts/ca.org1.chained-voting.com-cert.pem'
           }
         ],
         ca:    {
@@ -27,7 +27,7 @@ export class ChaincodeLocalConfig {
         },
         organization: {
           name: organization,
-          mspid: 'OrgMSP'
+          mspid: 'Org1MSP'
         },
         users: <UserConfig[]>[
           {

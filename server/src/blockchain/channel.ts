@@ -51,14 +51,14 @@ export class Channel {
 private async createOrgAdminUser(): Promise<void> {
   console.info('Going to set the org admin user');
 
-  let keyPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/keystore');
+  let keyPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org1.chained-voting.com/users/Admin@org1.chained-voting.com/msp/keystore');
   let keyPEM = Buffer.from(this.readAllFiles(keyPath)[0]).toString();
-  let certPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/signcerts');
+  let certPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org1.chained-voting.com/users/Admin@org1.chained-voting.com/msp/signcerts');
   let certPEM = this.readAllFiles(certPath)[0];
 
   this.orgAdminUser = await this.client.createUser({
     username: 'peerorgAdmin',
-    mspid: 'OrgMSP',
+    mspid: 'Org1MSP',
     cryptoContent: {
       privateKeyPEM: keyPEM.toString(),
       signedCertPEM: certPEM.toString()

@@ -8,7 +8,7 @@ Please find conceptional documentation in our mural proejct in blockhaingbs.
 
 Eventually, this results into a chained voting, meaning that specific persons can vote with lent votes, if the vote is within the agreed dates..
 
-## Applied on the blockchain: 
+## Applied on the blockchain:
 
  1. Lending a vote: Available dates & representatives are picked and placed as chaincode onto the blockchain.
  2. Regular voting: When voting for a date the smart contract is evaluated and executed if a lend vote applies.
@@ -31,9 +31,9 @@ docker-compose down
 
 This will start 5 containers
 
-1. ca0 - fabric certification authority 
+1. ca0 - fabric certification authority
 2. orderer.chained-voting.com - orderer service
-3. peer0.org.chained-voting.com - endorser for chaincode
+3. peer0.org1.chained-voting.com - endorser for chaincode
 4. cli - also a peer and used as command line interface towards the blockchain
 5. app - the node js application (not yet connected to the blockchain)
 
@@ -47,7 +47,7 @@ This is how the crypto-config & channel artifacts are generated.
 $CRYPTOGEN generate --config=./crypto-config.yaml
 ```
 
-2. Replace the private key of the ca in the docker-compose.yaml with the *_sk in  crypto-config/peerOrganizations/org.chained-voting.com/ca/
+2. Replace the private key of the ca in the docker-compose.yaml with the *_sk in  crypto-config/peerOrganizations/org1.chained-voting.com/ca/
 
 3. Generating Orderer Genesis block
 ```bash
@@ -59,7 +59,7 @@ $CONFIGTXGEN -profile OrdererGenesis -outputBlock ./channel-artifacts/genesis.bl
 $CONFIGTXGEN -profile Channel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID default
 ```
 
-5. Generating anchor peer update for Org1MSP 
+5. Generating anchor peer update for Org1MSP
 ```bash
-$CONFIGTXGEN -profile Channel -outputAnchorPeersUpdate ./channel-artifacts/OrgMSPanchors.tx -channelID default -asOrg OrgMSP
+$CONFIGTXGEN -profile Channel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID default -asOrg Org1MSP
 ```
