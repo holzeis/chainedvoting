@@ -6,24 +6,20 @@
       <div  class="col-sm-10">
         <label for="poll-id" class="control-label">Poll ID</label>
         <span>{{poll.id}}</span><br>
-        <button class="btn" (click)="setDelegate()">set delegate</button><br><br>
+        <button class="btn btn-success" (click)="goToVote(poll)">go to vote</button>
+        <button class="btn btn-primary" (click)="setDelegate()">set delegate</button><br><br>
         <label for="poll-description" class="control-label">Description</label>
         <span>{{poll.description}}</span><br>
         <label for="poll-options" class="control-label">Poll options</label>
-        <div class="table-responsive">
-          <table class="table table-condensed">
-            <tr *ngFor="let option of poll.options">
-              <td><a class="btn btn-primary" role="button" (click)="setVote(option)">vote for</a></td>
-              <td>{{option}}</td>
-            </tr>
-          </table>
+        <div *ngFor="let option of poll.options">
+          <div>{{option}}</div>
         </div>
-        <div *ngIf="vote">
-          <label for="poll-options" class="control-label">Vote</label><br>
-          <button class="btn btn-success btn-lg" (click)="submitVote()">Submit vote for {{vote.option}}</button>
-        </div>
+        <label for="poll-options" class="control-label">Votes in</label>
+        <td>{{poll.votes.length}}</td>
       </div>
+    </div>
+    <div class="row">
+      <button class="btn btn-default" (click)="goBack()">Back</button>
     </div>
   </div>
 </div>
-<router-outlet></router-outlet>

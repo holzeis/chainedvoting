@@ -55,7 +55,7 @@ export class CreateComponent {
       }
       this.pollservice.createPoll(this.poll)
           .then(res => {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/poll', this.poll.id]);
           }).catch(e => console.log("reject: " + e));
     });
   }

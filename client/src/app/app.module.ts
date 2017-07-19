@@ -14,7 +14,7 @@ import { CreateComponent } from './components/poll/create.component';
 import { UserComponent } from './components/user/user.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { VoteComponent } from './components/vote/vote.component';
-import { DelegateComponent } from './components/poll/delegate.component';
+import { DelegateComponent } from './components/vote/delegate.component';
 
 import {Configuration} from './app.constants';
 import {UserService} from './services/user.service';

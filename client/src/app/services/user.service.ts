@@ -27,6 +27,11 @@ export class UserService {
       return this._http.get(url).toPromise().then(res => res.json().data as User).catch(this.handleError);
     }
 
+    getUsers(): Promise<User[]> {
+      const url = `api/users/`;
+      return this._http.get(url).toPromise().then(res => res.json().data as User[]).catch(this.handleError);
+    }
+
     private handleError(error: any): Promise<any> {
       console.error('An error occurred', error); // for demo purposes only
       return Promise.reject(error.message || error);

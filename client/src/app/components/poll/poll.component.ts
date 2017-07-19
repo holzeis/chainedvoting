@@ -3,10 +3,12 @@ import { Router, ActivatedRoute } from "@angular/router";
 
 import { Poll } from '../../poll';
 import { Vote } from '../../vote';
+import { User } from '../../user';
+
 
 import { PollService } from '../../services/poll.service'
+import { UserService } from '../../services/user.service'
 import { VoteService } from '../../services/vote.service'
-
 
 @Component({
   selector: 'app-poll',
@@ -19,9 +21,8 @@ export class PollComponent implements OnInit {
   vote: Vote;
   pollID: string;
 
-
-  public constructor(private router: Router, private route: ActivatedRoute,
-    private pollservice: PollService, private votenservice: VoteService) {
+  public constructor(private voteService: VoteService, private router: Router, private route: ActivatedRoute,
+    private pollService: PollService, private userService: UserService) {
       this.route.params.subscribe(params => this.pollID = params['id']);
   }
 
@@ -30,41 +31,21 @@ export class PollComponent implements OnInit {
   }
 
   getPoll(pollID: string): void {
-    this.pollservice.getPoll(pollID).then(poll => {
+    this.pollService.getPoll(pollID).then(poll => {
       console.log("debugging poll service:")
-      console.dir(this.poll);
       this.poll = poll;
+      console.dir(this.poll);
     });
-
-  }
-
-
-  setVote(option: string):void {
-    this.vote = {
-      id: '', //TODO vote id
-      voter: null, //TODO user id
-      description: '',
-      option: option,
-      delegate: null,
-      timestamp: new Date().getTime()
-    }
-    console.dir(this.vote);
-
-  }
-
-  submitVote():void {
-    this.poll.votes.push(this.vote);
-    this.pollservice.updatePoll(this.poll, this.poll.id).then(res => console.log('Response ' + res));
-    this.router.navigate(['/dashboard']);
-    console.log("See poll obj");
-    console.dir(this.poll);
   }
 
   setDelegate():void {
-    this.router.navigate(['/delegate']);
+    this.router.navigate(['/delegate', this.poll.id]);
   }
 
-
-
-
+  goToVote(poll: Poll):void {
+    this.router.navigate(['/vote', poll.id]);
+  }
+  goBack() {
+    this.router.navigate(['/dashboard']);
+  }
 }
