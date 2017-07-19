@@ -16,12 +16,11 @@ export class CreateComponent {
 
   poll: Poll
   lastPoll: Poll;
-  polls: Poll[];
 
   //Mock poll owner
   ownerUser: User = {
-    id: '320932870732',
-    email: 'tom@aol.com',
+    id: '1',
+    email: 'ysadek@ibm.com',
     polls: null
   }
 
@@ -37,10 +36,11 @@ export class CreateComponent {
         id: this.lastPoll.id + 1,
         name: f.value.name,
         description: f.value.description,
-        owner: this.ownerUser,
+        owner: this.ownerUser.id,
         validFrom: f.value.validfrom,
         validTo: f.value.validto,
         options: ['First', 'Second', 'Third'],
+        // adding mock vote
         votes:
           [
             {
@@ -58,6 +58,5 @@ export class CreateComponent {
             this.router.navigate(['/dashboard']);
           }).catch(e => console.log("reject: " + e));
     });
-
   }
 }

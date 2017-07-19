@@ -1,7 +1,15 @@
-<h2>
-  {{title}}
-</h2>
-<a routerLink="/dashboard">My dashboard</a>
-<button class="btn btn-success" routerLink="/create">Create poll</button>
-
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <div class="navbar-brand">
+        <b>{{title}}</b>
+      </div>
+    </div>
+    <p *ngIf="user" class="navbar-text">Signed in as {{user.email}}</p>
+    <a routerLink="/dashboard">My Dashboard</a>
+    <button class="btn btn-success navbar-btn" routerLink="/create">Create poll</button>
+  </div>
+</nav>
+<br />
 <router-outlet></router-outlet>
+
