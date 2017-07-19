@@ -51,14 +51,14 @@ export class Channel {
 private async createOrgAdminUser(): Promise<void> {
   console.info('Going to set the org admin user');
 
-  let keyPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org1.chained-voting.com/users/Admin@org1.chained-voting.com/msp/keystore');
+  let keyPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/keystore');
   let keyPEM = Buffer.from(this.readAllFiles(keyPath)[0]).toString();
-  let certPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org1.chained-voting.com/users/Admin@org1.chained-voting.com/msp/signcerts');
+  let certPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/signcerts');
   let certPEM = this.readAllFiles(certPath)[0];
 
   this.orgAdminUser = await this.client.createUser({
-    username: 'peerorgAdmin',
-    mspid: 'Org1MSP',
+    username: 'Admin',
+    mspid: 'OrgMSP',
     cryptoContent: {
       privateKeyPEM: keyPEM.toString(),
       signedCertPEM: certPEM.toString()
@@ -266,13 +266,12 @@ private async addOrderer(): Promise<void> {
       txId: txId,
       nonce: nonce
       // use this to demonstrate the following policy:
-      // 'if signed by org1 admin, then that's the only signature required,
+      // 'if signed by org admin, then that's the only signature required,
       // but if that signature is missing, then the policy can also be fulfilled
       // when members (non-admin) from both orgs signed'
       // 'endorsement-policy': {
       //   identities: [
-      //     { role: { name: 'member', mspId: 'Org1MSP' }},
-      //     { role: { name: 'admin', mspId: 'Org1MSP' }}
+      //     { role: { name: 'member', mspId: 'OrgMSP' }}
       //   ],
       //   policy: {
       //     '1-of': [

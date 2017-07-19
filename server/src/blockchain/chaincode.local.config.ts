@@ -2,16 +2,16 @@ import { ChaincodeEnvironmentConfiguration, UserConfig, PeerConfig, OrdererConfi
 
 export class ChaincodeLocalConfig {
   public getConfiguration(): ChaincodeEnvironmentConfiguration {
-    const organization = 'org';
+    const organization = 'Org';
 
     return {
       network:   {
         peers: <PeerConfig[]>[
           {
-            requests: 'grpcs://peer0.org1.chained-voting.com:7051',
-            events: 'grpcs://peer0.org1.chained-voting.com:7053',
-            server_hostname: 'peer0.org1.chained-voting.com',
-            tls_cacerts: '../../resources/crypto-config/peerOrganizations/org1.chained-voting.com/peers/peer0.org1.chained-voting.com/msp/cacerts/ca.org1.chained-voting.com-cert.pem'
+            requests: 'grpcs://peer0.org.chained-voting.com:7051',
+            events: 'grpcs://peer0.org.chained-voting.com:7053',
+            server_hostname: 'peer0.org.chained-voting.com',
+            tls_cacerts: '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/peers/peer0.org.chained-voting.com/msp/cacerts/ca.org.chained-voting.com-cert.pem'
           }
         ],
         ca:    {
@@ -27,7 +27,7 @@ export class ChaincodeLocalConfig {
         },
         organization: {
           name: organization,
-          mspid: 'Org1MSP'
+          mspid: 'OrgMSP'
         },
         users: <UserConfig[]>[
           {
@@ -39,13 +39,13 @@ export class ChaincodeLocalConfig {
       },
       chaincode: {
         keyValStorePath: '/tmp/hfc-test-kvs-org',
-        chaincodeID: 'chained-voting',
+        chaincodeID: 'chaincode',
         chaincodePath: 'chaincode',
         chaincodeVersion: 'v1'
       },
       channels : <ChannelConfig[]>[
         {
-          name: 'channel',
+          name: 'default',
           path: '../resources/channel-artifacts/channel.tx'
         }
       ]
