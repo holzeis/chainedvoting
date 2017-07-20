@@ -1,12 +1,10 @@
-
 <div *ngIf="poll" class="container">
+  <h3>Vote</h3>
   <div *ngFor="let option of poll.options" class="row">
-    <div>
-      <label for="poll-options" class="control-label">Vote for </label><br>
-      <span>{{option}}</span>
-      <a class="btn btn-primary" role="button" (click)="setVote(option)">vote</a>
-    </div>
-  <br />
+    <div class="col-xs-6 col-sm-1"><label for="poll-options" class="control-label">Vote for </label></div>
+    <div class="col-xs-6 col-sm-1"><span>{{option}}</span></div>
+    <div class="col-xs-6 col-sm-1"><a class="btn btn-primary" role="button" (click)="setVote(option)">vote</a></div>
   </div>
-  <a class="btn btn-warning" role="button" (click)="goBack()">Cancel</a>
 </div>
+
+<a class="btn btn-default" role="button" (click)="goBack()">Cancel</a>
