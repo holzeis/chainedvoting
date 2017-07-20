@@ -43,7 +43,7 @@ export class InMemoryDataService implements InMemoryDbService {
       voter: 2,
       option: null,
       delegate: 1,
-      timestamp: 1500000
+      timestamp: null,
     },
     {
       id: 3,

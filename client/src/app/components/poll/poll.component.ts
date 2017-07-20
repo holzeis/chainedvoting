@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { Poll } from '../../poll';
+import { PollStat } from '../../pollstat';
 import { Vote } from '../../vote';
 import { User } from '../../user';
 
@@ -15,15 +16,21 @@ import { VoteService } from '../../services/vote.service'
   templateUrl: './poll.component.html',
   styleUrls: ['./poll.component.css']
 })
+
+
+
 export class PollComponent implements OnInit {
 
   poll: Poll;
-  vote: Vote;
+  votes: Vote[];
   pollID: string;
+  pollStats: PollStat[] = [];
 
   public constructor(private voteService: VoteService, private router: Router, private route: ActivatedRoute,
     private pollService: PollService, private userService: UserService) {
       this.route.params.subscribe(params => this.pollID = params['id']);
+
+
   }
 
   ngOnInit(){
@@ -32,9 +39,23 @@ export class PollComponent implements OnInit {
 
   getPoll(pollID: string): void {
     this.pollService.getPoll(pollID).then(poll => {
-      console.log("debugging poll service:")
       this.poll = poll;
-      console.dir(this.poll);
+      this.voteService.getVotes().then(votes => {
+        votes = votes.filter(vote => vote.pollID == this.pollID && vote.option);
+          for (let option of poll.options) {
+            this.pollStats.push({option: option, count: 0});
+          }
+
+          for(let pollStat of this.pollStats) {
+              for (let vote of votes) {
+                if (vote.option === pollStat.option) {
+                  pollStat.count++;
+                }
+              } 
+          }
+          console.dir(this.pollStats);
+      });
+
     });
   }
 

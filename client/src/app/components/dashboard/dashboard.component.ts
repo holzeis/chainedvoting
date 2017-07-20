@@ -7,6 +7,8 @@ import { Poll } from '../../poll';
 import { PollService } from '../../services/poll.service';
 import { User } from '../../user';
 import { UserService } from '../../services/user.service';
+import { Vote } from '../../vote';
+import { VoteService } from '../../services/vote.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,16 +19,17 @@ import { UserService } from '../../services/user.service';
 export class DashboardComponent {
   title = 'Polls';
   ownPolls: Poll[];
-  polls: Poll[];
+  polls: Poll[] = [];
   delegates: Poll[];
   user: User;
 
   // mock user
-  mockUserID = '1';
+  mockUserID = 1;
 
   public constructor(
     private pollService: PollService,
     private userService: UserService,
+    private voteService: VoteService,
     private router: Router,
   ){}
 
@@ -36,19 +39,21 @@ export class DashboardComponent {
   }
   getPolls():void {
     this.pollService.getPolls().then(polls => {
-        this.ownPolls = polls.filter(poll => poll.owner === this.mockUserID);
-        this.userService.getUser(this.mockUserID).then(user => {
-          this.user = user;
-          this.polls = [];
-          for (let userPoll of user.polls) {
-            for (let poll of polls) {
-              if (userPoll === poll.id) {
-                this.polls.push(poll);
-              }
-            }
+        this.ownPolls = polls.filter(poll => poll.owner == this.mockUserID);
+        this.voteService.getVotes().then(votes => {
+          console.dir(votes);
+          votes = votes.filter(vote => (vote.voter == this.mockUserID || vote.delegate == this.mockUserID) && !vote.timestamp);
+          for (let vote of votes) {
+            this.pollService.getPoll(vote.pollID).then(poll => {
+              this.polls.push(poll);
+            })
           }
         });
       });
+  }
+
+  getVotes():void {
+
   }
 
   selectPoll(pollID: string):void {

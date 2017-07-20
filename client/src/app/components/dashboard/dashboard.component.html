@@ -2,25 +2,29 @@
   {{title}}
 </h3>
 
-<h4>Open polls</h4>
-<div class="row">
-  <div class="col-xs-6 col-sm-2"><b>ID</b></div>
-  <div class="col-xs-6 col-sm-2"><b>Name</b></div>
-  <div class="col-xs-6 col-sm-5"><b>Description</b></div>
-  <div class="col-xs-6 col-sm-1"><b>Valid till</b></div>
-  <div class="col-xs-6 col-sm-1"><b>Votes in</b></div>
-  <div class="col-xs-6 col-sm-1"><b></b></div>
-</div>
-<br>
-<div class="row" *ngFor="let poll of polls">
-  <div class="col-xs-6 col-sm-2">{{poll.id}}</div>
-  <div class="col-xs-6 col-sm-2">{{poll.name}}</div>
-  <div class="col-xs-6 col-sm-5">{{poll.description}}</div>
-  <div class="col-xs-6 col-sm-1">{{poll.validTo}}</div>
-  <div *ngIf="poll.votes" class="col-xs-6 col-sm-1">{{poll.votes.length}}</div>
-  <div class="col-xs-6 col-sm-1"><button type="button" class="btn btn-primary" (click)="selectPoll(poll.id)">Details</button></div>
+<div *ngIf="polls">
+  <h4>Open polls</h4>
+  <div class="row">
+    <div class="col-xs-6 col-sm-2"><b>ID</b></div>
+    <div class="col-xs-6 col-sm-2"><b>Name</b></div>
+    <div class="col-xs-6 col-sm-5"><b>Description</b></div>
+    <div class="col-xs-6 col-sm-1"><b>Valid till</b></div>
+    <div class="col-xs-6 col-sm-1"><b>Votes in</b></div>
+    <div class="col-xs-6 col-sm-1"><b></b></div>
+  </div>
+  <br>
+  <div class="row" *ngFor="let poll of polls">
+    <div class="col-xs-6 col-sm-2">{{poll.id}}</div>
+    <div class="col-xs-6 col-sm-2">{{poll.name}}</div>
+    <div class="col-xs-6 col-sm-5">{{poll.description}}</div>
+    <div class="col-xs-6 col-sm-1">{{poll.validTo}}</div>
+    <div *ngIf="poll.votes" class="col-xs-6 col-sm-1">{{poll.votes.length}}</div>
+    <div class="col-xs-6 col-sm-1"><button type="button" class="btn btn-primary" (click)="selectPoll(poll.id)">Details</button></div>
+  </div>
 </div>
 
+
+<div *ngIf="ownPolls">
 <h4>Own polls</h4>
 <div class="row">
   <div class="col-xs-6 col-sm-2"><b>ID</b></div>
@@ -38,6 +42,7 @@
   <div class="col-xs-6 col-sm-1">{{poll.validTo}}</div>
   <div *ngIf="poll.votes" class="col-xs-6 col-sm-1">{{poll.votes.length}}</div>
   <div class="col-xs-6 col-sm-1"><button type="button" class="btn btn-danger" (click)="deletePoll(poll)">Delete</button></div>
+</div>
 </div>
 
 <router-outlet></router-outlet>

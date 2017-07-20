@@ -14,8 +14,13 @@
         <div *ngFor="let option of poll.options">
           <div>{{option}}</div>
         </div>
-        <label for="poll-options" class="control-label">Votes in</label>
-        <td>{{poll.votes.length}}</td>
+        <div *ngIf="pollStats">
+          <label for="poll-stats" class="control-label">Current votes</label>
+          <div *ngFor="let stat of pollStats">
+            <div>{{stat.option}}</div>
+            <div>{{stat.count}}</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">
