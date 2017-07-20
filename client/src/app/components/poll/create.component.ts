@@ -21,7 +21,6 @@ export class CreateComponent {
   ownerUser: User = {
     id: '1',
     email: 'ysadek@ibm.com',
-    polls: null
   }
 
   constructor(private pollservice: PollService, private router: Router) {}
@@ -31,7 +30,6 @@ export class CreateComponent {
     this.pollservice.getPolls().then(polls => {
 
       this.lastPoll = polls[polls.length - 1 ];
-      console.dir(this.lastPoll);
       this.poll = {
         id: this.lastPoll.id + 1,
         name: f.value.name,
@@ -39,19 +37,7 @@ export class CreateComponent {
         owner: this.ownerUser.id,
         validFrom: f.value.validfrom,
         validTo: f.value.validto,
-        options: ['First', 'Second', 'Third'],
-        // adding mock vote
-        votes:
-          [
-            {
-              id: '32234',
-              voter: this.ownerUser,
-              description: '',
-              option: 'First',
-              delegate: null,
-              timestamp: 2349764123
-            }
-          ]
+        options: ['First', 'Second', 'Third']
       }
       this.pollservice.createPoll(this.poll)
           .then(res => {

@@ -3,19 +3,18 @@ export class InMemoryDataService implements InMemoryDbService {
   createDb() {
     const polls = [
       {
-        id: '1234',
+        id: 1234,
         name: 'Class president',
         description: 'Class president poll of 2017',
-        owner: '1',
+        owner: 1,
         validFrom: 'tba',
         validTo: '',
         options: [
           'Tom', 'Jerry'
-        ],
-        votes: []
+        ]
       },
       {
-        id: '1235',
+        id: 1235,
         name: 'Class vice president',
         description: 'Class vice president poll of 2017',
         owner: null,
@@ -23,33 +22,47 @@ export class InMemoryDataService implements InMemoryDbService {
         validTo: '',
         options: [
           'Jane', 'John'
-        ],
-        votes: []
+        ]
       }
     ];
 
     const votes =
     [
       {
-      id: '1',
-      voter: 2,
+      id: 1,
+      pollID: 1234,
+      voter: 1,
       description: '',
       option: 'Tom',
       delegate: null,
       timestamp: 1500000
-      }
+    },
+    {
+      id: 2,
+      pollID: 1234,
+      voter: 2,
+      option: null,
+      delegate: 1,
+      timestamp: 1500000
+    },
+    {
+      id: 3,
+      pollID: 1235,
+      voter: 1,
+      option: null,
+      delegate: null,
+      timestamp: null
+    }
     ];
 
     const users = [
       {
-        id: '1',
+        id: 1,
         email: 'ysadek@ibm.com',
-        polls: ['1234', '1235']
       },
       {
-        id: '2',
+        id: 2,
         email: 'max@mustermann.de',
-        polls: null
       }
     ];
 

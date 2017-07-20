@@ -9,5 +9,4 @@ export class Poll {
   validFrom: string;
   validTo: string;
   options: string[];
-  votes: Vote[];
 }

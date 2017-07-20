@@ -29,7 +29,6 @@ export class VoteComponent implements OnInit {
     private location: Location
   ) {
     this.route.params.subscribe(params => this.pollID = params['id']);
-    console.log('poll id ' + this.pollID)
   }
 
   ngOnInit() {
@@ -41,7 +40,6 @@ export class VoteComponent implements OnInit {
   getPoll(pollID: string): void {
     this.pollService.getPoll(pollID).then(poll => {
       this.poll = poll;
-      console.dir(this.poll);
     });
   }
 
@@ -49,13 +47,12 @@ export class VoteComponent implements OnInit {
     this.voteService.getVotes().then(vote => {
       this.vote = {
         id: vote[vote.length - 1].id + 1,
+        pollID: this.poll.id,
         voter: this.mockUserID, //TODO user id
-        description: '',
         option: option,
         delegate: null,
         timestamp: new Date().getTime()
       }
-      console.dir(this.vote);
       this.voteService.createVote(this.pollID, this.vote).then(()=> this.submitVote());
     });
   }
@@ -65,11 +62,9 @@ export class VoteComponent implements OnInit {
   }
 
   submitVote():void {
-    this.poll.votes.push(this.vote);
-    this.pollService.updatePoll(this.poll, this.poll.id).then(res => console.log('Response ' + res));
+    // this.poll.votes.push(this.vote);
+    // this.pollService.updatePoll(this.poll, this.poll.id).then(res => console.log('Response ' + res));
     this.goBack();
-    console.log("See poll obj");
-    console.dir(this.poll);
   }
 
 }
