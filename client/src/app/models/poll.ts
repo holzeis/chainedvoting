@@ -1,6 +1,3 @@
-import {Vote} from './vote';
-import {User} from './user';
-
 export class Poll {
   id: any;
   name: string;
