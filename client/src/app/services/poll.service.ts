@@ -6,6 +6,9 @@ import 'rxjs/add/operator/toPromise';
 import { Poll } from '../poll';
 import { Vote } from '../vote';
 
+import {VoteService} from './vote.service';
+
+
 
 @Injectable()
 
@@ -13,7 +16,7 @@ export class PollService {
 
   private pollsUrl = 'api/polls';
   private headers = new Headers({'Content-Type': 'application/json'});
-  constructor(private http: Http) {}
+  constructor(private http: Http, private voteService: VoteService) {}
 
 
   getPoll(pollID: string):Promise<Poll> {
@@ -34,11 +37,22 @@ export class PollService {
     .then(response => response.json().data as Poll[]).catch(this.handleError);
   }
 
-  createPoll(poll: Poll):Promise<Poll> {
+  createPoll(poll: Poll, participants: string[]):Promise<Poll> {
     return this.http.post(this.pollsUrl, JSON.stringify(poll), {headers: this.headers})
     .toPromise().then(res => {
       res.json().data as Poll;
-      console.dir (res.json().data);
+      let pollId = res.json().data.id;
+      console.log('This poll ID is ' + pollId);
+      for (let participant of participants) {
+        this.voteService.createVote({
+          id: null,
+          pollID: pollId,
+          voter: participant,
+          option: null,
+          delegate: null,
+          timestamp: null
+        });
+      }
     })
     .catch(this.handleError);
   }

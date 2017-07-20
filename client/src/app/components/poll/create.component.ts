@@ -4,6 +4,8 @@ import {Router} from '@angular/router';
 
 import { Poll } from '../../poll';
 import {PollService} from '../../services/poll.service';
+import { Vote } from '../../vote';
+import {VoteService} from '../../services/vote.service';
 import { User } from '../../user';
 
 @Component({
@@ -23,26 +25,26 @@ export class CreateComponent {
     email: 'ysadek@ibm.com',
   }
 
-  constructor(private pollservice: PollService, private router: Router) {}
+  constructor(private pollService: PollService, private voteService: VoteService, private router: Router) {}
+
+  splitString(_toSplit: string): string[] {
+    return _toSplit.split(';');
+  }
 
   onSubmit(f: NgForm) {
 
-    this.pollservice.getPolls().then(polls => {
-
-      this.lastPoll = polls[polls.length - 1 ];
       this.poll = {
-        id: this.lastPoll.id + 1,
+        id: null,
         name: f.value.name,
         description: f.value.description,
         owner: this.ownerUser.id,
         validFrom: f.value.validfrom,
         validTo: f.value.validto,
-        options: ['First', 'Second', 'Third']
+        options: this.splitString(f.value.options)
       }
-      this.pollservice.createPoll(this.poll)
-          .then(res => {
-            this.router.navigate(['/poll', this.poll.id]);
-          }).catch(e => console.log("reject: " + e));
-    });
+      this.pollService.createPoll(this.poll, this.splitString(f.value.voters)).then(res => {
+        }).then(() => {
+          this.router.navigate(['/dashboard']);
+        }).catch(e => console.log("reject: " + e));
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
+import {Location} from '@angular/common';
 
 
 import {Vote} from '../../vote';
@@ -19,14 +20,16 @@ export class DelegateComponent {
 
   vote: Vote;
   users: User[];
-  pollID: String;
+  pollId: String;
+  mockUserID = 1;
 
   constructor(
     private voteService: VoteService,
     private route: ActivatedRoute,
-    private userService: UserService
+    private userService: UserService,
+    private location: Location
   ) {
-      this.route.params.subscribe(params => this.pollID = params['id']);
+      this.route.params.subscribe(params => this.pollId = params['id']);
     }
 
 
@@ -34,19 +37,28 @@ export class DelegateComponent {
     this.checkForUser(f.value.delegateemail);
   }
 
-  setDelegate(): void {
+  setDelegate(delegate:any): void {
+    this.voteService.getVotes().then(votes => {
+      let vote = votes.filter(vote => vote.pollID == this.pollId && vote.voter == this.mockUserID);
+      //TODO: implement direct vote route as user could have more than one vote (delegate)
+      vote[0].delegate = delegate;
 
+      this.voteService.updateVote(vote[0].id, vote[0]).then(()=> this.goBack());
+    });
   }
 
   checkForUser(userEmail: string): void {
     this.userService.getUsers().then(users => {
       let user = users.filter(user => user.email === userEmail);
       console.dir(user);
+      if(user.length == 1) {
+        this.setDelegate(user[0].id);
+      }
     });
   }
 
-  setVote(pollID: string, vote:Vote): void {
-    this.voteService.createVote(pollID, vote).then()
+  goBack() {
+    this.location.back();
   }
 
 

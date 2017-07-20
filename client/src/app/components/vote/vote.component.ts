@@ -44,16 +44,13 @@ export class VoteComponent implements OnInit {
   }
 
   setVote(option: string):void {
-    this.voteService.getVotes().then(vote => {
-      this.vote = {
-        id: vote[vote.length - 1].id + 1,
-        pollID: this.poll.id,
-        voter: this.mockUserID, //TODO user id
-        option: option,
-        delegate: null,
-        timestamp: new Date().getTime()
-      }
-      this.voteService.createVote(this.pollID, this.vote).then(()=> this.submitVote());
+    this.voteService.getVotes().then(votes => {
+      let vote = votes.filter(vote => vote.pollID == this.poll.id && vote.voter == this.mockUserID);
+      //TODO: implement direct vote route as user could have more than one vote (delegate)
+      vote[0].option = option;
+      vote[0].timestamp = new Date().getTime();
+
+      this.voteService.updateVote(vote[0].id, vote[0]).then(()=> this.submitVote());
     });
   }
 

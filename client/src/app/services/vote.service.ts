@@ -13,7 +13,7 @@ export class VoteService {
   private headers = new Headers({'Content-Type': 'application/json'});
   constructor(private http: Http) {}
 
-  createVote(pollID: string, vote: Vote):Promise<Vote> {
+  createVote(vote: Vote):Promise<Vote> {
     return this.http.post(this.votesUrl, JSON.stringify(vote), {headers: this.headers})
     .toPromise().then(res => res.json().data as Vote).catch(this.handleError);
   }
