@@ -2,8 +2,9 @@ import {Component, OnInit, Input} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 
-import {Poll} from '../../poll';
-import {Vote} from '../../vote';
+import {Poll} from '../../models/poll';
+import {Vote} from '../../models/vote';
+
 import {PollService} from '../../services/poll.service';
 import {VoteService} from '../../services/vote.service';
 
@@ -12,7 +13,6 @@ import {VoteService} from '../../services/vote.service';
   templateUrl: './vote.component.html',
   styleUrls: ['./vote.component.css']
 })
-
 
 export class VoteComponent implements OnInit {
 
@@ -24,7 +24,6 @@ export class VoteComponent implements OnInit {
   constructor(
     private pollService: PollService,
     private voteService: VoteService,
-    private router: Router,
     private route: ActivatedRoute,
     private location: Location
   ) {
@@ -43,25 +42,19 @@ export class VoteComponent implements OnInit {
     });
   }
 
-  setVote(option: string):void {
+  setVote(option: string): void {
     this.voteService.getVotes().then(votes => {
-      let vote = votes.filter(vote => vote.pollID == this.poll.id && vote.voter == this.mockUserID);
-      //TODO: implement direct vote route as user could have more than one vote (delegate)
-      vote[0].option = option;
-      vote[0].timestamp = new Date().getTime();
+      let filteredVote = votes.filter(vote => vote.pollID == this.poll.id && vote.voter == this.mockUserID);
+      console.dir(filteredVote);
+      // TODO: implement direct vote route as user could have more than one vote (delegate)
+      filteredVote[0].option = option;
+      filteredVote[0].timestamp = new Date().getTime();
 
-      this.voteService.updateVote(vote[0].id, vote[0]).then(()=> this.submitVote());
+      this.voteService.updateVote(filteredVote[0].id, filteredVote[0]).then( () => this.goBack());
     });
   }
 
   goBack(): void {
     this.location.back();
   }
-
-  submitVote():void {
-    // this.poll.votes.push(this.vote);
-    // this.pollService.updatePoll(this.poll, this.poll.id).then(res => console.log('Response ' + res));
-    this.goBack();
-  }
-
 }

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
-
-import { Vote } from '../vote';
-import { User } from '../user'
+import { Vote } from '../models/vote';
+import { User } from '../models/user';
 
 @Injectable()
 
@@ -13,7 +12,7 @@ export class VoteService {
   private headers = new Headers({'Content-Type': 'application/json'});
   constructor(private http: Http) {}
 
-  createVote(vote: Vote):Promise<Vote> {
+  createVote(vote: Vote): Promise<Vote> {
     return this.http.post(this.votesUrl, JSON.stringify(vote), {headers: this.headers})
     .toPromise().then(res => res.json().data as Vote).catch(this.handleError);
   }
@@ -23,12 +22,12 @@ export class VoteService {
     return this.http.put(url, JSON.stringify(vote), {headers: this.headers})
     .toPromise().then(() => vote)
     .catch(this.handleError);
-      //TODO: implement
+      // TODO: implement
   }
 
   getVotes(): Promise<Vote[]> {
     return this.http.get(this.votesUrl).toPromise()
-    .then(response => response.json().data as Vote[]).catch(this.handleError);;
+    .then(response => response.json().data as Vote[]).catch(this.handleError);
   }
 
   private handleError(error: any): Promise<any> {

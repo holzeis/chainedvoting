@@ -1,5 +1,5 @@
 import {Vote} from './vote';
-import {User} from './user'
+import {User} from './user';
 
 export class Poll {
   id: any;

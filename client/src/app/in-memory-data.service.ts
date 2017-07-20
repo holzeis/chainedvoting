@@ -65,11 +65,6 @@ export class InMemoryDataService implements InMemoryDbService {
         email: 'max@mustermann.de',
       }
     ];
-
-
-    //polls[0].owner = users[0];
-
     return {polls, votes, users};
-
   }
 }

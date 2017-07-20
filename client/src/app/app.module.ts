@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 // Imports for loading & configuring the in-memory web api
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService }  from './in-memory-data.service';
+import { InMemoryDataService } from './in-memory-data.service';
 
 import { AppComponent } from './app.component';
 import { PollComponent } from './components/poll/poll.component';

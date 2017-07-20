@@ -1,23 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute } from '@angular/router';
 
-import { Poll } from '../../poll';
-import { PollStat } from '../../pollstat';
-import { Vote } from '../../vote';
-import { User } from '../../user';
+import { Poll } from '../../models/poll';
+import { Vote } from '../../models/vote';
+import { PollStat } from '../../models/pollstat';
 
-
-import { PollService } from '../../services/poll.service'
-import { UserService } from '../../services/user.service'
-import { VoteService } from '../../services/vote.service'
+import { PollService } from '../../services/poll.service';
+import { UserService } from '../../services/user.service';
+import { VoteService } from '../../services/vote.service';
 
 @Component({
   selector: 'app-poll',
   templateUrl: './poll.component.html',
   styleUrls: ['./poll.component.css']
 })
-
-
 
 export class PollComponent implements OnInit {
 
@@ -29,11 +25,9 @@ export class PollComponent implements OnInit {
   public constructor(private voteService: VoteService, private router: Router, private route: ActivatedRoute,
     private pollService: PollService, private userService: UserService) {
       this.route.params.subscribe(params => this.pollID = params['id']);
-
-
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.getPoll(this.pollID);
   }
 
@@ -45,25 +39,22 @@ export class PollComponent implements OnInit {
           for (let option of poll.options) {
             this.pollStats.push({option: option, count: 0});
           }
-
-          for(let pollStat of this.pollStats) {
+          for (let pollStat of this.pollStats) {
               for (let vote of votes) {
                 if (vote.option === pollStat.option) {
                   pollStat.count++;
                 }
-              } 
+              }
           }
-          console.dir(this.pollStats);
       });
-
     });
   }
 
-  setDelegate():void {
+  setDelegate(): void {
     this.router.navigate(['/delegate', this.poll.id]);
   }
 
-  goToVote(poll: Poll):void {
+  goToVote(poll: Poll): void {
     this.router.navigate(['/vote', poll.id]);
   }
   goBack() {

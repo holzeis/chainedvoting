@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {Router} from '@angular/router';
 
-import { Poll } from '../../poll';
+import { Poll } from '../../models/poll';
 import {PollService} from '../../services/poll.service';
-import { Vote } from '../../vote';
+import { Vote } from '../../models/vote';
 import {VoteService} from '../../services/vote.service';
-import { User } from '../../user';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-create',
@@ -16,16 +16,16 @@ import { User } from '../../user';
 
 export class CreateComponent {
 
-  poll: Poll
-  lastPoll: Poll;
+  poll: Poll;
 
-  //Mock poll owner
+  // Mock poll owner
   ownerUser: User = {
     id: '1',
     email: 'ysadek@ibm.com',
-  }
+  };
 
-  constructor(private pollService: PollService, private voteService: VoteService, private router: Router) {}
+  constructor(private pollService: PollService,
+    private voteService: VoteService, private router: Router) {}
 
   splitString(_toSplit: string): string[] {
     return _toSplit.split(';');
@@ -41,10 +41,10 @@ export class CreateComponent {
         validFrom: f.value.validfrom,
         validTo: f.value.validto,
         options: this.splitString(f.value.options)
-      }
+      };
       this.pollService.createPoll(this.poll, this.splitString(f.value.voters)).then(res => {
         }).then(() => {
           this.router.navigate(['/dashboard']);
-        }).catch(e => console.log("reject: " + e));
+        }).catch(e => console.log('reject: ' + e));
   }
 }

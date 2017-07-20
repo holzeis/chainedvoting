@@ -3,8 +3,8 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { Poll } from '../poll';
-import { Vote } from '../vote';
+import { Poll } from '../models/poll';
+import { Vote } from '../models/vote';
 
 import {VoteService} from './vote.service';
 
@@ -19,13 +19,13 @@ export class PollService {
   constructor(private http: Http, private voteService: VoteService) {}
 
 
-  getPoll(pollID: string):Promise<Poll> {
+  getPoll(pollID: string): Promise<Poll> {
     const url = `${this.pollsUrl}/${pollID}`;
     return this.http.get(url).toPromise()
-    .then(response => response.json().data as Poll).catch(this.handleError);;
+    .then(response => response.json().data as Poll).catch(this.handleError);
   }
 
-  updatePoll(poll: Poll, pollID:string): Promise<Poll> {
+  updatePoll(poll: Poll, pollID: string): Promise<Poll> {
     const url = `${this.pollsUrl}/${pollID}`;
     return this.http.put(url, JSON.stringify(poll), {headers: this.headers})
     .toPromise().then(() => poll)
@@ -37,12 +37,11 @@ export class PollService {
     .then(response => response.json().data as Poll[]).catch(this.handleError);
   }
 
-  createPoll(poll: Poll, participants: string[]):Promise<Poll> {
+  createPoll(poll: Poll, participants: string[]): Promise<Poll> {
     return this.http.post(this.pollsUrl, JSON.stringify(poll), {headers: this.headers})
     .toPromise().then(res => {
       res.json().data as Poll;
       let pollId = res.json().data.id;
-      console.log('This poll ID is ' + pollId);
       for (let participant of participants) {
         this.voteService.createVote({
           id: null,
@@ -64,8 +63,7 @@ export class PollService {
   }
 
   private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
+    console.error('An error occurred', error);
     return Promise.reject(error.message || error);
   }
-
 }
