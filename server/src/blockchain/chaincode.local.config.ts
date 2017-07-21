@@ -2,7 +2,7 @@ import { ChaincodeEnvironmentConfiguration, UserConfig, PeerConfig, OrdererConfi
 
 export class ChaincodeLocalConfig {
   public getConfiguration(): ChaincodeEnvironmentConfiguration {
-    const organization = 'org1';
+    const organization = 'org';
 
     return {
       network:   {
@@ -40,7 +40,7 @@ export class ChaincodeLocalConfig {
       chaincode: {
         keyValStorePath: '/tmp/hfc-test-kvs-org1',
         chaincodeID: 'chained-voting',
-        chaincodePath: 'chained-voting',
+        chaincodePath: 'chained-voting/chaincode.go',
         chaincodeVersion: 'v1'
       },
       channels : <ChannelConfig[]>[

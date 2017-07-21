@@ -227,7 +227,7 @@ export class Channel {
       });
   }
 
-  private async installChaincode(chaincodePath: string, chaincodeId: string, chaincodeVersion: string): Promise<void> {
+  private async  installChaincode(chaincodePath: string, chaincodeId: string, chaincodeVersion: string): Promise<void> {
     console.info('Going to install chaincode');
 
     let nonce = hfcUtil.getNonce();
@@ -278,6 +278,7 @@ export class Channel {
         console.info('Successfully instantiated the chaincode');
         return results[0];
       }).catch((err) => {
+        console.error('Error: ' + err);
         console.error('Failed to send instantiate transaction and get notifications within the timeout period.');
         throw new Error('Failed to send instantiate transaction and get notifications within the timeout period.');
       });
