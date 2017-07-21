@@ -55,8 +55,15 @@ export class DashboardComponent {
   }
 
   deletePoll(poll: Poll): void {
-    this.pollService.deletePoll(poll.id).then(() => {
-      this.ownPolls = this.ownPolls.filter(p => poll !== p);
+    this.voteService.getVotes().then(votes => {
+      votes = votes.filter(vote => vote.pollID == poll.id);
+      this.pollService.deletePoll(poll.id).then(() => {
+        this.ownPolls = this.ownPolls.filter(p => poll !== p);
+        for (let vote of votes) {
+          this.voteService.deleteVote(vote.id);
+          this.polls = this.polls.filter(poll =>  vote.pollID !== poll.id );
+        }
+      });
     });
   }
 }

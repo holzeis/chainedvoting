@@ -12,6 +12,12 @@ export class VoteService {
   private headers = new Headers({'Content-Type': 'application/json'});
   constructor(private http: Http) {}
 
+  deleteVote(voteId: any): Promise<any> {
+    const url = `${this.votesUrl}/${voteId}`;
+    return this.http.delete(url, {headers: this.headers}).toPromise()
+    .then(() => null).catch(this.handleError);
+  }
+
   createVote(vote: Vote): Promise<Vote> {
     return this.http.post(this.votesUrl, JSON.stringify(vote), {headers: this.headers})
     .toPromise().then(res => res.json().data as Vote).catch(this.handleError);
