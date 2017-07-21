@@ -45,7 +45,7 @@ export class DashboardComponent {
             });
           }
         });
-      });
+      }).catch(error => this.alertService.error(error));
   }
 
   selectPoll(pollID: string): void {

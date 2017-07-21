@@ -3,10 +3,13 @@ import {NgForm} from '@angular/forms';
 import {Router} from '@angular/router';
 
 import { Poll } from '../../models/poll';
-import {PollService} from '../../services/poll.service';
 import { Vote } from '../../models/vote';
-import {VoteService} from '../../services/vote.service';
 import { User } from '../../models/user';
+
+import {PollService} from '../../services/poll.service';
+import {AlertService} from '../../services/alert.service';
+import {VoteService} from '../../services/vote.service';
+
 
 @Component({
   selector: 'app-create',
@@ -24,8 +27,12 @@ export class CreateComponent {
     email: 'ysadek@ibm.com',
   };
 
-  constructor(private pollService: PollService,
-    private voteService: VoteService, private router: Router) {}
+  constructor(
+    private pollService: PollService,
+    private voteService: VoteService,
+    private router: Router,
+    private alertService: AlertService
+  ) {}
 
   splitString(_toSplit: string): string[] {
     return _toSplit.split(';');
@@ -44,7 +51,8 @@ export class CreateComponent {
       };
       this.pollService.createPoll(this.poll, this.splitString(f.value.voters)).then(res => {
         }).then(() => {
+          this.alertService.success('Poll ' + this.poll.name + ' created')
           this.router.navigate(['/dashboard']);
-        }).catch(e => console.log('reject: ' + e));
+        }).catch(e => this.alertService.error(e));
   }
 }
