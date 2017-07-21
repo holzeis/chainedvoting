@@ -7,6 +7,7 @@ import {Vote} from '../../models/vote';
 
 import {PollService} from '../../services/poll.service';
 import {VoteService} from '../../services/vote.service';
+import {AlertService} from '../../services/alert.service';
 
 @Component({
   selector: 'app-vote',
@@ -25,7 +26,8 @@ export class VoteComponent implements OnInit {
     private pollService: PollService,
     private voteService: VoteService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private alertService: AlertService
   ) {
     this.route.params.subscribe(params => this.pollID = params['id']);
   }
@@ -50,7 +52,12 @@ export class VoteComponent implements OnInit {
       filteredVote[0].option = option;
       filteredVote[0].timestamp = new Date().getTime();
 
-      this.voteService.updateVote(filteredVote[0].id, filteredVote[0]).then( () => this.goBack());
+      this.voteService.updateVote(filteredVote[0].id, filteredVote[0]).then( () => {
+        this.alertService.success('Vote successfuly submited', true);
+        this.goBack();
+      }).catch(error => {
+        this.alertService.error(error);
+      });
     });
   }
 

@@ -15,11 +15,13 @@ import { UserComponent } from './components/user/user.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { VoteComponent } from './components/vote/vote.component';
 import { DelegateComponent } from './components/vote/delegate.component';
+import { AlertComponent } from './components/_utils/alert.component';
 
-import {Configuration} from './app.constants';
-import {UserService} from './services/user.service';
+import { Configuration } from './app.constants';
+import { UserService } from './services/user.service';
 import { PollService } from './services/poll.service';
 import { VoteService } from './services/vote.service';
+import { AlertService } from './services/alert.service';
 
 const appRoutes: Routes = [
   {
@@ -43,7 +45,8 @@ const appRoutes: Routes = [
     VoteComponent,
     DelegateComponent,
     CreateComponent,
-    UserComponent
+    UserComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
@@ -57,6 +60,7 @@ const appRoutes: Routes = [
   ],
   providers: [
     Configuration,
+    AlertService,
     UserService,
     PollService,
     VoteService
