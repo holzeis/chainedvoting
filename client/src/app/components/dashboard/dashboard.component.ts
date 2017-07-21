@@ -7,6 +7,7 @@ import { Vote } from '../../models/vote';
 
 import { PollService } from '../../services/poll.service';
 import { VoteService } from '../../services/vote.service';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,6 +27,7 @@ export class DashboardComponent {
     private pollService: PollService,
     private voteService: VoteService,
     private router: Router,
+    private alertService: AlertService
   ) {}
 
   ngOnInit() {
@@ -63,6 +65,7 @@ export class DashboardComponent {
           this.voteService.deleteVote(vote.id);
           this.polls = this.polls.filter(poll =>  vote.pollID !== poll.id );
         }
+        this.alertService.success('Poll id ' + poll.id + ' deleted');
       });
     });
   }

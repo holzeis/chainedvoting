@@ -8,6 +8,7 @@ import {User} from '../../models/user';
 
 import {VoteService} from '../../services/vote.service';
 import {UserService} from '../../services/user.service';
+import {AlertService} from '../../services/alert.service';
 
 @Component({
   selector: 'app-delegate',
@@ -25,6 +26,7 @@ export class DelegateComponent {
     private voteService: VoteService,
     private route: ActivatedRoute,
     private userService: UserService,
+    private alertService: AlertService,
     private location: Location
   ) {
       this.route.params.subscribe(params => this.pollId = params['id']);
@@ -40,7 +42,10 @@ export class DelegateComponent {
       // TODO: implement direct vote route as user could have more than one vote (delegate)
       vote[0].delegate = delegate;
 
-      this.voteService.updateVote(vote[0].id, vote[0]).then( () => this.goBack());
+      this.voteService.updateVote(vote[0].id, vote[0]).then( () => {
+        this.alertService.success('Delegate submited successfuly', true);
+        this.goBack();
+      }).catch(error => this.alertService.error(error));
     });
   }
 
@@ -50,6 +55,8 @@ export class DelegateComponent {
       console.dir(filteredUsers);
       if (filteredUsers.length == 1) {
         this.setDelegate(filteredUsers[0].id);
+      } else {
+        this.alertService.error('User not found');
       }
     });
   }
