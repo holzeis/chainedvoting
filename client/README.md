@@ -52,7 +52,8 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 - Add e2e test cases
 - Add user authentification
+- Add user backend (service with Observable)
 - Add user validation to services
 - Add validation to forms
-- Add alerts
+- Add alerts **DONE*
 
