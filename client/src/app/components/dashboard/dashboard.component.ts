@@ -38,13 +38,15 @@ export class DashboardComponent {
     this.pollService.getPolls().then(polls => {
         this.ownPolls = polls.filter(poll => poll.owner == this.mockUserID);
         this.voteService.getVotes().then(votes => {
-          votes = votes.filter(vote => (vote.voter == this.mockUserID || vote.delegate == this.mockUserID) && !vote.timestamp);
+          votes = votes.filter(vote => ((vote.voter == this.mockUserID
+            || vote.delegate == this.mockUserID) && !vote.timestamp));
+            console.dir(votes);
           for (let vote of votes) {
             this.pollService.getPoll(vote.pollID).then(poll => {
               this.polls.push(poll);
             });
           }
-        });
+        }).catch(error => this.alertService.error(error));
       }).catch(error => this.alertService.error(error));
   }
 

@@ -17,7 +17,7 @@ export class InMemoryDataService implements InMemoryDbService {
         id: 1235,
         name: 'Class vice president',
         description: 'Class vice president poll of 2017',
-        owner: null,
+        owner: 2,
         validFrom: 'tba',
         validTo: '',
         options: [
@@ -33,9 +33,9 @@ export class InMemoryDataService implements InMemoryDbService {
       pollID: 1234,
       voter: 1,
       description: '',
-      option: 'Tom',
+      option: null,
       delegate: null,
-      timestamp: 1500000
+      timestamp: null
     },
     {
       id: 2,
