@@ -23,7 +23,7 @@ export class CreateComponent {
 
   // Mock poll owner
   ownerUser: User = {
-    id: '1',
+    id: 1,
     email: 'ysadek@ibm.com',
   };
 
@@ -39,20 +39,19 @@ export class CreateComponent {
   }
 
   onSubmit(f: NgForm) {
-
-      this.poll = {
-        id: null,
-        name: f.value.name,
-        description: f.value.description,
-        owner: this.ownerUser.id,
-        validFrom: f.value.validfrom,
-        validTo: f.value.validto,
-        options: this.splitString(f.value.options)
-      };
-      this.pollService.createPoll(this.poll, this.splitString(f.value.voters)).then(res => {
-        }).then(() => {
-          this.alertService.success('Poll ' + this.poll.name + ' created', true)
-          this.router.navigate(['/dashboard']);
-        }).catch(e => this.alertService.error(e));
+    this.poll = {
+      id: null,
+      name: f.value.name,
+      description: f.value.description,
+      owner: this.ownerUser.id,
+      validFrom: f.value.validfrom,
+      validTo: f.value.validto,
+      options: this.splitString(f.value.options)
+    };
+    this.pollService.createPoll(this.poll, this.splitString(f.value.voters)).then(res => {
+      }).then(() => {
+        this.alertService.success('Poll ' + this.poll.name + ' created', true);
+        this.router.navigate(['/dashboard']);
+      }).catch(e => this.alertService.error(e));
   }
 }

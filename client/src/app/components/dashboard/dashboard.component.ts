@@ -15,13 +15,13 @@ import { AlertService } from '../../services/alert.service';
   styleUrls: ['./dashboard.component.css']
 })
 
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   title = 'Polls';
   ownPolls: Poll[];
   polls: Poll[] = [];
 
   // mock user
-  mockUserID = 1;
+  mockUserID = '1';
 
   public constructor(
     private pollService: PollService,
@@ -38,16 +38,16 @@ export class DashboardComponent {
   }
   getPolls(): void {
     this.pollService.getPolls().then(polls => {
-        this.ownPolls = polls.filter(poll => poll.owner == this.mockUserID);
+        this.ownPolls = polls.filter(poll => String(poll.owner) === this.mockUserID);
       }).catch(error => this.alertService.error(error));
   }
 
   getOpenPolls(): void {
     this.voteService.getVotes().then(votes => {
-      votes = votes.filter(vote => ((vote.voter == this.mockUserID
-        && !vote.delegate) || vote.delegate == this.mockUserID)
+      votes = votes.filter(vote => ((String(vote.voter) === this.mockUserID
+        && !vote.delegate) || String(vote.delegate) === this.mockUserID)
         && !vote.timestamp);
-      for (let vote of votes) {
+      for (const vote of votes) {
         this.pollService.getPoll(vote.pollID).then(poll => {
           this.polls.push(poll);
         });
@@ -65,13 +65,13 @@ export class DashboardComponent {
 
   deletePoll(poll: Poll): void {
     this.voteService.getVotes().then(votes => {
-      votes = votes.filter(vote => vote.pollID == poll.id);
+      votes = votes.filter(vote => vote.pollID === poll.id);
       this.pollService.deletePoll(poll.id).then(() => {
         this.ownPolls = this.ownPolls.filter(p => poll !== p);
         // deleting from poll issued votes
-        for (let vote of votes) {
+        for (const vote of votes) {
           this.voteService.deleteVote(vote.id);
-          this.polls = this.polls.filter(poll =>  vote.pollID !== poll.id );
+          this.polls = this.polls.filter(p =>  vote.pollID !== p.id );
         }
         this.alertService.success('Poll id ' + poll.id + ' deleted');
       });

@@ -19,7 +19,7 @@ export class PollService {
   constructor(private http: Http, private voteService: VoteService) {}
 
 
-  getPoll(pollID: string): Promise<Poll> {
+  getPoll(pollID: any): Promise<Poll> {
     const url = `${this.pollsUrl}/${pollID}`;
     return this.http.get(url).toPromise()
     .then(response => response.json().data as Poll).catch(this.handleError);
@@ -37,12 +37,12 @@ export class PollService {
     .then(response => response.json().data as Poll[]).catch(this.handleError);
   }
 
-  createPoll(poll: Poll, participants: string[]): Promise<Poll> {
+  createPoll(poll: Poll, participants: any[]): Promise<Poll> {
     return this.http.post(this.pollsUrl, JSON.stringify(poll), {headers: this.headers})
     .toPromise().then(res => {
       res.json().data as Poll;
-      let pollId = res.json().data.id;
-      for (let participant of participants) {
+      const pollId = res.json().data.id;
+      for (const participant of participants) {
         this.voteService.createVote({
           id: null,
           pollID: pollId,
@@ -56,7 +56,7 @@ export class PollService {
     .catch(this.handleError);
   }
 
-  deletePoll(pollID: string): Promise<void> {
+  deletePoll(pollID: any): Promise<void> {
     const url = `${this.pollsUrl}/${pollID}`;
     return this.http.delete(url, {headers: this.headers}).toPromise().then(() => null)
     .catch(this.handleError);

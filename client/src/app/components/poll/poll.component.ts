@@ -28,10 +28,10 @@ export class PollComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getPoll(this.pollID);
+    this.getPoll(+this.pollID);
   }
 
-  getPoll(pollID: string): void {
+  getPoll(pollID: number): void {
     this.pollService.getPoll(pollID).then(poll => {
       this.getPollStats(poll);
       this.poll = poll;
@@ -40,12 +40,12 @@ export class PollComponent implements OnInit {
 
   getPollStats(poll: Poll): void {
     this.voteService.getVotes().then(votes => {
-      votes = votes.filter(vote => vote.pollID == this.pollID && vote.option);
-        for (let option of poll.options) {
+      votes = votes.filter(vote => String(vote.pollID) === this.pollID && vote.option);
+        for (const option of poll.options) {
           this.pollStats.push({option: option, count: 0});
         }
-        for (let pollStat of this.pollStats) {
-            for (let vote of votes) {
+        for (const pollStat of this.pollStats) {
+            for (const vote of votes) {
               if (vote.option === pollStat.option) {
                 pollStat.count++;
               }

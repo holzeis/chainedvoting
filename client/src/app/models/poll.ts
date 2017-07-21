@@ -1,9 +1,9 @@
 export class Poll {
-  id: any;
+  id: number;
   name: string;
   description: string;
-  owner: any;
-  validFrom: string;
-  validTo: string;
+  owner: number;
+  validFrom: number;
+  validTo: number;
   options: string[];
 }

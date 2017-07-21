@@ -1,8 +1,8 @@
 export class Vote {
-  id: any;
-  pollID: any;
-  voter: any;
+  id: number;
+  pollID: number;
+  voter: number;
   option: string;
-  delegate: any;
+  delegate: number;
   timestamp: number;
 }

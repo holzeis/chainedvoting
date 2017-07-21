@@ -44,9 +44,9 @@ export class VoteComponent implements OnInit {
 
   setVote(option: string): void {
     this.voteService.getVotes().then(votes => {
-      let filteredVote = votes.filter(vote => vote.pollID == this.poll.id
-        && (vote.delegate == this.mockUserID
-          || (vote.voter == this.mockUserID && !vote.delegate)) && !vote.timestamp);
+      const filteredVote = votes.filter(vote => String(vote.pollID) === this.pollID
+        && (String(vote.delegate) === this.mockUserID
+          || (String(vote.voter) === this.mockUserID && !vote.delegate)) && !vote.timestamp);
       // TODO: implement direct vote route as user could have more than one vote (delegate)
       // currently loading all votes and filtering
       if ( filteredVote.length > 0) {
