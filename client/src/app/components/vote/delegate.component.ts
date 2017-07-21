@@ -42,7 +42,7 @@ export class DelegateComponent {
       // TODO: implement direct vote route as user could have more than one vote (delegate)
       vote[0].delegate = delegate;
 
-      this.voteService.updateVote(vote[0].id, vote[0]).then( () => {
+      this.voteService.updateVote(vote[0]).then( () => {
         this.alertService.success('Delegate submited successfuly', true);
         this.goBack();
       }).catch(error => this.alertService.error(error));
@@ -52,7 +52,6 @@ export class DelegateComponent {
   checkForUser(userEmail: string): void {
     this.userService.getUsers().then(users => {
       let filteredUsers = users.filter(user => user.email === userEmail);
-      console.dir(filteredUsers);
       if (filteredUsers.length == 1) {
         this.setDelegate(filteredUsers[0].id);
       } else {

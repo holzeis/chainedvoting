@@ -33,9 +33,7 @@ export class VoteComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.getPoll(this.pollID);
-
   }
 
   getPoll(pollID: string): void {
@@ -47,18 +45,23 @@ export class VoteComponent implements OnInit {
   setVote(option: string): void {
     this.voteService.getVotes().then(votes => {
       let filteredVote = votes.filter(vote => vote.pollID == this.poll.id
-        && (vote.delegate == this.mockUserID || vote.voter == this.mockUserID) && !vote.timestamp);
-      console.dir(filteredVote);
+        && (vote.delegate == this.mockUserID
+          || (vote.voter == this.mockUserID && !vote.delegate)) && !vote.timestamp);
       // TODO: implement direct vote route as user could have more than one vote (delegate)
-      filteredVote[0].option = option;
-      filteredVote[0].timestamp = new Date().getTime();
+      // currently loading all votes and filtering
+      if ( filteredVote.length > 0) {
+        filteredVote[0].option = option;
+        filteredVote[0].timestamp = new Date().getTime();
 
-      this.voteService.updateVote(filteredVote[0].id, filteredVote[0]).then( () => {
-        this.alertService.success('Vote successfuly submited', true);
-        this.goBack();
-      }).catch(error => {
-        this.alertService.error(error);
-      });
+        this.voteService.updateVote(filteredVote[0]).then( () => {
+          this.alertService.success('Vote successfuly submited', true);
+          this.goBack();
+        }).catch(error => {
+          this.alertService.error(error);
+        });
+      } else {
+        this.alertService.error('No vote issued to this account');
+      }
     });
   }
 

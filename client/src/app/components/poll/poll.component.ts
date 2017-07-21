@@ -33,20 +33,24 @@ export class PollComponent implements OnInit {
 
   getPoll(pollID: string): void {
     this.pollService.getPoll(pollID).then(poll => {
+      this.getPollStats(poll);
       this.poll = poll;
-      this.voteService.getVotes().then(votes => {
-        votes = votes.filter(vote => vote.pollID == this.pollID && vote.option);
-          for (let option of poll.options) {
-            this.pollStats.push({option: option, count: 0});
-          }
-          for (let pollStat of this.pollStats) {
-              for (let vote of votes) {
-                if (vote.option === pollStat.option) {
-                  pollStat.count++;
-                }
+    });
+  }
+
+  getPollStats(poll: Poll): void {
+    this.voteService.getVotes().then(votes => {
+      votes = votes.filter(vote => vote.pollID == this.pollID && vote.option);
+        for (let option of poll.options) {
+          this.pollStats.push({option: option, count: 0});
+        }
+        for (let pollStat of this.pollStats) {
+            for (let vote of votes) {
+              if (vote.option === pollStat.option) {
+                pollStat.count++;
               }
-          }
-      });
+            }
+        }
     });
   }
 

@@ -32,22 +32,27 @@ export class DashboardComponent {
 
   ngOnInit() {
     this.getPolls();
+    this.getOpenPolls();
+
 
   }
   getPolls(): void {
     this.pollService.getPolls().then(polls => {
         this.ownPolls = polls.filter(poll => poll.owner == this.mockUserID);
-        this.voteService.getVotes().then(votes => {
-          votes = votes.filter(vote => ((vote.voter == this.mockUserID
-            || vote.delegate == this.mockUserID) && !vote.timestamp));
-            console.dir(votes);
-          for (let vote of votes) {
-            this.pollService.getPoll(vote.pollID).then(poll => {
-              this.polls.push(poll);
-            });
-          }
-        }).catch(error => this.alertService.error(error));
       }).catch(error => this.alertService.error(error));
+  }
+
+  getOpenPolls(): void {
+    this.voteService.getVotes().then(votes => {
+      votes = votes.filter(vote => ((vote.voter == this.mockUserID
+        && !vote.delegate) || vote.delegate == this.mockUserID)
+        && !vote.timestamp);
+      for (let vote of votes) {
+        this.pollService.getPoll(vote.pollID).then(poll => {
+          this.polls.push(poll);
+        });
+      }
+    }).catch(error => this.alertService.error(error));
   }
 
   selectPoll(pollID: string): void {
@@ -63,6 +68,7 @@ export class DashboardComponent {
       votes = votes.filter(vote => vote.pollID == poll.id);
       this.pollService.deletePoll(poll.id).then(() => {
         this.ownPolls = this.ownPolls.filter(p => poll !== p);
+        // deleting from poll issued votes
         for (let vote of votes) {
           this.voteService.deleteVote(vote.id);
           this.polls = this.polls.filter(poll =>  vote.pollID !== poll.id );

@@ -25,8 +25,8 @@ export class PollService {
     .then(response => response.json().data as Poll).catch(this.handleError);
   }
 
-  updatePoll(poll: Poll, pollID: string): Promise<Poll> {
-    const url = `${this.pollsUrl}/${pollID}`;
+  updatePoll(poll: Poll): Promise<Poll> {
+    const url = `${this.pollsUrl}/${poll.id}`;
     return this.http.put(url, JSON.stringify(poll), {headers: this.headers})
     .toPromise().then(() => poll)
     .catch(this.handleError);

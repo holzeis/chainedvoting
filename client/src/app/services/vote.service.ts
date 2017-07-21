@@ -23,8 +23,8 @@ export class VoteService {
     .toPromise().then(res => res.json().data as Vote).catch(this.handleError);
   }
 
-  updateVote(voteID: string, vote: Vote): Promise<Vote> {
-    const url = `${this.votesUrl}/${voteID}`;
+  updateVote(vote: Vote): Promise<Vote> {
+    const url = `${this.votesUrl}/${vote.id}`;
     return this.http.put(url, JSON.stringify(vote), {headers: this.headers})
     .toPromise().then(() => vote)
     .catch(this.handleError);
