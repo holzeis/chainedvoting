@@ -83,12 +83,10 @@ services:
   server:
     container_name: server
     build: server
-    working_dir: /usr/src/app
     command: bash -c "npm start"
     environment:
       - GOPATH=/usr/src/blockchain
     volumes:
-      - ./server:/usr/src/app
       - ./blockchain/crypto-config:/usr/src/app/resources/crypto-config
       - ./blockchain/channel-artifacts:/usr/src/app/resources/channel-artifacts
       - ./blockchain/src/chaincode:/usr/src/blockchain/src/chaincode
@@ -104,10 +102,7 @@ services:
   client:
     container_name: client
     build: client
-    working_dir: /usr/src/app
-    command: bash -c "ng lint && ng serve --host 0.0.0.0"
-    volumes:
-      - ./client/:/usr/src/app
+    command: bash -c "npm start"
     depends_on:
       - server
     ports:
