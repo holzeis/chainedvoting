@@ -27,6 +27,7 @@ export class Channel {
     this._configtxProto = grpc.load(path.join(__dirname, '../../node_modules/fabric-client/lib/protos/common/configtx.proto')).common;
   }
 
+
   public async initChannel(deployPolicy: DeployPolicy): Promise<void> {
     this.channel = await this.client.newChannel(this.channelConfig.name);
     await this.createOrgAdminUser();
@@ -45,49 +46,50 @@ export class Channel {
         await this.channel.initialize();
         break;
     }
-  }
+}
+
+private async createOrgAdminUser(): Promise<void> {
+  console.info('Going to set the org admin user');
+
+  let keyPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/keystore');
+  let keyPEM = Buffer.from(this.readAllFiles(keyPath)[0]).toString();
+  let certPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/signcerts');
+  let certPEM = this.readAllFiles(certPath)[0];
+
+  this.orgAdminUser = await this.client.createUser({
+    username: 'Admin',
+    mspid: 'OrgMSP',
+    cryptoContent: {
+      privateKeyPEM: keyPEM.toString(),
+      signedCertPEM: certPEM.toString()
+    }
+  });
+}
 
   public getChannelName(): string {
     return this.channelConfig.name;
   }
 
-  private async createOrgAdminUser(): Promise<void> {
-    console.log('Going to set the org admin user');
-
-    let keyPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/keystore');
-    let keyPEM = Buffer.from(this.readAllFiles(keyPath)[0]).toString();
-    let certPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/signcerts');
-    let certPEM = this.readAllFiles(certPath)[0];
-
-    this.orgAdminUser = await this.client.createUser({
-      username: 'peerorgAdmin',
-      mspid: 'OrgMSP',
-      cryptoContent: {
-        privateKeyPEM: keyPEM.toString(),
-        signedCertPEM: certPEM.toString()
-      }
-    });
-  }
 
   private async setOrgAdminAsUserContext(): Promise<void> {
     await this.client.setUserContext(this.orgAdminUser);
-  }
+}
 
-  private async addOrderer(): Promise<void> {
-    console.log('Adding orderer');
-    let caRootsPath = this.config.network.orderer.tls_cacerts;
-    let data = await fs.readFileSync(path.join(__dirname, caRootsPath));
-    let caroots = Buffer.from(data).toString();
+private async addOrderer(): Promise<void> {
+  console.info('Adding orderer');
+  let caRootsPath = this.config.network.orderer.tls_cacerts;
+  let data = await fs.readFileSync(path.join(__dirname, caRootsPath));
+  let caroots = Buffer.from(data).toString();
 
-    this.orderer = await this.client.newOrderer(
-      this.config.network.orderer.url,
-      {
-        'pem': caroots,
-        'ssl-target-name-override': this.config.network.orderer.server_hostname
-      }
-    );
-    await this.channel.addOrderer(this.orderer);
-  }
+  this.orderer = await this.client.newOrderer(
+    this.config.network.orderer.url,
+    {
+      'pem': caroots,
+      'ssl-target-name-override': this.config.network.orderer.server_hostname
+    }
+  );
+  await this.channel.addOrderer(this.orderer);
+}
 
   private async addEventHubsAndPeers(): Promise<void> {
     console.log('Adding eventHubs and Peers');
@@ -147,7 +149,7 @@ export class Channel {
     signatures.push(this.client.signChannelConfig(config));
 
     let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(); // buildTransactionID(nonce, this.orgAdminUser)
+    let txId = this.client.newTransactionID(nonce, this.orgAdminUser)
 
     let request = {
       name: this.channelConfig.name,
@@ -194,7 +196,7 @@ export class Channel {
     console.info('Joining channel', this.channelConfig.name);
 
     let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
 
     let getBlockRequest = {
       txId : 	txId,
@@ -203,8 +205,8 @@ export class Channel {
 
     let genesisBlock = await this.channel.getGenesisBlock(getBlockRequest);
 
-    // nonce = hfcUtil.getNonce();
-    txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, this.orgAdminUser);
+    nonce = hfcUtil.getNonce();
+    txId = this.client.newTransactionID(nonce, this.orgAdminUser);
 
     let joinChannelRequest = {
       targets: this.channel.getPeers(),
@@ -231,8 +233,9 @@ export class Channel {
     console.info('Going to install chaincode');
 
     let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, this.orgAdminUser);
-
+    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
+    console.info('Affected peers:');
+    console.dir(this.channel.getPeers());
     let request = {
       targets: this.channel.getPeers(),
       chaincodePath: chaincodePath,
@@ -251,7 +254,7 @@ export class Channel {
     console.info('Going to instantiate chaincode');
 
     let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
 
     let request = {
       chaincodePath: chaincodePath,
@@ -262,10 +265,30 @@ export class Channel {
       chainId: this.channelConfig.name,
       txId: txId,
       nonce: nonce
+      // use this to demonstrate the following policy:
+      // 'if signed by org admin, then that's the only signature required,
+      // but if that signature is missing, then the policy can also be fulfilled
+      // when members (non-admin) from both orgs signed'
+      // 'endorsement-policy': {
+      //   identities: [
+      //     { role: { name: 'member', mspId: 'OrgMSP' }}
+      //   ],
+      //   policy: {
+      //     '1-of': [
+      //       { 'signed-by': 1},
+      //       { '2-of': [{ 'signed-by': 0}, { 'signed-by': 1 }]}
+      //     ]
+      //   }
+      // }
     };
-
+    console.info('Log the request:');
+    console.dir(request);
     let proposalResponse = await this.channel.sendInstantiateProposal(request);
+    console.info('Log the proposalResponse:');
+    console.dir(proposalResponse);
     let signedRequest = this.processProposal(proposalResponse, 'instantiate');
+    console.info('Log the signedRequest:');
+    console.dir(signedRequest);
 
     let eventPromises = [];
     this.eventHubs.forEach((eh) => {
@@ -273,6 +296,11 @@ export class Channel {
     });
 
     let sendPromise = await this.channel.sendTransaction(signedRequest);
+    console.info('Log the sendPromise:');
+    console.dir(sendPromise);
+
+    console.info('Log the eventPromises:');
+    console.dir(eventPromises);
     return Promise.all([sendPromise].concat(eventPromises))
       .then((results) => {
         console.info('Successfully instantiated the chaincode');
@@ -313,12 +341,12 @@ export class Channel {
     } else {
       console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
     }
-  }
+}
 
   public async query(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string, args: string[], userName: string): Promise<any> {
     console.info('Querying ' + this.channelConfig.name + ' with function name ' + chaincodeFunctionName);
     let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, await this.setAndGetUserContext(userName));
+    let txId = this.client.newTransactionID(nonce, await this.setAndGetUserContext(userName));
 
     args.unshift(chaincodeFunctionName);
 
@@ -385,7 +413,7 @@ export class Channel {
   public async invoke(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string, args: string[], userName: string): Promise<InvokeReponse> {
     console.info('Invoking ' + this.channelConfig.name + ' with function name ' + chaincodeFunctionName);
     let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(); // Client.buildTransactionID(nonce, await this.setAndGetUserContext(userName));
+    let txId = this.client.newTransactionID(nonce, await this.setAndGetUserContext(userName));
 
     args.unshift(chaincodeFunctionName);
 
