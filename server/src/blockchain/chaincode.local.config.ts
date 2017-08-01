@@ -38,15 +38,15 @@ export class ChaincodeLocalConfig {
         appUsers: <UserConfig[]> {}
       },
       chaincode: {
-        keyValStorePath: '/tmp/hfc-test-kvs-org1',
-        chaincodeID: 'chained-voting',
-        chaincodePath: 'chained-voting/chaincode.go',
+        keyValStorePath: '/tmp/hfc-test-kvs-org',
+        chaincodeID: 'chaincode',
+        chaincodePath: 'chaincode',
         chaincodeVersion: 'v1'
       },
       channels : <ChannelConfig[]>[
         {
-          name: 'channel',
-          path: 'channel-artifacts/channel.tx'
+          name: 'default',
+          path: '../resources/channel-artifacts/channel.tx'
         }
       ]
     };

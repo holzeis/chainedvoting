@@ -1,3 +1,30 @@
-<p>
-  poll works!
-</p>
+<div class="container">
+  <div class="row">
+    <div *ngIf="poll">
+      <h3>Poll</h3>
+      <h4>{{poll.name}}</h4>
+      <div  class="col-sm-10">
+        <label for="poll-id" class="control-label">Poll ID</label>
+        <span>{{poll.id}}</span><br>
+        <button class="btn btn-success" (click)="goToVote(poll)">go to vote</button>
+        <button class="btn btn-primary" (click)="setDelegate()">set delegate</button><br><br>
+        <label for="poll-description" class="control-label">Description</label>
+        <span>{{poll.description}}</span><br>
+        <label for="poll-options" class="control-label">Poll options</label>
+        <div *ngFor="let option of poll.options">
+          <div>{{option}}</div>
+        </div>
+        <div *ngIf="pollStats">
+          <label for="poll-stats" class="control-label">Current votes</label>
+          <div *ngFor="let stat of pollStats">
+            <div>{{stat.option}}</div>
+            <div>{{stat.count}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn btn-default" (click)="goBack()">Back</button>
+    </div>
+  </div>
+</div>

@@ -3,46 +3,53 @@ version: '2.0'
 services:
   ca0:
     container_name: ca0
-    image: hyperledger/fabric-ca:x86_64-1.0.0-alpha2
+    image: hyperledger/fabric-ca:x86_64-1.0.0
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-org
       - FABRIC_CA_SERVER_TLS_ENABLED=true
       - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org.chained-voting.com-cert.pem
       - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/ddb9205c44f6bf0cb5307d3b990752621d444d9a4062ec3ff05ae393d558ee17_sk
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/ddb9205c44f6bf0cb5307d3b990752621d444d9a4062ec3ff05ae393d558ee17_sk
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org.chained-voting.com-cert.pem
     ports:
       - "7054:7054"
-    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org.chained-voting.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/ddb9205c44f6bf0cb5307d3b990752621d444d9a4062ec3ff05ae393d558ee17_sk -b admin:adminpw -d'
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
       - ./blockchain/crypto-config/peerOrganizations/org.chained-voting.com/ca/:/etc/hyperledger/fabric-ca-server-config
 
   orderer.chained-voting.com:
     container_name: orderer.chained-voting.com
-    image: hyperledger/fabric-orderer:x86_64-1.0.0-alpha2
+    image: hyperledger/fabric-orderer:x86_64-1.0.0
     environment:
+      - GRPC_TRACE=ALL
+      - GRPC_VERBOSITY=DEBUG
       - ORDERER_GENERAL_LOGLEVEL=debug
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_RAMLEDGER_HISTORY_SIZE=100
+      - CONFIGTX_ORDERER_ORDERERTYPE=solo
       - ORDERER_GENERAL_GENESISMETHOD=file
-      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis.block
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
-      # enabled TLS
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
-      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt, /var/hyperledger/peer/tls/ca.crt]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
-    - ./blockchain/channel-artifacts/genesis.block:/var/hyperledger/orderer/genesis.block
+    - ./blockchain/channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
     - ./blockchain/crypto-config/ordererOrganizations/chained-voting.com/orderers/orderer.chained-voting.com/msp:/var/hyperledger/orderer/msp
     - ./blockchain/crypto-config/ordererOrganizations/chained-voting.com/orderers/orderer.chained-voting.com/tls:/var/hyperledger/orderer/tls
+    - ./blockchain/crypto-config/peerOrganizations/org.chained-voting.com/peers/peer0.org.chained-voting.com/tls:/var/hyperledger/peer/tls
     ports:
       - 7050:7050
 
   peer0.org.chained-voting.com:
     container_name: peer0.org.chained-voting.com
-    image: hyperledger/fabric-peer:x86_64-1.0.0-alpha2
+    image: hyperledger/fabric-peer:x86_64-1.0.0-beta
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=chainedvoting_default
@@ -62,7 +69,7 @@ services:
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org.chained-voting.com:7051
       - CORE_PEER_LOCALMSPID=OrgMSP
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: peer node start --peer-defaultchain=false
+    command: peer node start --peer-defaultchain=false -o orderer.chained-voting.com:7050
     volumes:
     - /var/run/:/host/var/run/
     - ./blockchain/crypto-config/peerOrganizations/org.chained-voting.com/peers/peer0.org.chained-voting.com/msp:/etc/hyperledger/fabric/msp
@@ -70,19 +77,19 @@ services:
     ports:
       - 7051:7051
       - 7053:7053
+    depends_on:
+      - orderer.chained-voting.com
 
   server:
     container_name: server
     build: server
-    working_dir: /usr/src/app
     command: bash -c "npm start"
     environment:
       - GOPATH=/usr/src/blockchain
     volumes:
-      - ./server:/usr/src/app
       - ./blockchain/crypto-config:/usr/src/app/resources/crypto-config
       - ./blockchain/channel-artifacts:/usr/src/app/resources/channel-artifacts
-      - ./blockchain/chaincode:/usr/src/blockchain/src/chained-voting
+      - ./blockchain/src/chaincode:/usr/src/blockchain/src/chaincode
       - $GOPATH/src/github.com:/usr/src/blockchain/src/github.com
     depends_on:
       - ca0
@@ -95,10 +102,7 @@ services:
   client:
     container_name: client
     build: client
-    working_dir: /usr/src/app
-    command: bash -c "ng lint && ng serve --host 0.0.0.0"
-    volumes:
-      - ./client/:/usr/src/app
+    command: bash -c "npm start"
     depends_on:
       - server
     ports:

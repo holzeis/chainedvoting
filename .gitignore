@@ -1,5 +1,11 @@
 client/node_modules/*
-server/node_modules/*
+
+blockchain/bin
+blockchain/pkg
+blockchain/src/github.com
+blockchain/src/golang.org
+blockchain/src/gopkg.in
+
 *.log
 .DS_Store
 
@@ -12,7 +18,10 @@ bin/cryptogen
 */dist/*
 **/.baseDir.ts
 
-/server/resources
+server/resources
+server/package-lock.json
+server/node_modules/*
+server/tscommand*
 
 .vscode/*
 */.vscode/*

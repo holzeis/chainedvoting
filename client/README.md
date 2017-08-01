@@ -25,3 +25,35 @@ Before running the tests make sure you are serving the app via `ng serve`.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+
+## Requirements (WIP)
+
+- List der offenen Abstimmungen (UC01) **DONE**
+    klick auf Abstimmung -> UC05 Anzeige einer Abstimmung **DONE**
+- Button zum Anlegen einer Abstimmung (UC02) **DONE**
+  - Formular um neue Abstimmung anzulegen  (UC02) **DONE**
+  - Formular für neue Abstimmung abschicken (UC02), danach UC05 **DONE**
+- Anzeige einer Abstimmung inkl. der Stimmen (UC05) **DONE**
+  - Button Stimme abgeben (UC03), danach zurück auf UC05 **DONE**
+  - Button Stimme delegieren (UC04), danach zurück auf UC05 **DONE**
+  - Abstimmung löschen (UC06, nur Anleger) **DONE** Missing validation of User
+
+### Todos
+
+- Show vote delegate away and delegate votes received
+- Show current poll votes for each option **DONE**
+- Add general input types for timestamps (date picker)
+- Add general variable input types for options
+- Add the above for user id or email input
+
+
+### General Todos
+
+- Add e2e test cases
+- Add user authentification
+- Add user backend (service with Observable)
+- Add user validation to services
+- Add validation to forms
+- Add alerts **DONE*
+
