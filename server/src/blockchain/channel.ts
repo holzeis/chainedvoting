@@ -28,7 +28,10 @@ export class Channel {
   }
 
 
+
+
   public async initChannel(deployPolicy: DeployPolicy): Promise<void> {
+
     this.channel = await this.client.newChannel(this.channelConfig.name);
     await this.createOrgAdminUser();
     await this.addOrderer();
@@ -99,14 +102,15 @@ private async addOrderer(): Promise<void> {
     return new Promise<any>((resolve: () => void, reject: (error: Error) => void) => {
       for (let key in peersConfig) {
         if (key) {
-          let data = fs.readFileSync(path.join(__dirname, peersConfig[key].tls_cacerts));
 
+          let data = fs.readFileSync(path.join(__dirname, peersConfig[key].tls_cacerts));
           this.channel.addPeer(new Peer(
             peersConfig[key].requests,
             {
               pem: Buffer.from(data).toString(),
               'ssl-target-name-override': peersConfig[key].server_hostname
             }
+
           ));
 
           let eh = new EventHub(this.client);
@@ -229,13 +233,12 @@ private async addOrderer(): Promise<void> {
       });
   }
 
-  private async installChaincode(chaincodePath: string, chaincodeId: string, chaincodeVersion: string): Promise<void> {
+  private async  installChaincode(chaincodePath: string, chaincodeId: string, chaincodeVersion: string): Promise<void> {
     console.info('Going to install chaincode');
 
     let nonce = hfcUtil.getNonce();
     let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
-    console.info('Affected peers:');
-    console.dir(this.channel.getPeers());
+
     let request = {
       targets: this.channel.getPeers(),
       chaincodePath: chaincodePath,
@@ -251,20 +254,20 @@ private async addOrderer(): Promise<void> {
   }
 
   private async instantiateChaincode(chaincodePath: string, chaincodeId: string, chaincodeVersion: string, args: string[]): Promise<void> {
+
     console.info('Going to instantiate chaincode');
 
-    let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID();
 
     let request = {
-      chaincodePath: chaincodePath,
+      //chaincodePath: chaincodePath,
       chaincodeId: chaincodeId,
       chaincodeVersion: chaincodeVersion,
       fcn: 'init',
       args: args,
-      chainId: this.channelConfig.name,
+      //chainId: this.channelConfig.name,
       txId: txId,
-      nonce: nonce
+      // nonce: nonce
       // use this to demonstrate the following policy:
       // 'if signed by org admin, then that's the only signature required,
       // but if that signature is missing, then the policy can also be fulfilled
@@ -281,40 +284,35 @@ private async addOrderer(): Promise<void> {
       //   }
       // }
     };
-    console.info('Log the request:');
-    console.dir(request);
+
     let proposalResponse = await this.channel.sendInstantiateProposal(request);
-    console.info('Log the proposalResponse:');
-    console.dir(proposalResponse);
+
     let signedRequest = this.processProposal(proposalResponse, 'instantiate');
-    console.info('Log the signedRequest:');
-    console.dir(signedRequest);
 
     let eventPromises = [];
     this.eventHubs.forEach((eh) => {
-      eventPromises.push(this.setTxEvent(eh, txId.toString()));
+      eventPromises.push(this.setTxEvent(eh, txId.getTransactionID()));
     });
 
     let sendPromise = await this.channel.sendTransaction(signedRequest);
-    console.info('Log the sendPromise:');
-    console.dir(sendPromise);
 
-    console.info('Log the eventPromises:');
-    console.dir(eventPromises);
     return Promise.all([sendPromise].concat(eventPromises))
       .then((results) => {
         console.info('Successfully instantiated the chaincode');
         return results[0];
       }).catch((err) => {
+        console.error('Error: ' + err);
         console.error('Failed to send instantiate transaction and get notifications within the timeout period.');
         throw new Error('Failed to send instantiate transaction and get notifications within the timeout period.');
       });
+
   }
 
   private processProposal(proposalResponse: any, proposalType: string): any {
+
     let proposalResponses = proposalResponse[0];
     let proposal = proposalResponse[1];
-    let header = proposalResponse[2];
+    //let header = proposalResponse[2];
 
     let allGood = true;
     for (let response of proposalResponses) {
@@ -332,8 +330,9 @@ private async addOrderer(): Promise<void> {
       if (proposalType === 'instantiate') {
         return {
           proposalResponses: proposalResponses,
-          proposal: proposal,
-          header: header
+          proposal: proposal
+
+          //header: header
         };
       } else {
         return {};
@@ -516,8 +515,8 @@ private async addOrderer(): Promise<void> {
     return new Promise<void>((resolve: () => void, reject: () => void) => {
       let handle = setTimeout(reject, 30000);
 
-      eh.registerTxEvent(txId.toString(), (tx, code) => {
-        console.info('The transaction has been committed on peer ' + eh.ep._endpoint.addr);
+       eh.registerTxEvent(txId, (tx, code) => {
+        console.info('The transaction has been committed on peer ');
         clearTimeout(handle);
         eh.unregisterTxEvent(txId);
 

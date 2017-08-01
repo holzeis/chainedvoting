@@ -2,7 +2,7 @@ import { ChaincodeEnvironmentConfiguration, UserConfig, PeerConfig, OrdererConfi
 
 export class ChaincodeLocalConfig {
   public getConfiguration(): ChaincodeEnvironmentConfiguration {
-    const organization = 'Org';
+    const organization = 'org';
 
     return {
       network:   {

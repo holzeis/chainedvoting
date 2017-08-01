@@ -1,4 +1,4 @@
-import "reflect-metadata"; 
+import "reflect-metadata";
 import {useExpressServer} from 'routing-controllers';
 import * as express from 'express';
 import * as cors from 'cors';
@@ -38,7 +38,7 @@ class App {
         await blockchain.init(DeployPolicy.ALWAYS);
         const blockchainClient = await blockchain.createClient();
 
-        console.debug('[App]', 'Blockchain client ready to be used');
+        console.log('[App]', 'Blockchain client ready to be used');
 
         return blockchainClient;
     }

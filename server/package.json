@@ -14,9 +14,9 @@
     "type": "git",
     "url": "git@git.ng.bluemix.net:gbs_dach_blockchain/chained_voting.git"
   },
-  "license": "MIT",
   "dependencies": {
     "@types/node": "^8.0.7",
+    "body-parser": "^1.17.2",
     "cors": "^2.8.1",
     "express": "^4.15.3",
     "fabric-ca-client": "1.0.0",
