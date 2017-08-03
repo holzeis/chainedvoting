@@ -41,11 +41,9 @@ Check the node js application on `http://<docker-machine-ip>:4200/`
 
 ### TypeScript transpilation and linting on server container
 
-When the docker server container is started it will initially run the grunt tasks for TS transpilation and linting and then watch the src/ for TS changes and start the application with nodemon.
+When the docker server container is started it will initially run the grunt tasks for TS transpilation and linting and then watch the src/ for TS changes and start the application the nodemon task.
 
 As soon as changes to the TS occur the watch task will run both TS tasks mentioned above. The nodemon will notice the changed JS file and restart the application.
-
-In the logs the watch task output will be preceded by '[0]' while the application log will be preceded by '[1]'
 
 ## Generate crypto-config & channel artifacts
 This is how the crypto-config & channel artifacts are generated.
