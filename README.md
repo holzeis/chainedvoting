@@ -34,10 +34,18 @@ This will start 5 containers
 1. ca0 - fabric certification authority
 2. orderer.chained-voting.com - orderer service
 3. peer0.org.chained-voting.com - endorser for chaincode
-4. cli - also a peer and used as command line interface towards the blockchain
-5. app - the node js application (not yet connected to the blockchain)
+4. client - container to host web app
+5. server - container to host REST API (for client)
 
 Check the node js application on `http://<docker-machine-ip>:4200/`
+
+### TypeScript transpilation and linting on server container
+
+When the docker server container is started it will initially run the grunt tasks for TS transpilation and linting and then watch the src/ for TS changes and start the application with nodemon.
+
+As soon as changes to the TS occur the watch task will run both TS tasks mentioned above. The nodemon will notice the changed JS file and restart the application.
+
+In the logs the watch task output will be preceded by '[0]' while the application log will be preceded by '[1]'
 
 ## Generate crypto-config & channel artifacts
 This is how the crypto-config & channel artifacts are generated.
@@ -59,7 +67,7 @@ $CONFIGTXGEN -profile OrdererGenesis -outputBlock ./channel-artifacts/genesis.bl
 $CONFIGTXGEN -profile Channel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID default
 ```
 
-5. Generating anchor peer update for OrgMSP
+5. Generating anchor peer update for Org1MSP
 ```bash
 $CONFIGTXGEN -profile Channel -outputAnchorPeersUpdate ./channel-artifacts/OrgMSPanchors.tx -channelID default -asOrg OrgMSP
 ```
