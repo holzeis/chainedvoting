@@ -1,16 +1,16 @@
-'use strict';
+"use strict";
 
-import * as fs from 'fs';
-import * as path from 'path';
-import * as grpc from 'grpc';
-import * as Client from 'fabric-client';
-import * as Orderer from 'fabric-client/lib/Orderer';
-import * as Peer from 'fabric-client/lib/Peer';
-import * as EventHub from 'fabric-client/lib/EventHub';
-import * as hfcUtil from 'fabric-client/lib/utils.js';
-import * as Member from 'fabric-client/lib/User';
-import {ChaincodeEnvironmentConfiguration, ChannelConfig} from './chaincode.env.config';
-import {DeployPolicy} from './blockchain';
+import * as fs from "fs";
+import * as path from "path";
+import * as grpc from "grpc";
+import * as Client from "fabric-client";
+import * as Orderer from "fabric-client/lib/Orderer";
+import * as Peer from "fabric-client/lib/Peer";
+import * as EventHub from "fabric-client/lib/EventHub";
+import * as hfcUtil from "fabric-client/lib/utils.js";
+import * as Member from "fabric-client/lib/User";
+import {ChaincodeEnvironmentConfiguration, ChannelConfig} from "./chaincode.env.config";
+import {DeployPolicy} from "./blockchain";
 
 export class Channel {
   private channel: any;
@@ -23,16 +23,14 @@ export class Channel {
   public constructor(private client: Client,
                      private channelConfig: ChannelConfig,
                      private config: ChaincodeEnvironmentConfiguration) {
-    this._commonProto = grpc.load(path.join(__dirname, '../../node_modules/fabric-client/lib/protos/common/common.proto')).common;
-    this._configtxProto = grpc.load(path.join(__dirname, '../../node_modules/fabric-client/lib/protos/common/configtx.proto')).common;
+    this._commonProto = grpc.load(path.join(__dirname, "../../node_modules/fabric-client/lib/protos/common/common.proto")).common;
+    this._configtxProto = grpc.load(path.join(__dirname, "../../node_modules/fabric-client/lib/protos/common/configtx.proto")).common;
   }
-
-
-
 
   public async initChannel(deployPolicy: DeployPolicy): Promise<void> {
 
     this.channel = await this.client.newChannel(this.channelConfig.name);
+
     await this.createOrgAdminUser();
     await this.addOrderer();
     await this.addEventHubsAndPeers();
@@ -41,61 +39,65 @@ export class Channel {
       case DeployPolicy.ALWAYS:
         await this.createChannel();
         await this.joinChannel();
-        await this.installChaincode(this.config.chaincode.chaincodePath, this.config.chaincode.chaincodeID, this.config.chaincode.chaincodeVersion);
+        await this.installChaincode(this.config.chaincode.chaincodePath,
+                  this.config.chaincode.chaincodeID, this.config.chaincode.chaincodeVersion);
         await this.channel.initialize();
-        await this.instantiateChaincode(this.config.chaincode.chaincodePath, this.config.chaincode.chaincodeID, this.config.chaincode.chaincodeVersion, []);
+        await this.instantiateChaincode(this.config.chaincode.chaincodePath,
+                  this.config.chaincode.chaincodeID, this.config.chaincode.chaincodeVersion, []);
         break;
       case DeployPolicy.NEVER:
         await this.channel.initialize();
         break;
     }
-}
-
-private async createOrgAdminUser(): Promise<void> {
-  console.info('Going to set the org admin user');
-
-  let keyPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/keystore');
-  let keyPEM = Buffer.from(this.readAllFiles(keyPath)[0]).toString();
-  let certPath = path.join(__dirname, '../../resources/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/signcerts');
-  let certPEM = this.readAllFiles(certPath)[0];
-
-  this.orgAdminUser = await this.client.createUser({
-    username: 'Admin',
-    mspid: 'OrgMSP',
-    cryptoContent: {
-      privateKeyPEM: keyPEM.toString(),
-      signedCertPEM: certPEM.toString()
-    }
-  });
-}
-
-  public getChannelName(): string {
-    return this.channelConfig.name;
   }
 
+  private async createOrgAdminUser(): Promise<void> {
+    console.log("Going to set the org admin user");
 
-  private async setOrgAdminAsUserContext(): Promise<void> {
-    await this.client.setUserContext(this.orgAdminUser);
-}
+    let keyPath = path.join(__dirname, "../../resources/crypto-config/peerOrganizations/" +
+                        "org.chained-voting.com/users/Admin@org.chained-voting.com/msp/keystore");
+    let keyPEM = Buffer.from(this.readAllFiles(keyPath)[0]).toString();
+    let certPath = path.join(__dirname, "../../resources/crypto-config/peerOrganizations/" +
+                        "org.chained-voting.com/users/Admin@org.chained-voting.com/msp/signcerts");
+    let certPEM = this.readAllFiles(certPath)[0];
 
-private async addOrderer(): Promise<void> {
-  console.info('Adding orderer');
-  let caRootsPath = this.config.network.orderer.tls_cacerts;
-  let data = await fs.readFileSync(path.join(__dirname, caRootsPath));
-  let caroots = Buffer.from(data).toString();
+    this.orgAdminUser = await this.client.createUser({
+      username: "Admin",
+      mspid: "OrgMSP",
+      cryptoContent: {
+        privateKeyPEM: keyPEM.toString(),
+        signedCertPEM: certPEM.toString()
+      }
+    });
+  }
 
-  this.orderer = await this.client.newOrderer(
-    this.config.network.orderer.url,
-    {
-      'pem': caroots,
-      'ssl-target-name-override': this.config.network.orderer.server_hostname
+    public getChannelName(): string {
+      return this.channelConfig.name;
     }
-  );
-  await this.channel.addOrderer(this.orderer);
-}
+
+
+    private async setOrgAdminAsUserContext(): Promise<void> {
+      await this.client.setUserContext(this.orgAdminUser);
+  }
+
+  private async addOrderer(): Promise<void> {
+    console.log("Adding orderer");
+    let caRootsPath = this.config.network.orderer.tls_cacerts;
+    let data = await fs.readFileSync(path.join(__dirname, caRootsPath));
+    let caroots = Buffer.from(data).toString();
+
+    this.orderer = await this.client.newOrderer(
+      this.config.network.orderer.url,
+      {
+        "pem": caroots,
+        "ssl-target-name-override": this.config.network.orderer.server_hostname
+      }
+    );
+    await this.channel.addOrderer(this.orderer);
+  }
 
   private async addEventHubsAndPeers(): Promise<void> {
-    console.log('Adding eventHubs and Peers');
+    console.log("Adding eventHubs and Peers");
     this.eventHubs = [];
     let peersConfig = this.config.network.peers;
 
@@ -108,7 +110,7 @@ private async addOrderer(): Promise<void> {
             peersConfig[key].requests,
             {
               pem: Buffer.from(data).toString(),
-              'ssl-target-name-override': peersConfig[key].server_hostname
+              "ssl-target-name-override": peersConfig[key].server_hostname
             }
 
           ));
@@ -118,7 +120,7 @@ private async addOrderer(): Promise<void> {
             peersConfig[key].events,
             {
               pem: Buffer.from(data).toString(),
-              'ssl-target-name-override': peersConfig[key].server_hostname
+              "ssl-target-name-override": peersConfig[key].server_hostname
             }
           );
           eh.connect();
@@ -142,7 +144,7 @@ private async addOrderer(): Promise<void> {
 
   private async createChannel(): Promise<void> {
 
-    let data = await fs.readFileSync(path.join(__dirname, '../../resources', this.channelConfig.path));
+    let data = await fs.readFileSync(path.join(__dirname, "../../resources", this.channelConfig.path));
 
     let envelope = this._commonProto.Envelope.decode(data);
     let payload = this._commonProto.Payload.decode(envelope.getPayload().toBuffer());
@@ -153,7 +155,7 @@ private async addOrderer(): Promise<void> {
     signatures.push(this.client.signChannelConfig(config));
 
     let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(nonce, this.orgAdminUser)
+    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
 
     let request = {
       name: this.channelConfig.name,
@@ -166,19 +168,19 @@ private async addOrderer(): Promise<void> {
 
     return this.client.createChannel(request)
       .then((response) => {
-        if (response && response.status === 'SUCCESS') {
-          console.log('Successfully created the channel.');
+        if (response && response.status === "SUCCESS") {
+          console.log("Successfully created the channel.");
           return this.sleep(5000);
         } else {
-          console.error('Failed to create the channel. ');
+          console.error("Failed to create the channel. ");
         }
       }, (err) => {
-        console.error('Failed to initialize the channel: ' + err.stack ? err.stack : err);
+        console.error("Failed to initialize the channel: " + err.stack ? err.stack : err);
       })
       .then(() => {
-        console.log('Successfully waited to make sure new channel was created.');
+        console.log("Successfully waited to make sure new channel was created.");
       }, (err) => {
-        console.error('Failed to sleep due to error: ' + err.stack ? err.stack : err);
+        console.error("Failed to sleep due to error: " + err.stack ? err.stack : err);
       });
   }
 
@@ -189,7 +191,7 @@ private async addOrderer(): Promise<void> {
   private async setAndGetUserContext(userName: string): Promise<Member> {
     let user = await this.client.loadUserFromStateStore(userName);
     if (!user) {
-      throw new Error('Unable to find user ' + userName);
+      throw new Error("Unable to find user " + userName);
     }
     await this.client.setUserContext(user);
 
@@ -197,7 +199,7 @@ private async addOrderer(): Promise<void> {
   }
 
   private async joinChannel(): Promise<void> {
-    console.info('Joining channel', this.channelConfig.name);
+    console.log("Joining channel", this.channelConfig.name);
 
     let nonce = hfcUtil.getNonce();
     let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
@@ -223,18 +225,18 @@ private async addOrderer(): Promise<void> {
     return Promise.all([sendPromise])
       .then((results) => {
         if (results[0] && results[0][0] && results[0][0].response && results[0][0].response.status === 200) {
-          console.info('All peers successfully joined the channel');
+          console.log("All peers successfully joined the channel");
         } else {
-          console.error(' Failed to join channel');
-          throw new Error('Failed to join channel');
+          console.error(" Failed to join channel");
+          throw new Error("Failed to join channel");
         }
       }, (err) => {
-        console.error('Failed to join channel due to error: ' + err.stack ? err.stack : err);
+        console.error("Failed to join channel due to error: " + err.stack ? err.stack : err);
       });
   }
 
-  private async  installChaincode(chaincodePath: string, chaincodeId: string, chaincodeVersion: string): Promise<void> {
-    console.info('Going to install chaincode');
+  private async installChaincode(chaincodePath: string, chaincodeId: string, chaincodeVersion: string): Promise<void> {
+    console.log("Going to install chaincode");
 
     let nonce = hfcUtil.getNonce();
     let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
@@ -249,13 +251,13 @@ private async addOrderer(): Promise<void> {
     };
 
     const installResponse = await this.client.installChaincode(request);
-    this.processProposal(installResponse, 'install');
-    console.info('Install chaincode done');
+    this.processProposal(installResponse, "install");
+    console.log("Install chaincode done");
   }
 
   private async instantiateChaincode(chaincodePath: string, chaincodeId: string, chaincodeVersion: string, args: string[]): Promise<void> {
 
-    console.info('Going to instantiate chaincode');
+    console.log("Going to instantiate chaincode");
 
     let txId = this.client.newTransactionID();
 
@@ -263,23 +265,23 @@ private async addOrderer(): Promise<void> {
       //chaincodePath: chaincodePath,
       chaincodeId: chaincodeId,
       chaincodeVersion: chaincodeVersion,
-      fcn: 'init',
+      fcn: "init",
       args: args,
       //chainId: this.channelConfig.name,
       txId: txId,
       // nonce: nonce
       // use this to demonstrate the following policy:
-      // 'if signed by org admin, then that's the only signature required,
+      // "if signed by org admin, then that"s the only signature required,
       // but if that signature is missing, then the policy can also be fulfilled
-      // when members (non-admin) from both orgs signed'
-      // 'endorsement-policy': {
+      // when members (non-admin) from both orgs signed"
+      // "endorsement-policy": {
       //   identities: [
-      //     { role: { name: 'member', mspId: 'OrgMSP' }}
+      //     { role: { name: "member", mspId: "OrgMSP" }}
       //   ],
       //   policy: {
-      //     '1-of': [
-      //       { 'signed-by': 1},
-      //       { '2-of': [{ 'signed-by': 0}, { 'signed-by': 1 }]}
+      //     "1-of": [
+      //       { "signed-by": 1},
+      //       { "2-of": [{ "signed-by": 0}, { "signed-by": 1 }]}
       //     ]
       //   }
       // }
@@ -287,7 +289,7 @@ private async addOrderer(): Promise<void> {
 
     let proposalResponse = await this.channel.sendInstantiateProposal(request);
 
-    let signedRequest = this.processProposal(proposalResponse, 'instantiate');
+    let signedRequest = this.processProposal(proposalResponse, "instantiate");
 
     let eventPromises = [];
     this.eventHubs.forEach((eh) => {
@@ -298,12 +300,12 @@ private async addOrderer(): Promise<void> {
 
     return Promise.all([sendPromise].concat(eventPromises))
       .then((results) => {
-        console.info('Successfully instantiated the chaincode');
+        console.log("Successfully instantiated the chaincode");
         return results[0];
       }).catch((err) => {
-        console.error('Error: ' + err);
-        console.error('Failed to send instantiate transaction and get notifications within the timeout period.');
-        throw new Error('Failed to send instantiate transaction and get notifications within the timeout period.');
+        console.error("Error: " + err);
+        console.error("Failed to send instantiate transaction and get notifications within the timeout period.");
+        throw new Error("Failed to send instantiate transaction and get notifications within the timeout period.");
       });
 
   }
@@ -319,15 +321,15 @@ private async addOrderer(): Promise<void> {
       let oneGood = false;
       if (proposalResponses && response.response && response.response.status === 200) {
         oneGood = true;
-        console.info('proposal was good');
+        console.log("proposal was good");
       } else {
-        console.info('proposal was bad');
+        console.log("proposal was bad");
       }
       allGood = allGood && oneGood;
     }
 
     if (allGood) {
-      if (proposalType === 'instantiate') {
+      if (proposalType === "instantiate") {
         return {
           proposalResponses: proposalResponses,
           proposal: proposal
@@ -338,12 +340,13 @@ private async addOrderer(): Promise<void> {
         return {};
       }
     } else {
-      console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
+      console.error("Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...");
     }
 }
 
-  public async query(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string, args: string[], userName: string): Promise<any> {
-    console.info('Querying ' + this.channelConfig.name + ' with function name ' + chaincodeFunctionName);
+  public async query(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string,
+          args: string[], userName: string): Promise<any> {
+    console.log("Querying " + this.channelConfig.name + " with function name " + chaincodeFunctionName);
     let nonce = hfcUtil.getNonce();
     let txId = this.client.newTransactionID(nonce, await this.setAndGetUserContext(userName));
 
@@ -352,7 +355,7 @@ private async addOrderer(): Promise<void> {
     let request = {
       chaincodeId: chaincodeID,
       chaincodeVersion: chaincodeVersion,
-      fcn: 'invoke',
+      fcn: "invoke",
       args: args,
       chainId: this.channelConfig.name,
       txId: txId,
@@ -374,13 +377,13 @@ private async addOrderer(): Promise<void> {
     let previousResponse = null;
 
     queryResponses.forEach((response) => {
-      let responseAsString = response.toString('utf8');
+      let responseAsString = response.toString("utf8");
       let responseAsObject = {};
       formattedQueryResponse.rawPeerPayloads.push(responseAsString);
 
       if (previousResponse != null) {
         if (previousResponse !== responseAsString) {
-          console.warn('Warning - some peers do not agree on query', previousResponse, responseAsString);
+          console.warn("Warning - some peers do not agree on query", previousResponse, responseAsString);
           formattedQueryResponse.peersAgree = false;
         }
         previousResponse = responseAsString;
@@ -389,18 +392,18 @@ private async addOrderer(): Promise<void> {
       }
 
       try {
-        if (responseAsString !== '') {
+        if (responseAsString !== "") {
           responseAsObject = JSON.parse(responseAsString);
         }
         if (formattedQueryResponse.parsed === null) {
           formattedQueryResponse.parsed = responseAsObject;
         }
       } catch (e) {
-        if (responseAsString.indexOf('Error: failed to obtain') >= 0) {
-          console.error('Query response looks like an error', typeof responseAsString, responseAsString);
+        if (responseAsString.indexOf("Error: failed to obtain") >= 0) {
+          console.error("Query response looks like an error", typeof responseAsString, responseAsString);
           formattedQueryResponse.parsed = null;
         } else {
-          console.warn('Query response is not json, might be okay.', typeof responseAsString, responseAsString);
+          console.warn("Query response is not json, might be okay.", typeof responseAsString, responseAsString);
           formattedQueryResponse.parsed = responseAsString;
         }
       }
@@ -409,8 +412,9 @@ private async addOrderer(): Promise<void> {
     return formattedQueryResponse;
   }
 
-  public async invoke(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string, args: string[], userName: string): Promise<InvokeReponse> {
-    console.info('Invoking ' + this.channelConfig.name + ' with function name ' + chaincodeFunctionName);
+  public async invoke(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string,
+            args: string[], userName: string): Promise<InvokeReponse> {
+    console.log("Invoking " + this.channelConfig.name + " with function name " + chaincodeFunctionName);
     let nonce = hfcUtil.getNonce();
     let txId = this.client.newTransactionID(nonce, await this.setAndGetUserContext(userName));
 
@@ -419,7 +423,7 @@ private async addOrderer(): Promise<void> {
     let request = {
       chaincodeId: chaincodeID,
       chaincodeVersion: chaincodeVersion,
-      fcn: 'invoke',
+      fcn: "invoke",
       args: args,
       chainId: this.channelConfig.name,
       txId: txId,
@@ -438,15 +442,15 @@ private async addOrderer(): Promise<void> {
       let sendPromise = await this.channel.sendTransaction(processedProposal.successResponse);
       return Promise.all([sendPromise].concat(eventPromises))
         .then((results) => {
-          console.info('Invoke completed');
+          console.log("Invoke completed");
           return {
             success: true
           };
         }).catch((err) => {
-          console.error('Failed to get all notifications within the timeout period.');
+          console.error("Failed to get all notifications within the timeout period.");
           return {
             success: false,
-            message: 'Failed to get all notifications within the timeout period.'
+            message: "Failed to get all notifications within the timeout period."
           };
         });
     } else {
@@ -495,7 +499,7 @@ private async addOrderer(): Promise<void> {
     errorMessages.forEach(errorMessage => {
       if (previousErrorMessage != null) {
         if (previousErrorMessage !== errorMessage) {
-          console.warn('Warning - peer return different errors', previousErrorMessage, errorMessage);
+          console.warn("Warning - peer return different errors", previousErrorMessage, errorMessage);
           errorMessageAreEqual = false;
         }
         previousErrorMessage = errorMessage;
@@ -507,7 +511,7 @@ private async addOrderer(): Promise<void> {
     if (errorMessageAreEqual) {
       return errorMessages[0];
     } else {
-      return errorMessages.join(',');
+      return errorMessages.join(",");
     }
   }
 
@@ -516,15 +520,15 @@ private async addOrderer(): Promise<void> {
       let handle = setTimeout(reject, 30000);
 
        eh.registerTxEvent(txId, (tx, code) => {
-        console.info('The transaction has been committed on peer ');
+        console.log("The transaction has been committed on peer ");
         clearTimeout(handle);
         eh.unregisterTxEvent(txId);
 
-        if (code !== 'VALID') {
-          console.error('The transaction was invalid, code = ' + code);
+        if (code !== "VALID") {
+          console.error("The transaction was invalid, code = " + code);
           reject();
         } else {
-          console.info('The transaction was valid.');
+          console.log("The transaction was valid.");
           resolve();
         }
       });

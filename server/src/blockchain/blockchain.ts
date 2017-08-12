@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-import * as Client from 'fabric-client';
-import * as CopService from 'fabric-ca-client/lib/FabricCAClientImpl';
-import * as Member from 'fabric-client/lib/User';
-import {ChaincodeEnvironmentConfiguration, UserConfig} from './chaincode.env.config';
-import {BlockchainClient} from './client/blockchain.client';
-import {Channel} from './channel';
+import * as Client from "fabric-client";
+import * as CopService from "fabric-ca-client/lib/FabricCAClientImpl";
+import * as Member from "fabric-client/lib/User";
+import {ChaincodeEnvironmentConfiguration, UserConfig} from "./chaincode.env.config";
+import {BlockchainClient} from "./client/blockchain.client";
+import {Channel} from "./channel";
 
 export enum DeployPolicy {
   ALWAYS,
@@ -16,6 +16,8 @@ export class Blockchain {
   protected client: Client;
   private caClient: CopService;
   private channels: any[];
+
+  private policy: DeployPolicy;
 
   public constructor(protected serverDirectory: string,
                      protected config: ChaincodeEnvironmentConfiguration) {
@@ -34,7 +36,7 @@ export class Blockchain {
   }
 
   private async setKeyStore(): Promise<void> {
-    console.log('Setting keystore at', this.config.chaincode.keyValStorePath);
+    console.log("Setting keystore at", this.config.chaincode.keyValStorePath);
     let store = await Client.newDefaultKeyValueStore({
       path: this.config.chaincode.keyValStorePath
     });
@@ -42,7 +44,7 @@ export class Blockchain {
   }
 
   private async setCertificateAuthority(): Promise<void> {
-    console.log('Adding CA service at', this.config.network.ca.ca.url);
+    console.log("Adding CA service at", this.config.network.ca.ca.url);
 
     var	tlsOptions = {
       trustedRoots: [],
@@ -71,7 +73,7 @@ export class Blockchain {
       .then((user) => {
         return new Promise((resolve, reject) => {
           if (user && user.isEnrolled()) {
-            console.log('Successfully loaded member from persistence');
+            console.log("Successfully loaded member from persistence");
             return resolve(user);
           }
 
@@ -81,7 +83,7 @@ export class Blockchain {
             enrollmentID: adminUser.enrollmentID,
             enrollmentSecret: adminUser.enrollmentSecret
           }).then((enrollment) => {
-            console.log('Successfully enrolled user ' + adminUser.enrollmentID);
+            console.log("Successfully enrolled user " + adminUser.enrollmentID);
             member = new Member(adminUser.enrollmentID, this.client);
             return member.setEnrollment(enrollment.key, enrollment.certificate, this.config.network.organization.mspid);
           }).then(() => {
@@ -89,7 +91,7 @@ export class Blockchain {
           }).then(() => {
             return resolve(member);
           }).catch((err) => {
-            console.error('Failed to enroll and persist user. Error: ' + err.stack ? err.stack : err);
+            console.error("Failed to enroll and persist user. Error: " + err.stack ? err.stack : err);
           });
         });
       });
@@ -97,14 +99,14 @@ export class Blockchain {
 
   private getAdminUserFromConfig(): UserConfig {
     for (let i = 0; i < this.config.network.users.length; i++) {
-      if (this.config.network.users[i].enrollmentID === 'admin') {
+      if (this.config.network.users[i].enrollmentID === "admin") {
         return this.config.network.users[i];
       }
     }
   }
 
   private async registerAndEnrollUsers(): Promise<any> {
-    console.log('[SDK] Going to register users');
+    console.log("[SDK] Going to register users");
     let users = this.config.network.appUsers;
 
     let registerAndEnrollUserPromises: Promise<void>[] = [];
@@ -116,13 +118,13 @@ export class Blockchain {
   }
 
   private async registerAndEnrollUser(user: UserConfig): Promise<void> {
-   console.log('going to register and enroll', user.enrollmentID);
+   console.log("going to register and enroll", user.enrollmentID);
     let adminUser = await this.setAndGetAdminUser();
 
     let registeredUser = await this.client.loadUserFromStateStore(user.enrollmentID);
 
     if (registeredUser) {
-      console.log('Already registered', user.enrollmentID);
+      console.log("Already registered", user.enrollmentID);
     } else {
       let registerRequest = {
         enrollmentID: user.enrollmentID,
@@ -144,7 +146,7 @@ export class Blockchain {
       await member.setEnrollment(enrollment.key, enrollment.certificate, this.config.network.organization.mspid);
       await this.client.setUserContext(member);
 
-      console.log('Successfully registered', user.enrollmentID);
+      console.log("Successfully registered", user.enrollmentID);
     }
   }
 
@@ -152,7 +154,7 @@ export class Blockchain {
     let adminUserName = this.getAdminUserFromConfig().enrollmentID;
     let adminUser = await this.client.loadUserFromStateStore(adminUserName);
     if (!adminUser) {
-      throw new Error('Unable to find admin user');
+      throw new Error("Unable to find admin user");
     }
     await this.client.setUserContext(adminUser);
 

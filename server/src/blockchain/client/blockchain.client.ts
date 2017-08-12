@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-import {ChaincodeEnvironmentConfiguration} from '../chaincode.env.config';
-import {ChaincodeLocalConfig} from '../chaincode.local.config';
+import {ChaincodeEnvironmentConfiguration} from "../chaincode.env.config";
+import {ChaincodeLocalConfig} from "../chaincode.local.config";
 
-import {InvokeReponse} from '../channel';
+import {InvokeReponse} from "../channel";
 
 export class BlockchainClient {
 
@@ -12,37 +12,40 @@ export class BlockchainClient {
                      ) {
   }
 
-  public async invoke(channelName: string, chaincodeFunctionName: string, args: string[], blockchainUsername: string): Promise<InvokeReponse> {
+  public async invoke(channelName: string, chaincodeFunctionName: string, args: string[],
+          blockchainUsername: string): Promise<InvokeReponse> {
     let channel = this.getChannel(channelName);
 
     if (!channel) {
-      console.log('Can\'t find channel');
+      console.log("Can't find channel");
       return <InvokeReponse> {
         success: false,
-        message: 'Can\'t find channel'
-      }
+        message: "Can't find channel"
+      };
     }
 
-    return await channel.invoke(this.config.chaincode.chaincodeID, this.config.chaincode.chaincodeVersion, chaincodeFunctionName, args, blockchainUsername);
+    return await channel.invoke(this.config.chaincode.chaincodeID, this.config.chaincode.chaincodeVersion,
+          chaincodeFunctionName, args, blockchainUsername);
   }
 
   public async query(channelName: string, chaincodeFunctionName: string, args: string[], blockchainUsername: string): Promise<any> {
     let channel = this.getChannel(channelName);
 
     if (!channel) {
-      console.log('Can\'t find channel');
-      return 'Can\'t find channel';
+      console.log("Can't find channel");
+      return "Can't find channel";
     }
 
-    return await channel.query(this.config.chaincode.chaincodeID, this.config.chaincode.chaincodeVersion, chaincodeFunctionName, args, blockchainUsername);
+    return await channel.query(this.config.chaincode.chaincodeID, this.config.chaincode.chaincodeVersion,
+            chaincodeFunctionName, args, blockchainUsername);
   }
 
   public async registerEvent(channelName: string, eventName: string, callback: (result: any) => void): Promise<any> {
     let channel = this.getChannel(channelName);
 
     if (!channel) {
-      console.log('Can\'t find channel');
-      return 'Can\'t find channel';
+      console.log("Can't find channel");
+      return "Can't find channel";
     }
 
     return channel.registerChaincodeEvent(this.config.chaincode.chaincodeID, eventName, callback);

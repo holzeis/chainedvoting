@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 import {JsonController, Post, Body, Req} from "routing-controllers";
-import {BlockchainClient} from '../blockchain/client/blockchain.client';
-import {InvokeReponse} from '../blockchain/channel';
+import {BlockchainClient} from "../blockchain/client/blockchain.client";
+import {InvokeReponse} from "../blockchain/channel";
 
 export interface Response {
     message : string;
