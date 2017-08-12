@@ -7,32 +7,23 @@ import {ChaincodeEnvironmentConfiguration, UserConfig} from "./chaincode.env.con
 import {BlockchainClient} from "./client/blockchain.client";
 import {Channel} from "./channel";
 
-export enum DeployPolicy {
-  ALWAYS,
-  NEVER
-}
-
 export class Blockchain {
   protected client: Client;
   private caClient: CopService;
   private channels: any[];
-
-  private policy: DeployPolicy;
 
   public constructor(protected serverDirectory: string,
                      protected config: ChaincodeEnvironmentConfiguration) {
     this.client = new Client();
   }
 
-  public async init(deployPolicy: DeployPolicy): Promise<void> {
+  public async init(): Promise<void> {
     console.log("init in blockchain.ts");
     await this.setKeyStore();
     await this.setCertificateAuthority();
     await this.registerAdminUser();
     // await this.registerAndEnrollUsers();
-    console.log("init in blockchain.ts with deployPolicy");
-    console.dir(deployPolicy);
-    await this.setupChannels(deployPolicy);
+    await this.setupChannels();
   }
 
   private async setKeyStore(): Promise<void> {
@@ -53,12 +44,12 @@ export class Blockchain {
     this.caClient = new CopService(this.config.network.ca.ca.url, tlsOptions, this.config.network.ca.ca.name);
   }
 
-  private async setupChannels(deployPolicy: DeployPolicy): Promise<void> {
+  private async setupChannels(): Promise<void> {
     this.channels = [];
     for (let i = 0; i < this.config.channels.length; i++) {
       let channel = new Channel(this.client, this.config.channels[i], this.config);
       this.channels.push(channel);
-      await channel.initChannel(deployPolicy);
+      await channel.initChannel();
     }
   }
 
