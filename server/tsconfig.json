@@ -6,7 +6,7 @@
         "removeComments": true,
         "sourceMap": true,
         "noLib": false,
-        "rootDir": ".",
+        "rootDir": "src",
         "outDir": "dist",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true
