@@ -85,12 +85,13 @@ export class Channel {
     let caRootsPath = this.config.network.orderer.tls_cacerts;
     let data = await fs.readFileSync(path.join(__dirname, caRootsPath));
     let caroots = Buffer.from(data).toString();
+    let hostname = this.config.network.orderer.server_hostname;
 
     this.orderer = await this.client.newOrderer(
       this.config.network.orderer.url,
       {
         "pem": caroots,
-        "ssl-target-name-override": this.config.network.orderer.server_hostname
+        "ssl-target-name-override": hostname
       }
     );
     await this.channel.addOrderer(this.orderer);
@@ -106,21 +107,25 @@ export class Channel {
         if (key) {
 
           let data = fs.readFileSync(path.join(__dirname, peersConfig[key].tls_cacerts));
+          let tlscerts = Buffer.from(data).toString();
+          let hostname = peersConfig[key].server_hostname;
+
           this.channel.addPeer(new Peer(
             peersConfig[key].requests,
             {
-              pem: Buffer.from(data).toString(),
-              "ssl-target-name-override": peersConfig[key].server_hostname
+              pem: tlscerts,
+              "ssl-target-name-override": hostname
             }
 
           ));
 
           let eh = new EventHub(this.client);
+
           eh.setPeerAddr(
             peersConfig[key].events,
             {
-              pem: Buffer.from(data).toString(),
-              "ssl-target-name-override": peersConfig[key].server_hostname
+              pem: tlscerts,
+              "ssl-target-name-override": hostname
             }
           );
           eh.connect();
@@ -154,16 +159,14 @@ export class Channel {
 
     signatures.push(this.client.signChannelConfig(config));
 
-    let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID();
 
     let request = {
       name: this.channelConfig.name,
       orderer: this.orderer,
       config: config,
-      nonce: nonce,
-      txId: txId,
-      signatures: signatures
+      signatures: signatures,
+      txId: txId
     };
 
     return this.client.createChannel(request)
@@ -201,24 +204,20 @@ export class Channel {
   private async joinChannel(): Promise<void> {
     console.log("Joining channel", this.channelConfig.name);
 
-    let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID();
 
     let getBlockRequest = {
-      txId : 	txId,
-      nonce : nonce
+      txId : 	txId
     };
 
     let genesisBlock = await this.channel.getGenesisBlock(getBlockRequest);
 
-    nonce = hfcUtil.getNonce();
-    txId = this.client.newTransactionID(nonce, this.orgAdminUser);
+    txId = this.client.newTransactionID();
 
     let joinChannelRequest = {
       targets: this.channel.getPeers(),
       block : genesisBlock,
-      txId: txId,
-      nonce: nonce
+      txId: txId
     };
 
     let sendPromise = this.channel.joinChannel(joinChannelRequest);
@@ -238,16 +237,14 @@ export class Channel {
   private async installChaincode(chaincodePath: string, chaincodeId: string, chaincodeVersion: string): Promise<void> {
     console.log("Going to install chaincode");
 
-    let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
+    let txId = this.client.newTransactionID();
 
     let request = {
       targets: this.channel.getPeers(),
       chaincodePath: chaincodePath,
       chaincodeId: chaincodeId,
       chaincodeVersion: chaincodeVersion,
-      txId: txId,
-      nonce: nonce
+      txId: txId
     };
 
     const installResponse = await this.client.installChaincode(request);
@@ -262,29 +259,12 @@ export class Channel {
     let txId = this.client.newTransactionID();
 
     let request = {
-      //chaincodePath: chaincodePath,
+      chaincodeType: "golang",
       chaincodeId: chaincodeId,
       chaincodeVersion: chaincodeVersion,
-      fcn: "init",
-      args: args,
-      //chainId: this.channelConfig.name,
       txId: txId,
-      // nonce: nonce
-      // use this to demonstrate the following policy:
-      // "if signed by org admin, then that"s the only signature required,
-      // but if that signature is missing, then the policy can also be fulfilled
-      // when members (non-admin) from both orgs signed"
-      // "endorsement-policy": {
-      //   identities: [
-      //     { role: { name: "member", mspId: "OrgMSP" }}
-      //   ],
-      //   policy: {
-      //     "1-of": [
-      //       { "signed-by": 1},
-      //       { "2-of": [{ "signed-by": 0}, { "signed-by": 1 }]}
-      //     ]
-      //   }
-      // }
+      fcn: "init",
+      args: args
     };
 
     let proposalResponse = await this.channel.sendInstantiateProposal(request);
@@ -314,7 +294,6 @@ export class Channel {
 
     let proposalResponses = proposalResponse[0];
     let proposal = proposalResponse[1];
-    //let header = proposalResponse[2];
 
     let allGood = true;
     for (let response of proposalResponses) {
@@ -333,8 +312,6 @@ export class Channel {
         return {
           proposalResponses: proposalResponses,
           proposal: proposal
-
-          //header: header
         };
       } else {
         return {};
@@ -347,8 +324,6 @@ export class Channel {
   public async query(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string,
           args: string[], userName: string): Promise<any> {
     console.log("Querying " + this.channelConfig.name + " with function name " + chaincodeFunctionName);
-    let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(nonce, await this.setAndGetUserContext(userName));
 
     args.unshift(chaincodeFunctionName);
 
@@ -357,9 +332,6 @@ export class Channel {
       chaincodeVersion: chaincodeVersion,
       fcn: "invoke",
       args: args,
-      chainId: this.channelConfig.name,
-      txId: txId,
-      nonce: nonce
     };
 
     let queryResponse = await this.channel.queryByChaincode(request);
@@ -423,11 +395,9 @@ export class Channel {
     let request = {
       chaincodeId: chaincodeID,
       chaincodeVersion: chaincodeVersion,
-      fcn: "invoke",
-      args: args,
-      chainId: this.channelConfig.name,
       txId: txId,
-      nonce: nonce
+      fcn: "invoke",
+      args: args
     };
 
     let proposalResponse = await this.channel.sendTransactionProposal(request);
@@ -436,7 +406,7 @@ export class Channel {
     if (processedProposal.success) {
       let eventPromises = [];
       this.eventHubs.forEach((eh) => {
-        eventPromises.push(this.setTxEvent(eh, txId.toString()));
+        eventPromises.push(this.setTxEvent(eh, txId.getTransactionID()));
       });
 
       let sendPromise = await this.channel.sendTransaction(processedProposal.successResponse);
