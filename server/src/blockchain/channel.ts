@@ -39,9 +39,9 @@ export class Channel {
     await this.addOrderer();
     await this.addEventHubsAndPeers();
 
-   let deployPolicy : DeployPolicy
-   deployPolicy = await this.determineDeployPolicy();
-   
+    let deployPolicy : DeployPolicy;
+    deployPolicy = await this.determineDeployPolicy();
+
     switch (deployPolicy) {
       case DeployPolicy.ALWAYS:
         await this.createChannel();
