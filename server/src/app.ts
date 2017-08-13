@@ -31,6 +31,7 @@ class App {
             controllers: [__dirname + "/controllers/*.js"]
         });
 
+        console.log("[App]", "App listens on port 3000.");
         app.listen(3000);
     }
 
