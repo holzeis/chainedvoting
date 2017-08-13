@@ -259,7 +259,6 @@ export class Channel {
     let txId = this.client.newTransactionID();
 
     let request = {
-      chaincodeType: "golang",
       chaincodeId: chaincodeId,
       chaincodeVersion: chaincodeVersion,
       txId: txId,
@@ -387,8 +386,7 @@ export class Channel {
   public async invoke(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string,
             args: string[], userName: string): Promise<InvokeReponse> {
     console.log("Invoking " + this.channelConfig.name + " with function name " + chaincodeFunctionName);
-    let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(nonce, await this.setAndGetUserContext(userName));
+    let txId = this.client.newTransactionID();
 
     args.unshift(chaincodeFunctionName);
 

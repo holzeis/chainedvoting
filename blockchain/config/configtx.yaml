@@ -17,7 +17,7 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                    - *OrdererOrg
+                    - *Org
 
     Channel:
         Consortium: SampleConsortium
