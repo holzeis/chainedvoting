@@ -10,7 +10,11 @@ import * as EventHub from "fabric-client/lib/EventHub";
 import * as hfcUtil from "fabric-client/lib/utils.js";
 import * as Member from "fabric-client/lib/User";
 import {ChaincodeEnvironmentConfiguration, ChannelConfig} from "./chaincode.env.config";
-import {DeployPolicy} from "./blockchain";
+
+export enum DeployPolicy {
+  ALWAYS,
+  NEVER
+}
 
 export class Channel {
   private channel: any;
@@ -27,7 +31,7 @@ export class Channel {
     this._configtxProto = grpc.load(path.join(__dirname, "../../node_modules/fabric-client/lib/protos/common/configtx.proto")).common;
   }
 
-  public async initChannel(deployPolicy: DeployPolicy): Promise<void> {
+  public async initChannel(): Promise<void> {
 
     this.channel = await this.client.newChannel(this.channelConfig.name);
 
@@ -35,6 +39,9 @@ export class Channel {
     await this.addOrderer();
     await this.addEventHubsAndPeers();
 
+   let deployPolicy : DeployPolicy
+   deployPolicy = await this.determineDeployPolicy();
+   
     switch (deployPolicy) {
       case DeployPolicy.ALWAYS:
         await this.createChannel();
@@ -49,6 +56,20 @@ export class Channel {
         await this.channel.initialize();
         break;
     }
+  }
+
+  private async determineDeployPolicy(): Promise<DeployPolicy> {
+     let blockRequest = {
+      txId : 	this.client.newTransactionID()
+    };
+
+    return this.channel.getGenesisBlock(blockRequest).then(genesisBlock => {
+      console.log("Found genesis block.");
+      return DeployPolicy.NEVER;
+    }, (err) => {
+      console.log("Could not find genesis block. Going to create channel!");
+      return DeployPolicy.ALWAYS;
+    });
   }
 
   private async createOrgAdminUser(): Promise<void> {

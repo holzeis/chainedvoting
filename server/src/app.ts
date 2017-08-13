@@ -6,7 +6,7 @@ import * as path from "path";
 import * as fs from "fs";
 import {Container} from "typedi";
 
-import {Blockchain, DeployPolicy} from "./blockchain/blockchain";
+import {Blockchain} from "./blockchain/blockchain";
 import {BlockchainClient} from "./blockchain/client/blockchain.client";
 import {ChaincodeLocalConfig} from "./blockchain/chaincode.local.config";
 
@@ -37,7 +37,7 @@ class App {
     private async initializeBlockchain(): Promise<BlockchainClient> {
         const blockchain = new Blockchain(path.join(process.cwd(), "dist"), new ChaincodeLocalConfig().getConfiguration());
 
-        await blockchain.init(DeployPolicy.ALWAYS);
+        await blockchain.init();
         const blockchainClient = await blockchain.createClient();
 
         console.log("[App]", "Blockchain client ready to be used");
