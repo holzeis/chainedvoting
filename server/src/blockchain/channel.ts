@@ -39,24 +39,9 @@ export class Channel {
     await this.addOrderer();
     await this.addEventHubsAndPeers();
 
-    let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(nonce, this.orgAdminUser);
-
-    let getBlockRequest = {
-      txId : 	txId,
-      nonce : nonce
-    };
-
-    let deployPolicy: DeployPolicy;
-
-    deployPolicy = await this.channel.getGenesisBlock(getBlockRequest).then(genesisBlock => {
-      console.log("Found genesis block.");
-      return DeployPolicy.NEVER;
-    }, (err) => {
-      console.log("Could not find genesis block. Going to create channel!");
-      return DeployPolicy.ALWAYS;
-    });
-
+   let deployPolicy : DeployPolicy
+   deployPolicy = await this.determineDeployPolicy();
+   
     switch (deployPolicy) {
       case DeployPolicy.ALWAYS:
         await this.createChannel();
@@ -71,6 +56,20 @@ export class Channel {
         await this.channel.initialize();
         break;
     }
+  }
+
+  private async determineDeployPolicy(): Promise<DeployPolicy> {
+     let blockRequest = {
+      txId : 	this.client.newTransactionID()
+    };
+
+    return this.channel.getGenesisBlock(blockRequest).then(genesisBlock => {
+      console.log("Found genesis block.");
+      return DeployPolicy.NEVER;
+    }, (err) => {
+      console.log("Could not find genesis block. Going to create channel!");
+      return DeployPolicy.ALWAYS;
+    });
   }
 
   private async createOrgAdminUser(): Promise<void> {
