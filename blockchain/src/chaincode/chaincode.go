@@ -41,11 +41,16 @@ func (t *Chaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 		var user entities.User
 		err := json.Unmarshal([]byte(args[0]), &user)
+
 		if err != nil {
+			fmt.Println(err)
 			return shim.Error(err.Error())
 		}
+
+		fmt.Println("Going to register " + user.Email)
 		StoreObjectInChain(stub, user.Email, "user", []byte(args[0]))
 
+		fmt.Println("Successfully registered " + user.Email)
 		return shim.Success(nil)
 	}
 
