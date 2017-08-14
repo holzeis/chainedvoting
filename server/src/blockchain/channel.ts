@@ -408,8 +408,7 @@ export class Channel {
   public async invoke(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string,
             args: string[], userName: string): Promise<InvokeReponse> {
     console.log("Invoking " + this.channelConfig.name + " with function name " + chaincodeFunctionName);
-    let nonce = hfcUtil.getNonce();
-    let txId = this.client.newTransactionID(nonce, await this.setAndGetUserContext(userName));
+    let txId = this.client.newTransactionID(await this.setAndGetUserContext(userName));
 
     args.unshift(chaincodeFunctionName);
 
@@ -422,6 +421,7 @@ export class Channel {
     };
 
     let proposalResponse = await this.channel.sendTransactionProposal(request);
+
     let processedProposal: ProcessInvokeProposalResponse = this.processInvokeProposal(proposalResponse);
 
     if (processedProposal.success) {
