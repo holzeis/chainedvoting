@@ -1,10 +1,10 @@
 import "reflect-metadata";
-import {useExpressServer} from "routing-controllers";
+import {useExpressServer, useContainer} from "routing-controllers";
+import {Container} from "typedi";
 import * as express from "express";
 import * as cors from "cors";
 import * as path from "path";
 import * as fs from "fs";
-import {Container} from "typedi";
 
 import {Blockchain} from "./blockchain/blockchain";
 import {BlockchainClient} from "./blockchain/client/blockchain.client";
@@ -20,19 +20,20 @@ class App {
         app.use(cors());
 
         // used for dependency injection
-        app.use(Container);
+        useContainer(Container);
 
         // initialize blockchain
         Container.set(BlockchainClient, await this.initializeBlockchain());
 
         // initialize routing
-        useExpressServer(app, {
-            // add all constrollers in folder controllers
-            controllers: [__dirname + "/controllers/*.js"]
+         useExpressServer(app, {
+              // add all constrollers in folder controllers
+             controllers: [__dirname + "/controllers/*.js"]
         });
 
-        console.log("[App]", "App listens on port 3000.");
-        app.listen(3000);
+        app.listen(3000, "0.0.0.0", () =>
+            console.log("[App]", "App listens on port 3000.")
+        );
     }
 
     private async initializeBlockchain(): Promise<BlockchainClient> {
