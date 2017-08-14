@@ -23,7 +23,7 @@ export class UserController {
     public async register(@Body() userParams: UserParams, @Req() req) : Promise<InvokeReponse> {
         console.log("registering " + userParams.email);
 
-        return this.blockchainClient.invoke("channel", "register", [userParams.email], "Admin");
+        return this.blockchainClient.invoke("default", "register", [JSON.stringify(userParams)], "Admin");
     }
 }
 
