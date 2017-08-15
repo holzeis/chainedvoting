@@ -8,6 +8,11 @@ Please find conceptional documentation in our mural proejct in blockhaingbs.
 
 Eventually, this results into a chained voting, meaning that specific persons can vote with lent votes, if the vote is within the agreed dates..
 
+## project modelling
+
+ 1. We will use https://www.draw.io/ for our additional software documentation
+ 2. We will provide all our models as an editable xml and also as an image file
+
 ## Applied on the blockchain:
 
  1. Lending a vote: Available dates & representatives are picked and placed as chaincode onto the blockchain.
