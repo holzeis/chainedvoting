@@ -37,22 +37,22 @@ export class DashboardComponent implements OnInit {
 
   }
   getPolls(): void {
-    this.pollService.getPolls().then(polls => {
-        this.ownPolls = polls.filter(poll => String(poll.owner) === this.mockUserID);
-      }).catch(error => this.alertService.error(error));
+    // this.pollService.getPolls().then(polls => {
+    //     this.ownPolls = polls.filter(poll => String(poll.owner) === this.mockUserID);
+    //   }).catch(error => this.alertService.error(error));
   }
 
   getOpenPolls(): void {
-    this.voteService.getVotes().then(votes => {
-      votes = votes.filter(vote => ((String(vote.voter) === this.mockUserID
-        && !vote.delegate) || String(vote.delegate) === this.mockUserID)
-        && !vote.timestamp);
-      for (const vote of votes) {
-        this.pollService.getPoll(vote.pollID).then(poll => {
-          this.polls.push(poll);
-        });
-      }
-    }).catch(error => this.alertService.error(error));
+    // this.voteService.getVotes().then(votes => {
+    //   votes = votes.filter(vote => ((String(vote.voter) === this.mockUserID
+    //     && !vote.delegate) || String(vote.delegate) === this.mockUserID)
+    //     && !vote.timestamp);
+    //   for (const vote of votes) {
+    //     this.pollService.getPoll(vote.pollID).then(poll => {
+    //       this.polls.push(poll);
+    //     });
+    //   }
+    // }).catch(error => this.alertService.error(error));
   }
 
   selectPoll(pollID: string): void {
