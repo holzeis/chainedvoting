@@ -8,10 +8,7 @@ import { Vote } from '../models/vote';
 
 import {VoteService} from './vote.service';
 
-
-
 @Injectable()
-
 export class PollService {
 
   private pollsUrl = 'api/polls';
