@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit {
     this.retrievePolls();
     this.retrieveBlocks();
   }
-  
+
   retrievePolls(): void {
     this.pollService.getPolls().then(polls => this.polls = polls).catch(error => this.alertService.error(error));
   }

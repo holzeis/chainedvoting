@@ -20,7 +20,7 @@ export class FabricService {
       const url = this.fabricUrl + '/blocks';
       return this._http.get(url).toPromise().then(res => res.json() as Transaction[]).catch(this.handleError);
     }
-    
+
     private handleError(error: any): Promise<any> {
       console.error('An error occurred', error);
       return Promise.reject(error.message || error);
