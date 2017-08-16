@@ -13,7 +13,6 @@ export class FabricController {
     @Get("/blocks")
     public async blocks() : Promise<any> {
         console.log("quering blocks of the fabric blockchain.");
-        
         return this.blockchainClient.queryBlocks("default");
     }
 }

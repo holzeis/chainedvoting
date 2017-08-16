@@ -536,7 +536,7 @@ export class Channel {
     let transactions : Transaction[] = [];
     for (let i = (info.height.low - 40) > 0 ? (info.height.low - 40) : 0; i < info.height.low; i++) {
       let blockinfo = await this.channel.queryBlock(i);
-      
+
       console.log(i + ". " + blockinfo.header.data_hash);
       for (let x = 0; x < blockinfo.data.data.length; x++) {
         let header = blockinfo.data.data[x].payload.header.channel_header;
