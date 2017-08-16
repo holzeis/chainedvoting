@@ -55,7 +55,7 @@ export class CreateComponent {
     };
     this.pollService.createPoll(this.poll, this.splitString(f.value.voters)).then(res => {
       }).then(() => {
-        this.alertService.success('Poll ' + this.poll.name + ' created', true);
+        this.alertService.success('Poll "' + this.poll.name + '" has been successfully created', true);
         this.router.navigate(['/dashboard']);
       }).catch(e => this.alertService.error(e));
   }
