@@ -1,0 +1,17 @@
+{
+  "name": "chained-voting",
+  "author": "GBS DACH Blockchain Taskforce",
+  "description": "This project aims at leveraging the Hyperledger fabric-Blockchain to showcase a simple voting app (server).",
+  "version": "0.1.0",
+  "license": "MIT",
+  "scripts": {
+    "start": "docker-compose up -d",
+    "stop": "docker-compose down && docker rm dev-peer0.org.chained-voting.com-chaincode-v1 && docker rmi dev-peer0.org.chained-voting.com-chaincode-v1",
+    "test": "go test chaincode"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.ng.bluemix.net:gbs_dach_blockchain/chained_voting.git"
+  }
+}
+    

@@ -36,7 +36,9 @@ export class PollService {
 
   getPolls(): Promise<Poll[]> {
     return this.http.get(this.pollsUrl).toPromise()
-    .then(response => response.json().data as Poll[]).catch(this.handleError);
+    .then(response => {
+      return response.json() as Poll[];
+    }).catch(this.handleError);
   }
 
   createPoll(poll: Poll, participants: any[]): Promise<Poll> {
