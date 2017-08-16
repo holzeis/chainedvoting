@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "docker-compose up -d",
-    "stop": "docker-compose down && docker rmi -f dev-peer0.org.chained-voting.com-chaincode-v1",
+    "stop": "docker-compose down && docker rm dev-peer0.org.chained-voting.com-chaincode-v1 && docker rmi dev-peer0.org.chained-voting.com-chaincode-v1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
