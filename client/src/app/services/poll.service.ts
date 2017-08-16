@@ -46,7 +46,7 @@ export class PollService {
                 console.log('Retrieved response: ' + res);
                 return;
             }).catch(this.handleError);
-    
+
     // .then(res => {
     //   res.json().data as Poll;
     //   const pollId = res.json().data.id;
