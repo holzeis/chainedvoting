@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { UserService } from '../../services/user.service';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-user',
@@ -11,20 +13,17 @@ export class UserComponent implements OnInit {
 
   public email: string;
 
-  public success: boolean;
-  public response: string;
-
-  constructor(private _userService: UserService) { }
+  constructor(private userService: UserService, private alertService: AlertService, private router: Router) { }
 
   ngOnInit() {
   }
 
   public register(email: string) {
-    this._userService.register(email).subscribe( result => {
-      console.log(result);
-      this.success = result.success;
-      this.response = result.response;
-    });
+    console.log('registering ' + email);
+    this.userService.register(email).then(() => {
+        this.alertService.success('User with email: ' + email + ' has been successfully registered.', true);
+        this.router.navigate(['/register']);
+      }).catch(e => this.alertService.error(e));
   }
 
 }

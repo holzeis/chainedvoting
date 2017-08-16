@@ -42,7 +42,7 @@ export class PollComponent implements OnInit {
     this.voteService.getVotes().then(votes => {
       votes = votes.filter(vote => String(vote.pollID) === this.pollID && vote.option);
         for (const option of poll.options) {
-          this.pollStats.push({option: option, count: 0});
+          this.pollStats.push({option: option.description, count: 0});
         }
         for (const pollStat of this.pollStats) {
             for (const vote of votes) {

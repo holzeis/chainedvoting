@@ -118,6 +118,8 @@ services:
       - basic
     build: client
     command: bash -c "npm start"
+    volumes:
+      - ./client/:/usr/src/app
     depends_on:
       - server
     ports:

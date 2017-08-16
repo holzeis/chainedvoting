@@ -5,5 +5,15 @@ export class Poll {
   owner: number;
   validFrom: number;
   validTo: number;
-  options: string[];
+  options: Option[];
+}
+
+export class Option {
+
+  id: number;
+  description: string;
+
+  constructor(descr: string) {
+    this.description = descr;
+  }
 }

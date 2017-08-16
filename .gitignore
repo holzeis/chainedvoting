@@ -5,6 +5,8 @@ blockchain/pkg
 blockchain/src/github.com
 blockchain/src/golang.org
 blockchain/src/gopkg.in
+blockchain/src/chaincode/chaincode
+
 
 *.log
 .DS_Store

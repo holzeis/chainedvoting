@@ -8,10 +8,16 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
+// UsersIndexName users key
 var UsersIndexName = "_users"
+
+// PollsIndexName polls key
 var PollsIndexName = "_polls"
+
+// VotesIndexName votes key
 var VotesIndexName = "_votes"
 
+// StoreObjectInChain stores an object into the blockchain.
 func StoreObjectInChain(stub shim.ChaincodeStubInterface, objectID string, indexName string, object []byte) error {
 	compositeKey, err := stub.CreateCompositeKey(indexName, []string{objectID})
 	if err != nil {
@@ -35,6 +41,7 @@ func StoreObjectInChain(stub shim.ChaincodeStubInterface, objectID string, index
 	return nil
 }
 
+// UpdateObjectInChain updates an object into the blockchain.
 func UpdateObjectInChain(stub shim.ChaincodeStubInterface, objectID string, indexName string, object []byte) error {
 	compositeKey, err := stub.CreateCompositeKey(indexName, []string{objectID})
 	if err != nil {

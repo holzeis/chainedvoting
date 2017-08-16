@@ -1,22 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import {NgForm} from '@angular/forms';
-import {Router} from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 
-import { Poll } from '../../models/poll';
+import { Poll, Option } from '../../models/poll';
 import { Vote } from '../../models/vote';
 import { User } from '../../models/user';
 
-import {PollService} from '../../services/poll.service';
-import {AlertService} from '../../services/alert.service';
-import {VoteService} from '../../services/vote.service';
-
+import { PollService } from '../../services/poll.service';
+import { AlertService } from '../../services/alert.service';
+import { VoteService } from '../../services/vote.service';
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.css']
 })
-
 export class CreateComponent {
 
   poll: Poll;
@@ -34,8 +32,15 @@ export class CreateComponent {
     private alertService: AlertService
   ) {}
 
-  splitString(_toSplit: string): string[] {
-    return _toSplit.split(';');
+  splitString(toSplit: string): Option[] {
+    const options: Option[] = [];
+
+    for (const opt  of toSplit.split(';')) {
+      const option = new Option(opt);
+      options.push(option);
+    }
+
+    return options;
   }
 
   onSubmit(f: NgForm) {
@@ -50,7 +55,7 @@ export class CreateComponent {
     };
     this.pollService.createPoll(this.poll, this.splitString(f.value.voters)).then(res => {
       }).then(() => {
-        this.alertService.success('Poll ' + this.poll.name + ' created', true);
+        this.alertService.success('Poll "' + this.poll.name + '" has been successfully created', true);
         this.router.navigate(['/dashboard']);
       }).catch(e => this.alertService.error(e));
   }
