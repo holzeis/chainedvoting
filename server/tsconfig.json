@@ -16,6 +16,7 @@
     ],
     "files": [
         "src/controllers/user.controller.ts",
+        "src/controllers/poll.controller.ts",
         "src/app.ts"
     ]
 }
