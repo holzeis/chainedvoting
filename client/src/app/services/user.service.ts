@@ -7,7 +7,9 @@ import { User } from '../models/user';
 @Injectable()
 export class UserService {
 
-    public userUrl: string;
+    private userUrl: string;
+    
+    private headers = new Headers({'Content-Type': 'application/json'});
 
     public constructor(private _http: Http, private _configuration: Configuration) {
         this.userUrl = `${_configuration.host}/api/users`;
@@ -15,7 +17,7 @@ export class UserService {
 
     public register(email: string): Promise<void> {
         const url = this.userUrl + '/register'
-        return this._http.post(url, {email: email}).toPromise()
+        return this._http.post(url, {email: email}, {headers: this.headers}).toPromise()
             .then(res => {
                 console.log('Retrieved response: ' + res);
                 return;
