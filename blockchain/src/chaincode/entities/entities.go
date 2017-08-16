@@ -1,6 +1,10 @@
 package entities
 
-import "time"
+import (
+	"fmt"
+	"strings"
+	"time"
+)
 
 type ECertResponse struct {
 	OK string `json:"OK"`
@@ -15,6 +19,7 @@ type TestDataElement interface {
 }
 
 type User struct {
+	UserID  int64  `json:"userID"`
 	Email   string `json:"email"`
 	MyPolls []Poll `json:"myPolls"`
 }
@@ -28,15 +33,19 @@ type Vote struct {
 	DelegatedVoter string    `json:"delegatedVoter"`
 }
 
+type Time struct {
+	time.Time
+}
+
 type Poll struct {
-	PollID      string    `json:"pollID"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Owner       string    `json:"owner"`
-	ValidFrom   time.Time `json:"validFrom"`
-	ValidTo     time.Time `json:"validTo"`
-	Options     []Option  `json:"options"`
-	Votes       []Vote    `json:"votes"`
+	PollID      string   `json:"pollID"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Owner       int64    `json:"owner"`
+	ValidFrom   Time     `json:"validFrom"`
+	ValidTo     Time     `json:"validTo"`
+	Options     []Option `json:"options"`
+	Votes       []Vote   `json:"votes"`
 }
 
 type Option struct {
@@ -58,4 +67,21 @@ func (t *Poll) ID() string {
 
 func (t *Option) ID() string {
 	return t.OptionID
+}
+
+// UnmarshalJSON custom time layout
+func (t *Time) UnmarshalJSON(b []byte) error {
+	s := string(b)
+
+	// for some reason the quotes are added to the string and have to be removed
+	// before parsing.
+	s = strings.Trim(s, "\"")
+
+	ret, err := time.Parse("2006-01-02", s)
+	if err != nil {
+		fmt.Println("Error at parsing time: " + err.Error())
+		return err
+	}
+	t.Time = ret
+	return nil
 }
