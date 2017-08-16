@@ -408,7 +408,7 @@ export class Channel {
   public async invoke(chaincodeID: string, chaincodeVersion: string, chaincodeFunctionName: string,
             args: string[], userName: string): Promise<InvokeReponse> {
     console.log("Invoking " + this.channelConfig.name + " with function name " + chaincodeFunctionName);
-    let txId = this.client.newTransactionID(await this.setAndGetUserContext(userName));
+    let txId = this.client.newTransactionID();
 
     args.unshift(chaincodeFunctionName);
 
