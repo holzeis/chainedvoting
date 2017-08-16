@@ -5,7 +5,7 @@ import {InvokeReponse} from "../blockchain/channel";
 
 import {User} from "../models/user";
 
-@JsonController()
+@JsonController("/api/users")
 export class UserController {
 
     public constructor(private blockchainClient: BlockchainClient) {

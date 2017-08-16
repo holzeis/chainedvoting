@@ -7,32 +7,32 @@ import { User } from '../models/user';
 @Injectable()
 export class UserService {
 
-    public actionUrl: string;
+    public userUrl: string;
 
     public constructor(private _http: Http, private _configuration: Configuration) {
-        this.actionUrl = `${_configuration.host}register`;
+        this.userUrl = `${_configuration.host}/api/users`;
     }
 
-    public register(email: string): Promise<Response> {
-        return this._http.post(this.actionUrl, {email: email}).toPromise()
+    public register(email: string): Promise<void> {
+        const url = this.userUrl + '/register'
+        return this._http.post(url, {email: email}).toPromise()
             .then(res => {
                 console.log('Retrieved response: ' + res);
-                return res.json().data as Response;
+                return;
             }).catch(this.handleError);
     }
 
     getUser(userID: string): Promise<User> {
-      const url = `api/users/${userID}`;
+      const url = this.userUrl + '/' + userID;
       return this._http.get(url).toPromise().then(res => res.json().data as User).catch(this.handleError);
     }
 
     getUsers(): Promise<User[]> {
-      const url = `api/users/`;
-      return this._http.get(url).toPromise().then(res => res.json().data as User[]).catch(this.handleError);
+      return this._http.get(this.userUrl).toPromise().then(res => res.json().data as User[]).catch(this.handleError);
     }
 
     private handleError(error: any): Promise<any> {
-      console.error('An error occurred', error); // for demo purposes only
+      console.error('An error occurred', error);
       return Promise.reject(error.message || error);
     }
 }
