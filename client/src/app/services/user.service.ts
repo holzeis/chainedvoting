@@ -8,7 +8,7 @@ import { User } from '../models/user';
 export class UserService {
 
     private userUrl: string;
-    
+
     private headers = new Headers({'Content-Type': 'application/json'});
 
     public constructor(private _http: Http, private _configuration: Configuration) {
@@ -16,7 +16,7 @@ export class UserService {
     }
 
     public register(email: string): Promise<void> {
-        const url = this.userUrl + '/register'
+        const url = this.userUrl + '/register';
         return this._http.post(url, {email: email}, {headers: this.headers}).toPromise()
             .then(res => {
                 console.log('Retrieved response: ' + res);

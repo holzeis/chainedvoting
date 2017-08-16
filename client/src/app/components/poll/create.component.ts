@@ -1,22 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import {NgForm} from '@angular/forms';
-import {Router} from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { Poll, Option } from '../../models/poll';
 import { Vote } from '../../models/vote';
 import { User } from '../../models/user';
 
-import {PollService} from '../../services/poll.service';
-import {AlertService} from '../../services/alert.service';
-import {VoteService} from '../../services/vote.service';
-
+import { PollService } from '../../services/poll.service';
+import { AlertService } from '../../services/alert.service';
+import { VoteService } from '../../services/vote.service';
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.css']
 })
-
 export class CreateComponent {
 
   poll: Poll;
@@ -35,10 +33,10 @@ export class CreateComponent {
   ) {}
 
   splitString(toSplit: string): Option[] {
-    let options : Option[];
-    
-    for (let opt  of toSplit.split(';')) {
-      let option = new Option(opt);
+    const options: Option[] = [];
+
+    for (const opt  of toSplit.split(';')) {
+      const option = new Option(opt);
       options.push(option);
     }
 
