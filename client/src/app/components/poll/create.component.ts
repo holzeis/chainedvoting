@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {Router} from '@angular/router';
 
-import { Poll } from '../../models/poll';
+import { Poll, Option } from '../../models/poll';
 import { Vote } from '../../models/vote';
 import { User } from '../../models/user';
 
@@ -34,8 +34,15 @@ export class CreateComponent {
     private alertService: AlertService
   ) {}
 
-  splitString(_toSplit: string): string[] {
-    return _toSplit.split(';');
+  splitString(toSplit: string): Option[] {
+    let options : Option[];
+    
+    for (let opt  of toSplit.split(';')) {
+      let option = new Option(opt);
+      options.push(option);
+    }
+
+    return options;
   }
 
   onSubmit(f: NgForm) {

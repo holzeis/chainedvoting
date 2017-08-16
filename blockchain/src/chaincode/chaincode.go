@@ -1,9 +1,7 @@
 package main
 
 import (
-	"chaincode/entities"
-	"encoding/json"
-	"errors"
+	"chaincode/contracts"
 	"fmt"
 	"os"
 
@@ -26,7 +24,6 @@ type Chaincode struct {
 //	Invoke - Called on chaincode invoke. Takes a function name passed and calls that function. Passes the
 //  		 initial arguments passed are passed on to the called function.
 //======================================================================================================================
-
 func (t *Chaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	_, args := stub.GetFunctionAndParameters()
 
@@ -36,48 +33,22 @@ func (t *Chaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Infof("Invoke is running " + functionName)
 	fmt.Println(args)
 
+	var err error
+
 	if functionName == "register" {
-		fmt.Println("registering " + args[0])
-
-		var user entities.User
-		err := json.Unmarshal([]byte(args[0]), &user)
-
-		if err != nil {
-			fmt.Println(err)
-			return shim.Error(err.Error())
-		}
-
-		fmt.Println("Going to register " + user.Email)
-		StoreObjectInChain(stub, user.Email, "user", []byte(args[0]))
-
-		fmt.Println("Successfully registered " + user.Email)
-		return shim.Success(nil)
+		err = contracts.Register(stub, args)
+	} else if functionName == "createPoll" {
+		err = contracts.CreatePoll(stub, args)
+	} else {
+		return shim.Error(fmt.Sprintf("Received unknown invoke function name: '%s'", functionName))
 	}
 
-	return shim.Error(fmt.Sprintf("Received unknown invoke function name: '%s'", functionName))
-}
-
-func StoreObjectInChain(stub shim.ChaincodeStubInterface, objectID string, indexName string, object []byte) error {
-	compositeKey, err := stub.CreateCompositeKey(indexName, []string{objectID})
 	if err != nil {
-		return errors.New("Create composite key error: " + err.Error())
+		fmt.Println(err.Error())
+		return shim.Error(err.Error())
 	}
 
-	thingAsBytes, err := stub.GetState(compositeKey)
-	if err != nil {
-		return errors.New("Getstate error: " + err.Error())
-	}
-
-	if len(thingAsBytes) != 0 {
-		return errors.New("Object with ID " + objectID + " already exists")
-	}
-
-	err = stub.PutState(compositeKey, object)
-	if err != nil {
-		return errors.New("Putstate error: " + err.Error())
-	}
-
-	return nil
+	return shim.Success(nil)
 }
 
 //======================================================================================================================
