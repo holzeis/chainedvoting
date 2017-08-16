@@ -20,10 +20,9 @@ export class UserComponent implements OnInit {
   }
 
   public register(email: string) {
-    this._userService.register(email).subscribe( result => {
-      console.log(result);
-      this.success = result.success;
-      this.response = result.response;
+    console.log('registering ' + email);
+    this._userService.register(email).then(response => {
+      console.log(response);
     });
   }
 
