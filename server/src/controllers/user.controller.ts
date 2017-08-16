@@ -3,13 +3,7 @@ import {JsonController, Post, Body, Req} from "routing-controllers";
 import {BlockchainClient} from "../blockchain/client/blockchain.client";
 import {InvokeReponse} from "../blockchain/channel";
 
-export interface Response {
-    message : string;
-}
-
-class UserParams {
-    public email: string;
-}
+import {User} from "../models/user";
 
 @JsonController()
 export class UserController {
@@ -20,10 +14,10 @@ export class UserController {
 
 
     @Post("/register")
-    public async register(@Body() userParams: UserParams, @Req() req) : Promise<InvokeReponse> {
-        console.log("registering " + userParams.email);
+    public async register(@Body() user: User, @Req() req) : Promise<InvokeReponse> {
+        console.log("registering " + user.email);
 
-        return this.blockchainClient.invoke("default", "register", [JSON.stringify(userParams)], "Admin");
+        return this.blockchainClient.invoke("default", "register", [JSON.stringify(user)], "Admin");
     }
 }
 
