@@ -22,7 +22,7 @@ export class UserComponent implements OnInit {
     console.log('registering ' + email);
     this.userService.register(email).then(() => {
         this.alertService.success('User with email: ' + email + ' has been successfully registered.', true);
-        this.router.navigate(['/register']);
+        this.router.navigate(['/dashboard']);
       }).catch(e => this.alertService.error(e));
   }
 

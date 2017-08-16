@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
 @Injectable()
-
 export class AlertService {
     private subject = new Subject<any>();
     private keepAfterNavigationChange = false;

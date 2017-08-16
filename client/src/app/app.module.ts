@@ -18,6 +18,7 @@ import { UserService } from './services/user.service';
 import { PollService } from './services/poll.service';
 import { VoteService } from './services/vote.service';
 import { AlertService } from './services/alert.service';
+import { FabricService } from './services/fabric.service';
 
 const appRoutes: Routes = [
   {
@@ -58,7 +59,8 @@ const appRoutes: Routes = [
     AlertService,
     UserService,
     PollService,
-    VoteService
+    VoteService,
+    FabricService
   ],
   bootstrap: [AppComponent]
 })

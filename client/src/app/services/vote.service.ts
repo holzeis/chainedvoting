@@ -5,7 +5,6 @@ import { Vote } from '../models/vote';
 import { User } from '../models/user';
 
 @Injectable()
-
 export class VoteService {
 
   private votesUrl = 'api/votes';

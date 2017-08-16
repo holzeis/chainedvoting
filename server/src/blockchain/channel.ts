@@ -11,6 +11,8 @@ import * as hfcUtil from "fabric-client/lib/utils.js";
 import * as Member from "fabric-client/lib/User";
 import {ChaincodeEnvironmentConfiguration, ChannelConfig} from "./chaincode.env.config";
 
+import { Transaction } from "../models/transaction";
+
 export enum DeployPolicy {
   ALWAYS,
   NEVER
@@ -528,6 +530,24 @@ export class Channel {
   public async registerChaincodeEvent(chaincodeID: string, eventName: string, callback: (result: any) => void): Promise<void> {
     await this.eventHubs[0].registerChaincodeEvent(chaincodeID, eventName, callback);
   }
+
+  public async queryBlocks(): Promise<Transaction[]> {
+    let info = await this.channel.queryInfo();
+    let transactions : Transaction[] = [];
+    for (let i = (info.height.low - 40) > 0 ? (info.height.low - 40) : 0; i < info.height.low; i++) {
+      let blockinfo = await this.channel.queryBlock(i);
+      
+      console.log(i + ". " + blockinfo.header.data_hash);
+      for (let x = 0; x < blockinfo.data.data.length; x++) {
+        let header = blockinfo.data.data[x].payload.header.channel_header;
+        const transaction = new Transaction(i, blockinfo.header.data_hash, header);
+        console.log(header.tx_id);
+        transactions.push(transaction);
+      }
+    }
+    return transactions;
+  }
+
 }
 
 export interface InvokeReponse {

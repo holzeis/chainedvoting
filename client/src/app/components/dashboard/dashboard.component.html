@@ -1,7 +1,3 @@
-<h3>
-  {{title}}
-</h3>
-
 <div *ngIf="polls">
   <h4>Open polls</h4>
   <div class="row">
@@ -21,24 +17,22 @@
   </div>
 </div>
 
-
-<div *ngIf="ownPolls">
-<h4>Own polls</h4>
+<h4>Fabric Blockchain Transactions</h4>
 <div class="row">
-  <div class="col-xs-6 col-sm-2"><b>ID</b></div>
-  <div class="col-xs-6 col-sm-2"><b>Name</b></div>
-  <div class="col-xs-6 col-sm-5"><b>Description</b></div>
-  <div class="col-xs-6 col-sm-1"><b>Valid till</b></div>
-  <div class="col-xs-6 col-sm-1"></div>
+  <div class="col-xs-6 col-sm-1"><b>Block</b></div>
+  <div class="col-xs-6 col-sm-2"><b>Transaction Id</b></div>
+  <div class="col-xs-6 col-sm-2"><b>Timestamp</b></div>
+  <div class="col-xs-6 col-sm-1"><b>Channel</b></div>
+  <div class="col-xs-6 col-sm-2"><b>Block Hash</b></div>
+  <div class="col-xs-6 col-sm-1"><b>Type</b></div>
 </div>
-<br>
-<div class="row" *ngFor="let poll of ownPolls">
-  <div class="col-xs-6 col-sm-2">{{poll.id}}</div>
-  <div class="col-xs-6 col-sm-2">{{poll.name}}</div>
-  <div class="col-xs-6 col-sm-5">{{poll.description}}</div>
-  <div class="col-xs-6 col-sm-1">{{poll.validTo}}</div>
-  <div class="col-xs-6 col-sm-1"><button type="button" class="btn btn-danger" (click)="deletePoll(poll)">Delete</button></div>
-</div>
+<div *ngFor="let transaction of transactions" class="row">
+  <div class="col-xs-6 col-sm-1">{{transaction.number}}</div>
+  <div class="col-xs-6 col-sm-2">{{transaction.txId}}</div>
+  <div class="col-xs-6 col-sm-2">{{transaction.timestamp | date:'medium'}}</div>
+  <div class="col-xs-6 col-sm-1">{{transaction.channel}}</div>
+  <div class="col-xs-6 col-sm-2">{{transaction.blockhash}}</div>
+  <div class="col-xs-6 col-sm-1">{{transaction.type}}</div>
 </div>
 
 <router-outlet></router-outlet>

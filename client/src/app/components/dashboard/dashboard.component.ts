@@ -4,10 +4,12 @@ import { Router } from '@angular/router';
 
 import { Poll } from '../../models/poll';
 import { Vote } from '../../models/vote';
+import { Transaction } from '../../models/transaction';
 
 import { PollService } from '../../services/poll.service';
 import { VoteService } from '../../services/vote.service';
 import { AlertService } from '../../services/alert.service';
+import { FabricService } from '../../services/fabric.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,9 +18,9 @@ import { AlertService } from '../../services/alert.service';
 })
 
 export class DashboardComponent implements OnInit {
-  title = 'Polls';
-  ownPolls: Poll[];
+
   polls: Poll[] = [];
+  transactions: Transaction[] = [];
 
   // mock user
   mockUserID = '1';
@@ -27,30 +29,21 @@ export class DashboardComponent implements OnInit {
     private pollService: PollService,
     private voteService: VoteService,
     private router: Router,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private fabricService: FabricService
   ) {}
 
   ngOnInit() {
-    this.getPolls();
-    this.getOpenPolls();
-
-
+    this.retrievePolls();
+    this.retrieveBlocks();
   }
-  getPolls(): void {
+  
+  retrievePolls(): void {
     this.pollService.getPolls().then(polls => this.polls = polls).catch(error => this.alertService.error(error));
   }
 
-  getOpenPolls(): void {
-    // this.voteService.getVotes().then(votes => {
-    //   votes = votes.filter(vote => ((String(vote.voter) === this.mockUserID
-    //     && !vote.delegate) || String(vote.delegate) === this.mockUserID)
-    //     && !vote.timestamp);
-    //   for (const vote of votes) {
-    //     this.pollService.getPoll(vote.pollID).then(poll => {
-    //       this.polls.push(poll);
-    //     });
-    //   }
-    // }).catch(error => this.alertService.error(error));
+  retrieveBlocks(): void {
+    this.fabricService.queryBlocks().then(transactions => this.transactions = transactions).catch(error => this.alertService.error(error));
   }
 
   selectPoll(pollID: string): void {
@@ -59,20 +52,5 @@ export class DashboardComponent implements OnInit {
 
   createPoll(): void {
     this.router.navigate(['/create']);
-  }
-
-  deletePoll(poll: Poll): void {
-    this.voteService.getVotes().then(votes => {
-      votes = votes.filter(vote => vote.pollID === poll.id);
-      this.pollService.deletePoll(poll.id).then(() => {
-        this.ownPolls = this.ownPolls.filter(p => poll !== p);
-        // deleting from poll issued votes
-        for (const vote of votes) {
-          this.voteService.deleteVote(vote.id);
-          this.polls = this.polls.filter(p =>  vote.pollID !== p.id );
-        }
-        this.alertService.success('Poll id ' + poll.id + ' deleted');
-      });
-    });
   }
 }

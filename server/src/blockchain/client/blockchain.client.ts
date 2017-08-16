@@ -4,12 +4,22 @@ import {ChaincodeEnvironmentConfiguration} from "../chaincode.env.config";
 import {ChaincodeLocalConfig} from "../chaincode.local.config";
 
 import {InvokeReponse} from "../channel";
+import {Transaction} from "../../models/transaction";
 
 export class BlockchainClient {
 
   public constructor(private channels: any[],
                      private config: ChaincodeEnvironmentConfiguration,
                      ) {
+  }
+
+  public async queryBlocks(channelName: string): Promise<any> {
+    let channel = this.getChannel(channelName);
+    if (!channel) {
+      console.log("Can't find channel");
+      return "Can't find channel";
+    }
+    return await channel.queryBlocks();
   }
 
   public async invoke(channelName: string, chaincodeFunctionName: string, args: string[],
