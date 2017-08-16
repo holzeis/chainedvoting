@@ -10,8 +10,8 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
-// Register a user
-func Register(stub shim.ChaincodeStubInterface, args []string) error {
+// RegisterUser a user
+func RegisterUser(stub shim.ChaincodeStubInterface, args []string) error {
 	var user entities.User
 	err := json.Unmarshal([]byte(args[0]), &user)
 

@@ -34,11 +34,14 @@ func (t *Chaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	fmt.Println(args)
 
 	var err error
+	var response []byte
 
 	if functionName == "register" {
-		err = contracts.Register(stub, args)
+		err = contracts.RegisterUser(stub, args)
 	} else if functionName == "createPoll" {
 		err = contracts.CreatePoll(stub, args)
+	} else if functionName == "allPolls" {
+		response, err = contracts.RetrieveAllPolls(stub)
 	} else {
 		return shim.Error(fmt.Sprintf("Received unknown invoke function name: '%s'", functionName))
 	}
@@ -48,7 +51,7 @@ func (t *Chaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return shim.Error(err.Error())
 	}
 
-	return shim.Success(nil)
+	return shim.Success(response)
 }
 
 //======================================================================================================================
