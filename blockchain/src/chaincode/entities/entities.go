@@ -21,6 +21,7 @@ type Vote struct {
 	Timestamp      time.Time `json:"timestamp"`
 	Voter          string    `json:"voter"`
 	OptionID       string    `json:"optionID"`
+	PollID         string    `json:"pollID"`
 	DelegatedVoter string    `json:"delegatedVoter"`
 }
 
