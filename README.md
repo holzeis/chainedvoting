@@ -18,23 +18,12 @@ Eventually, this results into a chained voting, meaning that specific persons ca
  1. Lending a vote: Available dates & representatives are picked and placed as chaincode onto the blockchain.
  2. Regular voting: When voting for a date the smart contract is evaluated and executed if a lend vote applies.
 
-## Start the project
+### Start the project
 
 start services
 
 ```bash
 npm start
-```
-
-stop services
-
-```
-npm stop
-```
-
-test smart contracts
-```
-npm test
 ```
 
 This will start 5 containers
@@ -45,7 +34,25 @@ This will start 5 containers
 4. client - container to host web app
 5. server - container to host REST API (for client)
 
-Check the node js application on `http://<docker-machine-ip>:4200/`
+Check the (client) angular js application on `http://<docker-machine-ip>:4200/`
+
+Check the (server) node js application on `http://<docker-machine-ip>:3000/`
+
+### Stop the project
+
+stop services
+
+```
+npm stop
+```
+This will stop all containers, including the created container for the smart contracts. The image is removed as well.
+
+### Test the project
+```
+npm test
+```
+This will execute the go tests.
+
 
 ### TypeScript transpilation and linting on server container
 
