@@ -40,6 +40,25 @@ func RegisterUser(stub shim.ChaincodeStubInterface, args []string) error {
 	return nil
 }
 
+// GetUser a user
+func GetUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	if len(args) != 1 {
+		return []byte{}, errors.New("email is required")
+	}
+
+	fmt.Println("Check if " + args[0] + " is already registered.")
+	userAsBytes, err := util.GetUserAsBytesByID(stub, args[0])
+	if err != nil {
+		return []byte{}, err
+	}
+
+	if len(userAsBytes) == 0 {
+		return []byte{}, errors.New("User with email " + args[0] + " hasn't been registered yet")
+	}
+
+	return userAsBytes, err
+}
+
 // LoginUser a user
 func LoginUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	if len(args) != 1 {

@@ -143,3 +143,53 @@ func TestLoginUserWithoutRegistrationButExistingUser(t *testing.T) {
 
 	stub.MockTransactionEnd("LoginUser")
 }
+
+func TestGetUser(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("GetUser")
+
+	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(request)})
+
+	response = stub.MockInvoke("getUser", [][]byte{[]byte(""), []byte("getUser"), []byte("richard.holzeis@at.ibm.com")})
+
+	if response.Status != shim.OK {
+		t.Error(response.Message)
+	}
+
+	var user entities.User
+	err := json.Unmarshal(response.Payload, &user)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	stub.MockTransactionEnd("GetUser")
+}
+
+func TestGetUserWithoutRegistration(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("GetUser")
+
+	response := stub.MockInvoke("getUser", [][]byte{[]byte(""), []byte("getUser"), []byte("richard.holzeis@at.ibm.com")})
+
+	if response.Status == shim.OK {
+		t.Error("User should not be found as he isn't registered yet.")
+	}
+
+	stub.MockTransactionEnd("GetUser")
+}
+
+func TestGetUserWithoutRegistrationButExistingUser(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("GetUser")
+
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte("{\"email\":\"holzeis@at.ibm.com\"}")})
+
+	response = stub.MockInvoke("getUser", [][]byte{[]byte(""), []byte("getUser"), []byte("richard.holzeis@at.ibm.com")})
+
+	if response.Status == shim.OK {
+		t.Error("User should not be found as he isn't registered yet.")
+	}
+
+	stub.MockTransactionEnd("GetUser")
+}
