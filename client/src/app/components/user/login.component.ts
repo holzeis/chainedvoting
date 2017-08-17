@@ -30,8 +30,8 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.userService.login(this.model.email).then(res => this.router.navigate([this.returnUrl]))
       .catch(error => {
-        this.loading = false
-        this.alertService.error(error)
+        this.loading = false;
+        this.alertService.error(error);
       });
   }
 }

@@ -23,11 +23,11 @@ export class UserService {
     }
 
     public login(email: string): Promise<void> {
-        const user = new User();
-        user.email = email;
+        const login = new User();
+        login.email = email;
 
-        const url = this.userUrl + '/login'
-        return this._http.post(url, JSON.stringify(user), {headers: this.headers}).toPromise().then(user => {
+        const url = this.userUrl + '/login';
+        return this._http.post(url, JSON.stringify(login), {headers: this.headers}).toPromise().then(user => {
             localStorage.setItem('currentUser', JSON.stringify(user));
 
             // populate an event that the user has been signed in.
