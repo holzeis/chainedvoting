@@ -27,8 +27,8 @@ export class UserService {
         login.email = email;
 
         const url = this.userUrl + '/login';
-        return this._http.post(url, JSON.stringify(login), {headers: this.headers}).toPromise().then(user => {
-            localStorage.setItem('currentUser', JSON.stringify(user));
+        return this._http.post(url, JSON.stringify(login), {headers: this.headers}).toPromise().then(response => {
+            localStorage.setItem('currentUser', response.text());
 
             // populate an event that the user has been signed in.
             this.signedIn.emit(true);

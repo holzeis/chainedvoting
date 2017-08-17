@@ -23,7 +23,12 @@ export class UserController {
     public async login(@Body() user: User, @Req() req) : Promise<User> {
         console.log("performing login for " + user.email);
 
-        return this.blockchainClient.invoke("default", "loginUser", [user.email], "Admin");
+        var response: InvokeReponse = await this.blockchainClient.invoke("default", "loginUser", [user.email], "Admin");
+        if (!response.success) {
+            Promise.reject(response.message);
+        }
+
+        return this.blockchainClient.query("default", "getUser", [user.email], "Admin");
     }
 }
 
