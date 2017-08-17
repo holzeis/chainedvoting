@@ -24,7 +24,7 @@ func RegisterUser(stub shim.ChaincodeStubInterface, args []string) error {
 	}
 
 	// check if user is already registered
-	userAsBytes, err := util.GetUserAsBytesByID(stub, user.Email)
+	userAsBytes, err := util.GetUserAsBytesByID(stub, user.ID())
 	if err != nil {
 		return err
 	}
@@ -34,7 +34,7 @@ func RegisterUser(stub shim.ChaincodeStubInterface, args []string) error {
 	}
 
 	fmt.Println("Going to register " + user.Email)
-	util.StoreObjectInChain(stub, user.Email, util.UsersIndexName, []byte(args[0]))
+	util.StoreObjectInChain(stub, user.ID(), util.UsersIndexName, []byte(args[0]))
 
 	fmt.Println("Successfully registered " + user.Email)
 	return nil
@@ -90,7 +90,7 @@ func LoginUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) 
 	}
 
 	fmt.Println("Updating user to the blockchain.")
-	err = util.UpdateObjectInChain(stub, user.Email, util.UsersIndexName, userAsBytes)
+	err = util.UpdateObjectInChain(stub, user.ID(), util.UsersIndexName, userAsBytes)
 	if err != nil {
 		return []byte{}, err
 	}

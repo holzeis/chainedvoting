@@ -21,7 +21,7 @@ func CreatePoll(stub shim.ChaincodeStubInterface, args []string) error {
 
 	fmt.Println("Going to create poll: " + poll.Name)
 
-	util.StoreObjectInChain(stub, poll.Name, util.PollsIndexName, []byte(args[0]))
+	util.StoreObjectInChain(stub, poll.ID(), util.PollsIndexName, []byte(args[0]))
 
 	fmt.Println("Successfully created " + poll.Name)
 	return nil
