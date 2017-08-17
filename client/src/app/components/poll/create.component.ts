@@ -19,13 +19,6 @@ export class CreateComponent {
 
   poll: Poll;
 
-  // Mock poll owner
-  ownerUser: User = {
-    email: 'richard.holzeis@at.ibm.com',
-    surname: 'Richard',
-    lastname: 'Holzeis'
-  };
-
   constructor(
     private pollService: PollService,
     private voteService: VoteService,
@@ -45,11 +38,13 @@ export class CreateComponent {
   }
 
   onSubmit(f: NgForm) {
+    const currentUser: User = JSON.parse(localStorage.getItem('currentUser'));
+
     this.poll = {
       id: null,
       name: f.value.name,
       description: f.value.description,
-      owner: this.ownerUser.email,
+      owner: currentUser.email,
       validFrom: f.value.validfrom,
       validTo: f.value.validto,
       options: this.splitString(f.value.options)
