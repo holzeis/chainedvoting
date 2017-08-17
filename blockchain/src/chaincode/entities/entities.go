@@ -6,24 +6,14 @@ import (
 	"time"
 )
 
-type ECertResponse struct {
-	OK string `json:"OK"`
-}
-
-type TestData struct {
-	Users []User `json:"users"`
-}
-
-type TestDataElement interface {
-	ID() string
-}
-
+// User represents the user
 type User struct {
-	UserID  int64  `json:"userID"`
-	Email   string `json:"email"`
-	MyPolls []Poll `json:"myPolls"`
+	Email    string `json:"email"`
+	Surname  string `json:"surname"`
+	Lastname string `json:"lastname"`
 }
 
+// Vote represents the vote
 type Vote struct {
 	VoteID         string    `json:"voteID"`
 	Description    string    `json:"description"`
@@ -33,38 +23,45 @@ type Vote struct {
 	DelegatedVoter string    `json:"delegatedVoter"`
 }
 
+// Time wrapped time for custom date layouts
 type Time struct {
 	time.Time
 }
 
+// Poll represents the poll
 type Poll struct {
 	PollID      string   `json:"pollID"`
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
-	Owner       int64    `json:"owner"`
+	Owner       string   `json:"owner"`
 	ValidFrom   Time     `json:"validFrom"`
 	ValidTo     Time     `json:"validTo"`
 	Options     []Option `json:"options"`
 	Votes       []Vote   `json:"votes"`
 }
 
+// Option represent an option of a poll
 type Option struct {
 	OptionID    string `json:"optionID"`
 	Description string `json:"description"`
 }
 
+// ID returns the emal address of the user
 func (t *User) ID() string {
 	return t.Email
 }
 
+// ID returns the unique id of the vote
 func (t *Vote) ID() string {
 	return t.VoteID
 }
 
+// ID returns the unique id of the poll
 func (t *Poll) ID() string {
 	return t.PollID
 }
 
+// ID returns the unique id of the option
 func (t *Option) ID() string {
 	return t.OptionID
 }

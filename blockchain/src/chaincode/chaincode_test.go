@@ -39,7 +39,7 @@ func TestCreatePoll(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("CreatePollTx")
 
-	var request = "{\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":1,\"validFrom\":\"2017-08-13\"," +
+	var request = "{\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
 		"\"validTo\":\"2017-08-20\",\"options\":[{\"description\":\"option1\"},{\"description\":\"option2\"},{\"description\":\"option3\"}]}"
 	response := stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(request)})
 
@@ -54,7 +54,7 @@ func TestRetrieveAllPolls(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("RetrieveAllPolls")
 
-	var request = "{\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":1,\"validFrom\":\"2017-08-13\"," +
+	var request = "{\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
 		"\"validTo\":\"2017-08-20\",\"options\":[{\"description\":\"option1\"},{\"description\":\"option2\"},{\"description\":\"option3\"}]}"
 	response := stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(request)})
 
