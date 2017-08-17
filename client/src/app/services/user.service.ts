@@ -17,11 +17,7 @@ export class UserService {
 
     public register(email: string): Promise<void> {
         const url = this.userUrl + '/register';
-        return this._http.post(url, {email: email}, {headers: this.headers}).toPromise()
-            .then(res => {
-                console.log('Retrieved response: ' + res);
-                return;
-            }).catch(this.handleError);
+        return this._http.post(url, {email: email}, {headers: this.headers}).toPromise().catch(this.handleError);
     }
 
     getUser(userID: string): Promise<User> {
