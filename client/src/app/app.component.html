@@ -7,7 +7,6 @@
     </div>
     <button *ngIf="currentUser" class="btn btn-success navbar-btn" routerLink="/dashboard">My Dashboard</button>
     <button *ngIf="currentUser" class="btn btn-success navbar-btn" routerLink="/create">Create poll</button>
-    <button *ngIf="currentUser" class="btn btn-success navbar-btn" routerLink="/register">Register</button>
     <div class="pull-right">
       <p class="vcenter" *ngIf="currentUser">Logged in as {{currentUser.surname}} {{currentUser.lastname}} | <a *ngIf="currentUser" (click)="logout()" class="btn btn-link">Logout</a></p>
     </div>
