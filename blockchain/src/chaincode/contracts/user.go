@@ -17,11 +17,20 @@ func RegisterUser(stub shim.ChaincodeStubInterface, args []string) error {
 	err := json.Unmarshal([]byte(args[0]), &user)
 
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	if user.Email == "" {
 		return errors.New("user email must not be null")
+	}
+
+	// check if user is already registered
+	userAsBytes, err := util.GetUserAsBytesByID(stub, user.Email)
+	if err != nil {
+		return err
+	}
+
+	if len(userAsBytes) != 0 {
+		return errors.New("A user with the email: " + user.Email + " has already been registered.")
 	}
 
 	fmt.Println("Going to register " + user.Email)

@@ -13,10 +13,27 @@ func TestRegisterUser(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("CreateUserTx")
 
-	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte("{\"email\":\"richard.holzeis@at.ibm.com\"}")})
+	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(request)})
 
 	if response.Status != shim.OK {
 		t.Error(response.Message)
+	}
+
+	stub.MockTransactionEnd("CreateUserTx")
+}
+
+func TestAlreadyRegisteredUser(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("CreateUserTx")
+
+	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(request)})
+
+	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(request)})
+
+	if response.Status == shim.OK {
+		t.Error("It shouldn't be possible to register the same email address twice.")
 	}
 
 	stub.MockTransactionEnd("CreateUserTx")
