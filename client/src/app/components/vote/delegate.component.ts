@@ -36,12 +36,12 @@ export class DelegateComponent {
     this.checkForUser(f.value.delegateemail);
   }
 
-  setDelegate(delegate: any): void {
+  setDelegate(delegate: string): void {
     this.voteService.getVotes().then(votes => {
       const filteredVote = votes.filter(vote => String(vote.pollID) === this.pollId
       && String(vote.voter) === this.mockUserID);
       // TODO: implement direct vote route as user could have more than one vote (delegate)
-      filteredVote[0].delegate = delegate;
+      // filteredVote[0].delegate = delegate;
 
       this.voteService.updateVote(filteredVote[0]).then( () => {
         this.alertService.success('Delegate submited successfuly', true);
@@ -54,7 +54,7 @@ export class DelegateComponent {
     this.userService.getUsers().then(users => {
       const filteredUsers = users.filter(user => user.email === userEmail);
       if (filteredUsers.length === 1) {
-        this.setDelegate(filteredUsers[0].id);
+        this.setDelegate(filteredUsers[0].email);
       } else {
         this.alertService.error('User not found');
       }
