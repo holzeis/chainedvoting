@@ -52,6 +52,10 @@ func LoginUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) 
 		return []byte{}, err
 	}
 
+	if len(userAsBytes) == 0 {
+		return []byte{}, errors.New("User with email " + args[0] + " hasn't been registered yet")
+	}
+
 	fmt.Println("Found user; updating last login time.")
 	var user entities.User
 	err = json.Unmarshal(userAsBytes, &user)
