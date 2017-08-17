@@ -15,7 +15,8 @@ export class LoginComponent implements OnInit {
   public loading = false;
   public returnUrl: string;
 
-  constructor(private userService: UserService,  private alertService: AlertService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private userService: UserService,  private alertService: AlertService, 
+    private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     // reset login status
@@ -27,6 +28,7 @@ export class LoginComponent implements OnInit {
 
   public login() {
     this.loading = true;
-    this.userService.login(this.model.email).then(res => this.router.navigate([this.returnUrl])).catch(error => this.alertService.error(error));
+    this.userService.login(this.model.email).then(res => this.router.navigate([this.returnUrl]))
+      .catch(error => this.alertService.error(error));
   }
 }
