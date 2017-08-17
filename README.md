@@ -20,18 +20,21 @@ Eventually, this results into a chained voting, meaning that specific persons ca
 
 ## Start the project
 
-The docker images are setup and uploaded to my private repository space on dockerhub "richardholzeis".
-
 start services
 
 ```bash
-docker-compose up -d
+npm start
 ```
 
 stop services
 
 ```
-docker-compose down
+npm stop
+```
+
+test smart contracts
+```
+npm test
 ```
 
 This will start 5 containers
