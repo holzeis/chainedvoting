@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -28,4 +29,39 @@ func RegisterUser(stub shim.ChaincodeStubInterface, args []string) error {
 
 	fmt.Println("Successfully registered " + user.Email)
 	return nil
+}
+
+// LoginUser a user
+func LoginUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	if len(args) != 1 {
+		return []byte{}, errors.New("email is required")
+	}
+
+	fmt.Println("Check if " + args[0] + " is already registered.")
+	userAsBytes, err := util.GetUserAsBytesByID(stub, args[0])
+	if err != nil {
+		return []byte{}, err
+	}
+
+	fmt.Println("Found user; updating last login time.")
+	var user entities.User
+	err = json.Unmarshal(userAsBytes, &user)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	user.LastLogin = time.Now()
+
+	userAsBytes, err = json.Marshal(user)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	fmt.Println("Updating user to the blockchain.")
+	err = util.UpdateObjectInChain(stub, user.Email, util.UsersIndexName, userAsBytes)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	return userAsBytes, nil
 }

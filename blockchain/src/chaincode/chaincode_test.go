@@ -73,3 +73,46 @@ func TestRetrieveAllPolls(t *testing.T) {
 
 	stub.MockTransactionEnd("RetrieveAllPolls")
 }
+
+func TestLoginUser(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("LoginUser")
+
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte("{\"email\":\"richard.holzeis@at.ibm.com\"}")})
+
+	response = stub.MockInvoke("loginUser", [][]byte{[]byte(""), []byte("loginUser"), []byte("richard.holzeis@at.ibm.com")})
+
+	if response.Status != shim.OK {
+		t.Error(response.Message)
+	}
+
+	stub.MockTransactionEnd("LoginUser")
+}
+
+func TestLoginUserWithoutRegistration(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("LoginUser")
+
+	response := stub.MockInvoke("loginUser", [][]byte{[]byte(""), []byte("loginUser"), []byte("richard.holzeis@at.ibm.com")})
+
+	if response.Status == shim.OK {
+		t.Error("User should not be able to login as he isn't registered yet.")
+	}
+
+	stub.MockTransactionEnd("LoginUser")
+}
+
+func TestLoginUserWithoutRegistrationButExistingUser(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("LoginUser")
+
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte("{\"email\":\"holzeis@at.ibm.com\"}")})
+
+	response = stub.MockInvoke("loginUser", [][]byte{[]byte(""), []byte("loginUser"), []byte("richard.holzeis@at.ibm.com")})
+
+	if response.Status == shim.OK {
+		t.Error("User should not be able to login as he isn't registered yet.")
+	}
+
+	stub.MockTransactionEnd("LoginUser")
+}

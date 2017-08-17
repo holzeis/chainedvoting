@@ -8,9 +8,10 @@ import (
 
 // User represents the user
 type User struct {
-	Email    string `json:"email"`
-	Surname  string `json:"surname"`
-	Lastname string `json:"lastname"`
+	Email     string    `json:"email"`
+	Surname   string    `json:"surname"`
+	Lastname  string    `json:"lastname"`
+	LastLogin time.Time `json:"lastlogin"`
 }
 
 // Vote represents the vote
