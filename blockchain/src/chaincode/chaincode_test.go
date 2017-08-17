@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -95,12 +96,21 @@ func TestLoginUser(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("LoginUser")
 
-	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte("{\"email\":\"richard.holzeis@at.ibm.com\"}")})
+	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(request)})
 
 	response = stub.MockInvoke("loginUser", [][]byte{[]byte(""), []byte("loginUser"), []byte("richard.holzeis@at.ibm.com")})
 
 	if response.Status != shim.OK {
 		t.Error(response.Message)
+	}
+
+	var user entities.User
+	json.Unmarshal(response.Payload, &user)
+
+	zeroTime := time.Time{}
+	if user.LastLogin == zeroTime {
+		t.Error("timestamp should be set at login")
 	}
 
 	stub.MockTransactionEnd("LoginUser")
