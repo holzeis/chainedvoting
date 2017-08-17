@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   title = 'Chained Voting';
   currentUser: User;
 
-  constructor(private userService: UserService, private alertService: AlertService, 
+  constructor(private userService: UserService, private alertService: AlertService,
       private router: Router, private route: ActivatedRoute) {
 
   }
@@ -30,6 +30,6 @@ export class AppComponent implements OnInit {
   public logout() {
     console.log('clicked logout!');
     this.userService.logout();
-    this.router.navigate(['/'])
+    this.router.navigate(['/']);
   }
 }
