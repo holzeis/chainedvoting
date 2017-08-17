@@ -51,7 +51,7 @@ export class VoteComponent implements OnInit {
       // currently loading all votes and filtering
       if ( filteredVote.length > 0) {
         filteredVote[0].option = option;
-        filteredVote[0].timestamp = new Date().getTime();
+        // filteredVote[0].timestamp = new Date().getTime();
 
         this.voteService.updateVote(filteredVote[0]).then( () => {
           this.alertService.success('Vote successfuly submited', true);

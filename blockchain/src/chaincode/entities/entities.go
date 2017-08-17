@@ -16,7 +16,7 @@ type User struct {
 
 // Vote represents the vote
 type Vote struct {
-	VoteID         string    `json:"voteID"`
+	VoteID         string    `json:"id"`
 	Description    string    `json:"description"`
 	Timestamp      time.Time `json:"timestamp"`
 	Voter          string    `json:"voter"`
@@ -31,7 +31,7 @@ type Time struct {
 
 // Poll represents the poll
 type Poll struct {
-	PollID      string   `json:"pollID"`
+	PollID      string   `json:"id"`
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
 	Owner       string   `json:"owner"`
@@ -43,7 +43,7 @@ type Poll struct {
 
 // Option represent an option of a poll
 type Option struct {
-	OptionID    string `json:"optionID"`
+	OptionID    string `json:"id"`
 	Description string `json:"description"`
 }
 

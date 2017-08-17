@@ -40,15 +40,16 @@ export class CreateComponent {
   onSubmit(f: NgForm) {
     const currentUser: User = JSON.parse(localStorage.getItem('currentUser'));
 
-    this.poll = {
-      id: null,
-      name: f.value.name,
-      description: f.value.description,
-      owner: currentUser.email,
-      validFrom: f.value.validfrom,
-      validTo: f.value.validto,
-      options: this.splitString(f.value.options)
-    };
+    this.poll = new Poll();
+    this.poll.name = f.value.name;
+    this.poll.description = f.value.description;
+    this.poll.owner = currentUser.email;
+    this.poll.validFrom = f.value.validfrom;
+    this.poll.validTo = f.value.validto;
+    this.poll.options = this.splitString(f.value.options);
+
+    console.log(JSON.stringify(this.poll));
+
     this.pollService.createPoll(this.poll, this.splitString(f.value.voters)).then(res => {
       }).then(() => {
         this.alertService.success('Poll "' + this.poll.name + '" has been successfully created', true);

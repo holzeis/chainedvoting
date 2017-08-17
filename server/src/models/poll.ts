@@ -1,5 +1,6 @@
-export class Poll {
-  id: number;
+import { ID } from "./id";
+
+export class Poll extends ID {
   name: string;
   description: string;
   owner: string;
@@ -8,12 +9,11 @@ export class Poll {
   options: Option[];
 }
 
-export class Option {
-
-  id: number;
+export class Option extends ID {
   description: string;
 
   constructor(descr: string) {
+    super();
     this.description = descr;
   }
 }
