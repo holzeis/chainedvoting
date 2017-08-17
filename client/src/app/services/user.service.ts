@@ -15,9 +15,9 @@ export class UserService {
         this.userUrl = `${_configuration.host}/api/users`;
     }
 
-    public register(email: string): Promise<void> {
+    public register(user: User): Promise<void> {
         const url = this.userUrl + '/register';
-        return this._http.post(url, {email: email}, {headers: this.headers}).toPromise().catch(this.handleError);
+        return this._http.post(url, JSON.stringify(user), {headers: this.headers}).toPromise().catch(this.handleError);
     }
 
     getUser(userID: string): Promise<User> {
