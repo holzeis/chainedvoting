@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Output, EventEmitter} from '@angular/core';
 import {Http, Response, Headers} from '@angular/http';
 import {Configuration} from '../app.constants';
 
@@ -6,6 +6,8 @@ import { User } from '../models/user';
 
 @Injectable()
 export class UserService {
+
+    @Output() signedIn: EventEmitter<any> = new EventEmitter();
 
     private userUrl: string;
 
@@ -29,6 +31,10 @@ export class UserService {
         };
 
         localStorage.setItem('currentUser', JSON.stringify(user));
+
+        // populate an event that the user has been signed in.
+        this.signedIn.emit(true);
+
         return Promise.resolve();
 
         // const url = this.userUrl + '/login'
@@ -38,6 +44,8 @@ export class UserService {
     }
 
     public logout() {
+        // populate event that the user has been logged out.
+        this.signedIn.emit(false);
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
     }

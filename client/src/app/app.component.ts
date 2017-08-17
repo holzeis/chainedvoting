@@ -21,6 +21,14 @@ export class AppComponent implements OnInit {
   constructor(private userService: UserService, private alertService: AlertService,
       private router: Router, private route: ActivatedRoute) {
 
+    this.userService.signedIn.subscribe(signedIn => {
+      if (signedIn) {
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      } else {
+        this.currentUser = null;
+      }
+    });
+
   }
 
   ngOnInit() {
@@ -30,6 +38,6 @@ export class AppComponent implements OnInit {
   public logout() {
     console.log('clicked logout!');
     this.userService.logout();
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 }
