@@ -17,7 +17,7 @@ import { VoteService } from '../../services/vote.service';
 })
 export class CreateComponent {
 
-  poll: Poll;
+  public poll: Poll;
 
   constructor(
     private pollService: PollService,
@@ -26,7 +26,7 @@ export class CreateComponent {
     private alertService: AlertService
   ) {}
 
-  splitString(toSplit: string): Option[] {
+  private splitString(toSplit: string): Option[] {
     const options: Option[] = [];
 
     for (const opt  of toSplit.split(';')) {
@@ -37,7 +37,7 @@ export class CreateComponent {
     return options;
   }
 
-  onSubmit(f: NgForm) {
+  public onSubmit(f: NgForm) {
     const currentUser: User = JSON.parse(localStorage.getItem('currentUser'));
 
     this.poll = new Poll();

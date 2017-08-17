@@ -3,8 +3,8 @@
   <div *ngFor="let option of poll.options" class="row">
     <div class="col-xs-6 col-sm-1"><label for="poll-options" class="control-label">Vote for </label></div>
     <div class="col-xs-6 col-sm-1"><span>{{option.description}}</span></div>
-    <div class="col-xs-6 col-sm-1"><a class="btn btn-primary" role="button" (click)="setVote(option)">vote</a></div>
+    <div class="col-xs-6 col-sm-1"><a class="btn btn-primary" role="button" (click)="submit(option)">vote</a></div>
   </div>
 </div>
 
-<a class="btn btn-default" role="button" (click)="goBack()">Cancel</a>
+<a [routerLink]="['/']" class="btn btn-default">Cancel</a>
