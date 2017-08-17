@@ -20,15 +20,23 @@ export class UserService {
         return this._http.post(url, JSON.stringify(user), {headers: this.headers}).toPromise().catch(this.handleError);
     }
 
-    getUser(userID: string): Promise<User> {
-      const url = this.userUrl + '/' + userID;
-      return this._http.get(url).toPromise().then(res => res.json().data as User).catch(this.handleError);
-    }
+    public login(email: string): Promise<void> {
 
-    getUsers(): Promise<User[]> {
-      return this._http.get(this.userUrl).toPromise().then(res => res.json().data as User[]).catch(this.handleError);
-    }
+        const user: User = {
+            email: 'richard.holzeis@at.ibm.com',
+            surname: 'Richard',
+            lastname: 'Holzeis'
+        };
 
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        return Promise.resolve();
+
+        // const url = this.userUrl + '/login'
+        // return this._http.post(url, JSON.stringify({ email: email }), {headers: this.headers}).toPromise().then(user => {
+        //     localStorage.setItem('currentUser', JSON.stringify(user));
+        // }).catch(this.handleError);
+    }
+    
     private handleError(error: any): Promise<any> {
       console.error('An error occurred', error);
       return Promise.reject(error.message || error);
