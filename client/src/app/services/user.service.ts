@@ -23,24 +23,16 @@ export class UserService {
     }
 
     public login(email: string): Promise<void> {
+        const user = new User();
+        user.email = email;
 
-        const user: User = {
-            email: 'richard.holzeis@at.ibm.com',
-            surname: 'Richard',
-            lastname: 'Holzeis'
-        };
+        const url = this.userUrl + '/login'
+        return this._http.post(url, JSON.stringify(user), {headers: this.headers}).toPromise().then(user => {
+            localStorage.setItem('currentUser', JSON.stringify(user));
 
-        localStorage.setItem('currentUser', JSON.stringify(user));
-
-        // populate an event that the user has been signed in.
-        this.signedIn.emit(true);
-
-        return Promise.resolve();
-
-        // const url = this.userUrl + '/login'
-        // return this._http.post(url, JSON.stringify({ email: email }), {headers: this.headers}).toPromise().then(user => {
-        //     localStorage.setItem('currentUser', JSON.stringify(user));
-        // }).catch(this.handleError);
+            // populate an event that the user has been signed in.
+            this.signedIn.emit(true);
+        }).catch(this.handleError);
     }
 
     public logout() {

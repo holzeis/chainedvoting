@@ -29,6 +29,9 @@ export class LoginComponent implements OnInit {
   public login() {
     this.loading = true;
     this.userService.login(this.model.email).then(res => this.router.navigate([this.returnUrl]))
-      .catch(error => this.alertService.error(error));
+      .catch(error => {
+        this.loading = false
+        this.alertService.error(error)
+      });
   }
 }
