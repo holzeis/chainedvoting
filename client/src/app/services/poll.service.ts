@@ -20,7 +20,6 @@ export class PollService {
     this.pollsUrl = `${_configuration.host}/api/polls`;
   }
 
-
   getPoll(pollID: any): Promise<Poll> {
     const url = `${this.pollsUrl}/${pollID}`;
     return this.http.get(url).toPromise()
@@ -40,27 +39,7 @@ export class PollService {
 
   createPoll(poll: Poll, participants: any[]): Promise<Poll> {
     const url = this.pollsUrl + '/create';
-    return this.http.post(url, JSON.stringify(poll), {headers: this.headers})
-    .toPromise().then(res => {
-                console.log('Retrieved response: ' + res);
-                return;
-            }).catch(this.handleError);
-
-    // .then(res => {
-    //   res.json().data as Poll;
-    //   const pollId = res.json().data.id;
-    //   for (const participant of participants) {
-    //     this.voteService.createVote({
-    //       id: null,
-    //       pollID: pollId,
-    //       voter: participant,
-    //       option: null,
-    //       delegate: null,
-    //       timestamp: null
-    //     });
-    //   }
-    // })
-    // .catch(this.handleError);
+    return this.http.post(url, JSON.stringify(poll), {headers: this.headers}).toPromise().catch(this.handleError);
   }
 
   deletePoll(pollID: any): Promise<void> {

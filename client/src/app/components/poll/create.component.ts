@@ -21,8 +21,9 @@ export class CreateComponent {
 
   // Mock poll owner
   ownerUser: User = {
-    id: 1,
-    email: 'ysadek@ibm.com',
+    email: 'richard.holzeis@at.ibm.com',
+    surname: 'Richard',
+    lastname: 'Holzeis'
   };
 
   constructor(
@@ -48,7 +49,7 @@ export class CreateComponent {
       id: null,
       name: f.value.name,
       description: f.value.description,
-      owner: this.ownerUser.id,
+      owner: this.ownerUser.email,
       validFrom: f.value.validfrom,
       validTo: f.value.validto,
       options: this.splitString(f.value.options)

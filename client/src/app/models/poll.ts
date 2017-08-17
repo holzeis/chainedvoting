@@ -2,7 +2,7 @@ export class Poll {
   id: number;
   name: string;
   description: string;
-  owner: number;
+  owner: string;
   validFrom: number;
   validTo: number;
   options: Option[];
