@@ -28,10 +28,10 @@ export class PollComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getPoll(+this.pollID);
+    this.getPoll(this.pollID);
   }
 
-  getPoll(pollID: number): void {
+  getPoll(pollID: string): void {
     this.pollService.getPoll(pollID).then(poll => {
       this.getPollStats(poll);
       this.poll = poll;

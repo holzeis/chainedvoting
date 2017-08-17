@@ -37,9 +37,7 @@ export class VoteComponent implements OnInit {
   }
 
   getPoll(pollID: string): void {
-    this.pollService.getPoll(pollID).then(poll => {
-      this.poll = poll;
-    });
+    this.pollService.getPoll(pollID).then(poll => this.poll = poll);
   }
 
   setVote(option: string): void {

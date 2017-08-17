@@ -1,5 +1,5 @@
 "use strict";
-import {JsonController, Post, Get, Body, Req} from "routing-controllers";
+import {JsonController, Param, Post, Get, Body, Req} from "routing-controllers";
 import {BlockchainClient} from "../blockchain/client/blockchain.client";
 import {InvokeReponse} from "../blockchain/channel";
 import {Poll} from "../models/poll";
@@ -25,6 +25,13 @@ export class PollController {
         console.log("retrieving all polls");
 
         return this.blockchainClient.query("default", "allPolls", [], "Admin");
+    }
+
+    @Get("/:id")
+    public async retrievePoll(@Param("id") id: string, @Req() req) : Promise<Poll> {
+        console.log("retrieving poll with id " + id);
+
+        return this.blockchainClient.query("default", "getPoll", [id], "Admin");
     }
 }
 
