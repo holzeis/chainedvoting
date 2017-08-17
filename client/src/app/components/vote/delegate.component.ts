@@ -36,29 +36,29 @@ export class DelegateComponent {
     this.checkForUser(f.value.delegateemail);
   }
 
-  setDelegate(delegate: any): void {
-    this.voteService.getVotes().then(votes => {
-      const filteredVote = votes.filter(vote => String(vote.pollID) === this.pollId
-      && String(vote.voter) === this.mockUserID);
-      // TODO: implement direct vote route as user could have more than one vote (delegate)
-      filteredVote[0].delegate = delegate;
+  setDelegate(delegate: string): void {
+    // this.voteService.getVotes().then(votes => {
+    //   const filteredVote = votes.filter(vote => String(vote.pollID) === this.pollId
+    //   && String(vote.voter) === this.mockUserID);
+    //   // TODO: implement direct vote route as user could have more than one vote (delegate)
+    //   filteredVote[0].delegate = delegate;
 
-      this.voteService.updateVote(filteredVote[0]).then( () => {
-        this.alertService.success('Delegate submited successfuly', true);
-        this.goBack();
-      }).catch(error => this.alertService.error(error));
-    });
+    //   this.voteService.updateVote(filteredVote[0]).then( () => {
+    //     this.alertService.success('Delegate submited successfuly', true);
+    //     this.goBack();
+    //   }).catch(error => this.alertService.error(error));
+    // });
   }
 
   checkForUser(userEmail: string): void {
-    this.userService.getUsers().then(users => {
-      const filteredUsers = users.filter(user => user.email === userEmail);
-      if (filteredUsers.length === 1) {
-        this.setDelegate(filteredUsers[0].id);
-      } else {
-        this.alertService.error('User not found');
-      }
-    });
+    // this.userService.getUsers().then(users => {
+    //   const filteredUsers = users.filter(user => user.email === userEmail);
+    //   if (filteredUsers.length === 1) {
+    //     this.setDelegate(filteredUsers[0].email);
+    //   } else {
+    //     this.alertService.error('User not found');
+    //   }
+    // });
   }
 
   goBack() {

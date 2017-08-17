@@ -12,6 +12,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { VoteComponent } from './components/vote/vote.component';
 import { DelegateComponent } from './components/vote/delegate.component';
 import { AlertComponent } from './components/_utils/alert.component';
+import { LoginComponent } from './components/user/login.component';
 
 import { Configuration } from './app.constants';
 import { UserService } from './services/user.service';
@@ -20,6 +21,8 @@ import { VoteService } from './services/vote.service';
 import { AlertService } from './services/alert.service';
 import { FabricService } from './services/fabric.service';
 
+import { AuthGuard } from './guards/auth.guard';
+
 const appRoutes: Routes = [
   {
   path: '',
@@ -27,11 +30,12 @@ const appRoutes: Routes = [
   pathMatch: 'full'
   },
   { path: 'register', component: UserComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'poll/:id', component: PollComponent },
-  { path: 'vote/:id', component: VoteComponent },
-  { path: 'delegate/:id', component: DelegateComponent},
-  { path: 'create', component: CreateComponent}
+  { path: 'login', component: LoginComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'poll/:id', component: PollComponent, canActivate: [AuthGuard] },
+  { path: 'vote/:id', component: VoteComponent, canActivate: [AuthGuard] },
+  { path: 'delegate/:id', component: DelegateComponent, canActivate: [AuthGuard]},
+  { path: 'create', component: CreateComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
@@ -43,7 +47,8 @@ const appRoutes: Routes = [
     DelegateComponent,
     CreateComponent,
     UserComponent,
-    AlertComponent
+    AlertComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +65,8 @@ const appRoutes: Routes = [
     UserService,
     PollService,
     VoteService,
-    FabricService
+    FabricService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Output, EventEmitter} from '@angular/core';
 import {Http, Response, Headers} from '@angular/http';
 import {Configuration} from '../app.constants';
 
@@ -6,6 +6,8 @@ import { User } from '../models/user';
 
 @Injectable()
 export class UserService {
+
+    @Output() signedIn: EventEmitter<any> = new EventEmitter();
 
     private userUrl: string;
 
@@ -15,22 +17,29 @@ export class UserService {
         this.userUrl = `${_configuration.host}/api/users`;
     }
 
-    public register(email: string): Promise<void> {
+    public register(user: User): Promise<void> {
         const url = this.userUrl + '/register';
-        return this._http.post(url, {email: email}, {headers: this.headers}).toPromise()
-            .then(res => {
-                console.log('Retrieved response: ' + res);
-                return;
-            }).catch(this.handleError);
+        return this._http.post(url, JSON.stringify(user), {headers: this.headers}).toPromise().catch(this.handleError);
     }
 
-    getUser(userID: string): Promise<User> {
-      const url = this.userUrl + '/' + userID;
-      return this._http.get(url).toPromise().then(res => res.json().data as User).catch(this.handleError);
+    public login(email: string): Promise<void> {
+        const login = new User();
+        login.email = email;
+
+        const url = this.userUrl + '/login';
+        return this._http.post(url, JSON.stringify(login), {headers: this.headers}).toPromise().then(response => {
+            localStorage.setItem('currentUser', response.text());
+
+            // populate an event that the user has been signed in.
+            this.signedIn.emit(true);
+        }).catch(this.handleError);
     }
 
-    getUsers(): Promise<User[]> {
-      return this._http.get(this.userUrl).toPromise().then(res => res.json().data as User[]).catch(this.handleError);
+    public logout() {
+        // populate event that the user has been logged out.
+        this.signedIn.emit(false);
+        // remove user from local storage to log user out
+        localStorage.removeItem('currentUser');
     }
 
     private handleError(error: any): Promise<any> {

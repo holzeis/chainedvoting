@@ -23,15 +23,12 @@ export class BlockchainClient {
   }
 
   public async invoke(channelName: string, chaincodeFunctionName: string, args: string[],
-          blockchainUsername: string): Promise<InvokeReponse> {
+          blockchainUsername: string): Promise<any> {
     let channel = this.getChannel(channelName);
 
     if (!channel) {
       console.log("Can't find channel");
-      return <InvokeReponse> {
-        success: false,
-        message: "Can't find channel"
-      };
+      return "Can't find channel";
     }
 
     return await channel.invoke(this.config.chaincode.chaincodeID, this.config.chaincode.chaincodeVersion,

@@ -22,9 +22,6 @@ export class DashboardComponent implements OnInit {
   polls: Poll[] = [];
   transactions: Transaction[] = [];
 
-  // mock user
-  mockUserID = '1';
-
   public constructor(
     private pollService: PollService,
     private voteService: VoteService,

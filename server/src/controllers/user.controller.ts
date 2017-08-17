@@ -12,12 +12,23 @@ export class UserController {
 
     }
 
-
     @Post("/register")
     public async register(@Body() user: User, @Req() req) : Promise<InvokeReponse> {
         console.log("registering " + user.email);
 
         return this.blockchainClient.invoke("default", "register", [JSON.stringify(user)], "Admin");
+    }
+
+    @Post("/login")
+    public async login(@Body() user: User, @Req() req) : Promise<User> {
+        console.log("performing login for " + user.email);
+
+        var response: InvokeReponse = await this.blockchainClient.invoke("default", "loginUser", [user.email], "Admin");
+        if (!response.success) {
+            Promise.reject(response.message);
+        }
+
+        return this.blockchainClient.query("default", "getUser", [user.email], "Admin");
     }
 }
 
