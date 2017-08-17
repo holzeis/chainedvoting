@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { OnInit } from '@angular/core';
 
 import { AlertService } from './services/alert.service';
+import { UserService } from './services/user.service';
 
 
 import { User } from './models/user';
@@ -17,7 +18,8 @@ export class AppComponent implements OnInit {
   title = 'Chained Voting';
   currentUser: User;
 
-  constructor(private alertService: AlertService, private router: Router, private route: ActivatedRoute) {
+  constructor(private userService: UserService, private alertService: AlertService, 
+      private router: Router, private route: ActivatedRoute) {
 
   }
 
@@ -26,9 +28,8 @@ export class AppComponent implements OnInit {
   }
 
   public logout() {
-    console.log("clicked logout!");
-    localStorage.removeItem('currentUser');
-    this.currentUser = null;
-    //this.router.navigate(['/'])
+    console.log('clicked logout!');
+    this.userService.logout();
+    this.router.navigate(['/'])
   }
 }
