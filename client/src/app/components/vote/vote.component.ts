@@ -20,7 +20,7 @@ export class VoteComponent implements OnInit {
   public poll: Poll;
   public pollID: string;
   public vote: Vote;
-  
+
   constructor(
     private pollService: PollService,
     private voteService: VoteService,
@@ -42,7 +42,7 @@ export class VoteComponent implements OnInit {
   public submit(option: Option): void {
     console.log('voted for ' + JSON.stringify(option));
 
-    let user: User = JSON.parse(localStorage.getItem('currentUser'));
+    const user: User = JSON.parse(localStorage.getItem('currentUser'));
     const vote = new Vote();
     vote.option = option;
     vote.pollID = this.pollID;
@@ -50,7 +50,7 @@ export class VoteComponent implements OnInit {
     vote.voter = user.email;
 
     this.voteService.createVote(vote).then(res => {
-      this.alertService.success("Your vote has been successfully processed!");
-    }).catch(error => this.alertService.error("Your vote was not accepted!"));
+      this.alertService.success('Your vote has been successfully processed!');
+    }).catch(error => this.alertService.error('Your vote was not accepted!'));
   }
 }

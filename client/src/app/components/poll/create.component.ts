@@ -26,7 +26,7 @@ export class CreateComponent {
     private alertService: AlertService
   ) {}
 
-  private splitString(toSplit: string): Option[] {
+  splitString(toSplit: string): Option[] {
     const options: Option[] = [];
 
     for (const opt  of toSplit.split(';')) {
@@ -48,9 +48,7 @@ export class CreateComponent {
     this.poll.validTo = f.value.validto;
     this.poll.options = this.splitString(f.value.options);
 
-    console.log(JSON.stringify(this.poll));
-
-    this.pollService.createPoll(this.poll, this.splitString(f.value.voters)).then(res => {
+    this.pollService.createPoll(this.poll).then(res => {
       }).then(() => {
         this.alertService.success('Poll "' + this.poll.name + '" has been successfully created', true);
         this.router.navigate(['/dashboard']);

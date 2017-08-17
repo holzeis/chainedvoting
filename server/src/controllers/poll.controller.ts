@@ -14,7 +14,7 @@ export class PollController {
 
     @Post("/create")
     public async create(@Body() poll: Poll, @Req() req) : Promise<InvokeReponse> {
-        console.log("creating " + poll.name);        
+        console.log("creating " + poll.name);
 
         return this.blockchainClient.invoke("default", "createPoll", [JSON.stringify(poll)], "Admin");
     }
