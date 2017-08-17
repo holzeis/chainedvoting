@@ -19,7 +19,7 @@ func RegisterUser(stub shim.ChaincodeStubInterface, args []string) error {
 	if err != nil {
 		return err
 	}
-	if user.Email == "" {
+	if user.ID() == "" {
 		return errors.New("user email must not be null")
 	}
 
@@ -30,13 +30,13 @@ func RegisterUser(stub shim.ChaincodeStubInterface, args []string) error {
 	}
 
 	if len(userAsBytes) != 0 {
-		return errors.New("A user with the email: " + user.Email + " has already been registered.")
+		return errors.New("A user with the email: " + user.ID() + " has already been registered.")
 	}
 
-	fmt.Println("Going to register " + user.Email)
+	fmt.Println("Going to register " + user.ID())
 	util.StoreObjectInChain(stub, user.ID(), util.UsersIndexName, []byte(args[0]))
 
-	fmt.Println("Successfully registered " + user.Email)
+	fmt.Println("Successfully registered " + user.ID())
 	return nil
 }
 
