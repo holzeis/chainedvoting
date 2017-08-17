@@ -42,6 +42,7 @@ func RegisterUser(stub shim.ChaincodeStubInterface, args []string) error {
 
 // GetUser a user
 func GetUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	fmt.Println("Getting user with email: " + args[0])
 	if len(args) != 1 {
 		return []byte{}, errors.New("email is required")
 	}

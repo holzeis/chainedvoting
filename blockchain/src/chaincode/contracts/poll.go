@@ -4,6 +4,7 @@ import (
 	"chaincode/entities"
 	"chaincode/util"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -52,4 +53,23 @@ func RetrieveAllPolls(stub shim.ChaincodeStubInterface) ([]byte, error) {
 	}
 
 	return json.Marshal(polls)
+}
+
+//GetPoll retrieves a poll by id
+func GetPoll(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	if len(args) != 1 {
+		return []byte{}, errors.New("poll id is required")
+	}
+
+	fmt.Println("Getting poll with id: " + args[0])
+	pollAsBytes, err := util.GetPollAsBytesByID(stub, args[0])
+	if err != nil {
+		return []byte{}, err
+	}
+
+	if len(pollAsBytes) == 0 {
+		return []byte{}, errors.New("Poll with id " + args[0] + " not found")
+	}
+
+	return pollAsBytes, err
 }

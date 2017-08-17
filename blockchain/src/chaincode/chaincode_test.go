@@ -193,3 +193,56 @@ func TestGetUserWithoutRegistrationButExistingUser(t *testing.T) {
 
 	stub.MockTransactionEnd("GetUser")
 }
+
+func TestGetPoll(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("GetPoll")
+
+	var request = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2017-08-20\",\"options\":[{\"description\":\"option1\"},{\"description\":\"option2\"},{\"description\":\"option3\"}]}"
+	response := stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(request)})
+
+	response = stub.MockInvoke("getPoll", [][]byte{[]byte(""), []byte("getPoll"), []byte("1")})
+
+	if response.Status != shim.OK {
+		t.Error(response.Message)
+	}
+
+	var user entities.User
+	err := json.Unmarshal(response.Payload, &user)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	stub.MockTransactionEnd("GetPoll")
+}
+
+func TestGGetPollWithoutPolls(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("GetPoll")
+
+	response := stub.MockInvoke("getPoll", [][]byte{[]byte(""), []byte("getPoll"), []byte("1")})
+
+	if response.Status == shim.OK {
+		t.Error("Poll should not be found as it hasn't been created")
+	}
+
+	stub.MockTransactionEnd("GetPoll")
+}
+
+func TestGetPollWithoutCreatedPollButExistingPolls(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("GetPoll")
+
+	var request = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2017-08-20\",\"options\":[{\"description\":\"option1\"},{\"description\":\"option2\"},{\"description\":\"option3\"}]}"
+	response := stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(request)})
+
+	response = stub.MockInvoke("getPoll", [][]byte{[]byte(""), []byte("getPoll"), []byte("2")})
+
+	if response.Status == shim.OK {
+		t.Error("Poll should not be found as it hasn't been created")
+	}
+
+	stub.MockTransactionEnd("GetPoll")
+}
