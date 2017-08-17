@@ -36,7 +36,12 @@ export class UserService {
         //     localStorage.setItem('currentUser', JSON.stringify(user));
         // }).catch(this.handleError);
     }
-    
+
+    public logout() {
+        // remove user from local storage to log user out
+        localStorage.removeItem('currentUser');
+    }
+
     private handleError(error: any): Promise<any> {
       console.error('An error occurred', error);
       return Promise.reject(error.message || error);
