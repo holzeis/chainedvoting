@@ -98,5 +98,10 @@ func validateVote(stub shim.ChaincodeStubInterface, vote entities.Vote) (entitie
 		return entities.Poll{}, errors.New("Voter is no registered user")
 	}
 
+	fmt.Println("check if the option is valid.")
+	if !entities.Contains(poll.Options, vote.Option) {
+		return entities.Poll{}, errors.New("Voted for invalid option")
+	}
+
 	return poll, nil
 }

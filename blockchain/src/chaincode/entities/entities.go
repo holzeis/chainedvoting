@@ -95,3 +95,13 @@ func (t Time) MarshalJSON() ([]byte, error) {
 	s := fmt.Sprintf(`"%s"`, t.Time.Format(TimeFormat))
 	return []byte(s), nil
 }
+
+// Contains checks if an option is present in a list of options
+func Contains(list []Option, x Option) bool {
+	for _, item := range list {
+		if item == x {
+			return true
+		}
+	}
+	return false
+}
