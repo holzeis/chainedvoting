@@ -78,8 +78,6 @@ func (t *Time) UnmarshalJSON(b []byte) error {
 	// before parsing.
 	s = strings.Trim(s, "\"")
 
-	fmt.Println("Unmarshaling time: " + s)
-
 	ret, err := time.Parse(TimeFormat, s)
 	if err != nil {
 		fmt.Println("Error at parsing time: " + err.Error())
@@ -95,6 +93,5 @@ func (t Time) MarshalJSON() ([]byte, error) {
 		return []byte("null"), nil
 	}
 	s := fmt.Sprintf(`"%s"`, t.Time.Format(TimeFormat))
-	fmt.Println("Marshalling time to " + s)
 	return []byte(s), nil
 }
