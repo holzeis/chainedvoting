@@ -51,6 +51,6 @@ export class VoteComponent implements OnInit {
 
     this.voteService.createVote(vote).then(res => {
       this.alertService.success('Your vote has been successfully processed!');
-    }).catch(error => this.alertService.error('Your vote was not accepted!'));
+    }).catch(error => this.alertService.error(error));
   }
 }

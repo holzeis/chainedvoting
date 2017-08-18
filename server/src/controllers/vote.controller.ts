@@ -16,8 +16,6 @@ export class VoteController {
     public async vote(@Body() vote: Vote, @Req() req) : Promise<InvokeReponse> {
         console.log("processing vote for " + vote.option.description + " of poll with id: " + vote.pollID);
 
-        console.log([JSON.stringify(vote)]);
-
         return this.blockchainClient.invoke("default", "vote", [JSON.stringify(vote)], "Admin");
     }
 }

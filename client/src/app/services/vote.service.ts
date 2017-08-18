@@ -15,19 +15,14 @@ export class VoteService {
     this.votesUrl = `${_configuration.host}/api/votes`;
   }
 
-  createVote(vote: Vote): Promise<Vote> {
+  public createVote(vote: Vote): Promise<Vote> {
     const url = this.votesUrl + '/create';
     return this.http.post(url, JSON.stringify(vote), {headers: this.headers})
         .toPromise().then(res => res.json() as Vote).catch(this.handleError);
   }
 
-  getVotes(): Promise<Vote[]> {
-    return this.http.get(this.votesUrl).toPromise()
-        .then(response => response.json() as Vote[]).catch(this.handleError);
-  }
-
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+    return Promise.reject(error.json().message || error);
   }
 }
