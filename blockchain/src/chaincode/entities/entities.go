@@ -19,7 +19,7 @@ type Vote struct {
 	VoteID         string    `json:"id"`
 	Timestamp      time.Time `json:"timestamp"`
 	Voter          string    `json:"voter"`
-	OptionID       Option    `json:"option"`
+	Option         Option    `json:"option"`
 	PollID         string    `json:"pollID"`
 	DelegatedVoter string    `json:"delegatedVoter"`
 }

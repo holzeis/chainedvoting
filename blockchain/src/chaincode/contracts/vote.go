@@ -25,7 +25,7 @@ func Vote(stub shim.ChaincodeStubInterface, args []string) error {
 		return errors.New("vote id must not be null")
 	}
 
-	if vote.OptionID == "" {
+	if vote.Option.ID() == "" {
 		return errors.New("an option has to be selected")
 	}
 
