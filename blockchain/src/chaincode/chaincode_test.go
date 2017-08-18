@@ -322,6 +322,22 @@ func TestVoteForExpiredPoll(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("VoteTx")
 
+	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register)})
+
+	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2016-08-13\"," +
+		"\"validTo\":\"2016-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\",\"description\":\"option2\"},{\"id\":\"4\",\"description\":\"option3\"}]}"
+	response = stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(createPoll)})
+
+	var vote = "{\"id\":\"1\",\"option\":{\"id\":\"2\",\"description\":\"option1\"},\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"richard.holzeis@at.ibm.com\"}"
+
+	response = stub.MockInvoke("vote", [][]byte{[]byte(""), []byte("vote"), []byte(vote)})
+
+	if response.Status == shim.OK {
+		t.Error("Vote shouldn't be accepted as it is submitted onto an expired poll.")
+	}
+
 	stub.MockTransactionEnd("VoteTx")
 }
 
