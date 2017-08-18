@@ -9,6 +9,7 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
+// GetUserAsBytesByID gets a user as bytes by id
 func GetUserAsBytesByID(stub shim.ChaincodeStubInterface, email string) ([]byte, error) {
 	userCompositeKey, err := stub.CreateCompositeKey(UsersIndexName, []string{email})
 	if err != nil {
@@ -23,6 +24,7 @@ func GetUserAsBytesByID(stub shim.ChaincodeStubInterface, email string) ([]byte,
 	return userAsBytes, nil
 }
 
+// GetPollAsBytesByID gets a poll as bytes by id
 func GetPollAsBytesByID(stub shim.ChaincodeStubInterface, pollID string) ([]byte, error) {
 	pollCompositeKey, err := stub.CreateCompositeKey(PollsIndexName, []string{pollID})
 	if err != nil {
@@ -37,6 +39,7 @@ func GetPollAsBytesByID(stub shim.ChaincodeStubInterface, pollID string) ([]byte
 	return pollAsBytes, nil
 }
 
+// GetAllPollsAsBytes gets all polls as bytes
 func GetAllPollsAsBytes(stub shim.ChaincodeStubInterface) ([]byte, error) {
 	pollsResultsIterator, err := stub.GetStateByPartialCompositeKey(PollsIndexName, []string{})
 	if err != nil {
