@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     this.userService.login(this.model.email).then(res => this.router.navigate([this.returnUrl]))
       .catch(error => {
         this.loading = false;
-        this.alertService.error('User with email: ' + this.model.email + ' hasn\'t been registered yet!');
+        this.alertService.error(error);
       });
   }
 }
