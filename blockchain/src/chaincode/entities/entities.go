@@ -17,10 +17,9 @@ type User struct {
 // Vote represents the vote
 type Vote struct {
 	VoteID         string    `json:"id"`
-	Description    string    `json:"description"`
 	Timestamp      time.Time `json:"timestamp"`
 	Voter          string    `json:"voter"`
-	OptionID       string    `json:"optionID"`
+	OptionID       Option    `json:"option"`
 	PollID         string    `json:"pollID"`
 	DelegatedVoter string    `json:"delegatedVoter"`
 }
