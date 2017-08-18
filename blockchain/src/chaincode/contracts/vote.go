@@ -14,65 +14,74 @@ import (
 func Vote(stub shim.ChaincodeStubInterface, args []string) error {
 	var vote entities.Vote
 	err := json.Unmarshal([]byte(args[0]), &vote)
-
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("checking input vote object.")
+	fmt.Println("validating vote.")
+	poll, err := validateVote(stub, vote)
+	if err != nil {
+		return err
+	}
 
+	fmt.Println("adding vote to the poll.")
+	poll.Votes = append(poll.Votes, vote)
+
+	pollAsBytes, err := json.Marshal(poll)
+	if err != nil {
+		return err
+	}
+
+	err = util.UpdateObjectInChain(stub, poll.ID(), util.PollsIndexName, pollAsBytes)
+	if err != nil {
+		return err
+	}
+
+	err = util.StoreObjectInChain(stub, vote.ID(), util.VotesIndexName, []byte(args[0]))
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("successfully submitted vote to poll!")
+	return nil
+}
+
+func validateVote(stub shim.ChaincodeStubInterface, vote entities.Vote) (entities.Poll, error) {
 	if vote.ID() == "" {
-		return errors.New("vote id must not be null")
+		return entities.Poll{}, errors.New("vote id must not be null")
 	}
 
 	if vote.Option.ID() == "" {
-		return errors.New("an option has to be selected")
+		return entities.Poll{}, errors.New("an option has to be selected")
 	}
 
 	if vote.Voter == "" {
-		return errors.New("a voter must be provided")
+		return entities.Poll{}, errors.New("a voter must be provided")
 	}
 
 	fmt.Println("check if user has already voted on the poll.")
 
 	pollAsBytes, err := util.GetPollAsBytesByID(stub, vote.PollID)
 	if err != nil {
-		return err
+		return entities.Poll{}, err
 	}
 
 	if len(pollAsBytes) == 0 {
-		return errors.New("Could not find poll by poll id " + vote.PollID)
+		return entities.Poll{}, errors.New("Could not find poll by poll id " + vote.PollID)
 	}
 
 	var poll entities.Poll
 	err = json.Unmarshal(pollAsBytes, &poll)
 	if err != nil {
-		return err
+		return entities.Poll{}, err
 	}
 
 	for _, pVote := range poll.Votes {
 		// check if vote with the same user has already been submitted.
 		if pVote.Voter == vote.Voter {
-			return errors.New("The user has already voted for this poll")
+			return entities.Poll{}, errors.New("The user has already voted for this poll")
 		}
 	}
 
-	fmt.Println("all checks have been successfully passed, hence the vote is stored to the blockchain.")
-	err = util.StoreObjectInChain(stub, vote.ID(), util.VotesIndexName, []byte(args[0]))
-	if err != nil {
-		return err
-	}
-
-	fmt.Println("add vote to the poll")
-	poll.Votes = append(poll.Votes, vote)
-
-	pollAsBytes, err = json.Marshal(poll)
-	if err != nil {
-		return err
-	}
-
-	util.StoreObjectInChain(stub, poll.ID(), util.PollsIndexName, pollAsBytes)
-
-	fmt.Println("successfully submitted vote to poll!")
-	return nil
+	return poll, nil
 }
