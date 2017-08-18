@@ -4,6 +4,7 @@ import (
 	"chaincode/entities"
 	"chaincode/util"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -19,9 +20,12 @@ func CreatePoll(stub shim.ChaincodeStubInterface, args []string) error {
 		return err
 	}
 
-	fmt.Println("Going to create poll: " + poll.Name)
+	fmt.Println("Going to create poll: " + poll.Name + " with id: " + poll.ID())
 
-	util.StoreObjectInChain(stub, poll.Name, util.PollsIndexName, []byte(args[0]))
+	err = util.StoreObjectInChain(stub, poll.ID(), util.PollsIndexName, []byte(args[0]))
+	if err != nil {
+		return err
+	}
 
 	fmt.Println("Successfully created " + poll.Name)
 	return nil
@@ -52,4 +56,23 @@ func RetrieveAllPolls(stub shim.ChaincodeStubInterface) ([]byte, error) {
 	}
 
 	return json.Marshal(polls)
+}
+
+//GetPoll retrieves a poll by id
+func GetPoll(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	if len(args) != 1 {
+		return []byte{}, errors.New("poll id is required")
+	}
+
+	fmt.Println("Getting poll with id: " + args[0])
+	pollAsBytes, err := util.GetPollAsBytesByID(stub, args[0])
+	if err != nil {
+		return []byte{}, err
+	}
+
+	if len(pollAsBytes) == 0 {
+		return []byte{}, errors.New("Poll with id " + args[0] + " not found")
+	}
+
+	return pollAsBytes, err
 }

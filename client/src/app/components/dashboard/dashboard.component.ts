@@ -16,11 +16,10 @@ import { FabricService } from '../../services/fabric.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-
 export class DashboardComponent implements OnInit {
 
-  polls: Poll[] = [];
-  transactions: Transaction[] = [];
+  public polls: Poll[] = [];
+  public transactions: Transaction[] = [];
 
   public constructor(
     private pollService: PollService,
@@ -30,24 +29,28 @@ export class DashboardComponent implements OnInit {
     private fabricService: FabricService
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.retrievePolls();
     this.retrieveBlocks();
   }
 
-  retrievePolls(): void {
+  public retrievePolls(): void {
     this.pollService.getPolls().then(polls => this.polls = polls).catch(error => this.alertService.error(error));
   }
 
-  retrieveBlocks(): void {
+  public retrieveBlocks(): void {
     this.fabricService.queryBlocks().then(transactions => this.transactions = transactions).catch(error => this.alertService.error(error));
   }
 
-  selectPoll(pollID: string): void {
+  public view(pollID: string): void {
     this.router.navigate(['/poll', pollID]);
   }
 
-  createPoll(): void {
+  public vote(pollID: string): void {
+    this.router.navigate(['/vote', pollID]);
+  }
+
+  public createPoll(): void {
     this.router.navigate(['/create']);
   }
 }

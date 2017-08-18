@@ -7,7 +7,6 @@ import { Poll } from '../models/poll';
 import { Vote } from '../models/vote';
 
 import { Configuration } from '../app.constants';
-import { VoteService } from './vote.service';
 
 @Injectable()
 export class PollService {
@@ -16,28 +15,20 @@ export class PollService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
 
-  constructor(private http: Http, private _configuration: Configuration, private voteService: VoteService) {
+  constructor(private http: Http, private _configuration: Configuration) {
     this.pollsUrl = `${_configuration.host}/api/polls`;
   }
 
-  getPoll(pollID: any): Promise<Poll> {
-    const url = `${this.pollsUrl}/${pollID}`;
-    return this.http.get(url).toPromise()
-    .then(response => response.json().data as Poll).catch(this.handleError);
+  public getPoll(pollID: string): Promise<Poll> {
+    const url = this.pollsUrl + '/' + pollID;
+    return this.http.get(url).toPromise().then(response => response.json() as Poll).catch(this.handleError);
   }
 
-  updatePoll(poll: Poll): Promise<Poll> {
-    const url = `${this.pollsUrl}/${poll.id}`;
-    return this.http.put(url, JSON.stringify(poll), {headers: this.headers})
-    .toPromise().then(() => poll)
-    .catch(this.handleError);
-  }
-
-  getPolls(): Promise<Poll[]> {
+  public getPolls(): Promise<Poll[]> {
     return this.http.get(this.pollsUrl).toPromise().then(response => response.json() as Poll[]).catch(this.handleError);
   }
 
-  createPoll(poll: Poll, participants: any[]): Promise<Poll> {
+  public createPoll(poll: Poll): Promise<Poll> {
     const url = this.pollsUrl + '/create';
     return this.http.post(url, JSON.stringify(poll), {headers: this.headers}).toPromise().catch(this.handleError);
   }

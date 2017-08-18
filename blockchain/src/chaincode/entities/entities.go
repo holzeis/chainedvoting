@@ -16,11 +16,11 @@ type User struct {
 
 // Vote represents the vote
 type Vote struct {
-	VoteID         string    `json:"voteID"`
-	Description    string    `json:"description"`
+	VoteID         string    `json:"id"`
 	Timestamp      time.Time `json:"timestamp"`
 	Voter          string    `json:"voter"`
-	OptionID       string    `json:"optionID"`
+	Option         Option    `json:"option"`
+	PollID         string    `json:"pollID"`
 	DelegatedVoter string    `json:"delegatedVoter"`
 }
 
@@ -31,7 +31,7 @@ type Time struct {
 
 // Poll represents the poll
 type Poll struct {
-	PollID      string   `json:"pollID"`
+	PollID      string   `json:"id"`
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
 	Owner       string   `json:"owner"`
@@ -43,7 +43,7 @@ type Poll struct {
 
 // Option represent an option of a poll
 type Option struct {
-	OptionID    string `json:"optionID"`
+	OptionID    string `json:"id"`
 	Description string `json:"description"`
 }
 
@@ -67,6 +67,9 @@ func (t *Option) ID() string {
 	return t.OptionID
 }
 
+// TimeFormat time layout
+const TimeFormat = "2006-01-02"
+
 // UnmarshalJSON custom time layout
 func (t *Time) UnmarshalJSON(b []byte) error {
 	s := string(b)
@@ -75,11 +78,30 @@ func (t *Time) UnmarshalJSON(b []byte) error {
 	// before parsing.
 	s = strings.Trim(s, "\"")
 
-	ret, err := time.Parse("2006-01-02", s)
+	ret, err := time.Parse(TimeFormat, s)
 	if err != nil {
 		fmt.Println("Error at parsing time: " + err.Error())
 		return err
 	}
 	t.Time = ret
 	return nil
+}
+
+// MarshalJSON custom time layout
+func (t Time) MarshalJSON() ([]byte, error) {
+	if t.Time.UnixNano() == (time.Time{}).UnixNano() {
+		return []byte("null"), nil
+	}
+	s := fmt.Sprintf(`"%s"`, t.Time.Format(TimeFormat))
+	return []byte(s), nil
+}
+
+// Contains checks if an option is present in a list of options
+func Contains(list []Option, x Option) bool {
+	for _, item := range list {
+		if item == x {
+			return true
+		}
+	}
+	return false
 }

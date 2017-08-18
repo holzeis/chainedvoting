@@ -57,7 +57,7 @@ func TestCreatePoll(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("CreatePollTx")
 
-	var request = "{\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+	var request = "{\"id\":\"1\", \"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
 		"\"validTo\":\"2017-08-20\",\"options\":[{\"description\":\"option1\"},{\"description\":\"option2\"},{\"description\":\"option3\"}]}"
 	response := stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(request)})
 
@@ -72,7 +72,7 @@ func TestRetrieveAllPolls(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("RetrieveAllPolls")
 
-	var request = "{\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+	var request = "{\"id\":\"1\", \"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
 		"\"validTo\":\"2017-08-20\",\"options\":[{\"description\":\"option1\"},{\"description\":\"option2\"},{\"description\":\"option3\"}]}"
 	response := stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(request)})
 
@@ -192,4 +192,197 @@ func TestGetUserWithoutRegistrationButExistingUser(t *testing.T) {
 	}
 
 	stub.MockTransactionEnd("GetUser")
+}
+
+func TestGetPoll(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("GetPoll")
+
+	var request = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2017-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\", \"description\":\"option2\"},{\"id\":\"4\", \"description\":\"option3\"}]}"
+	response := stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(request)})
+
+	response = stub.MockInvoke("getPoll", [][]byte{[]byte(""), []byte("getPoll"), []byte("1")})
+
+	if response.Status != shim.OK {
+		t.Error(response.Message)
+	}
+
+	var poll entities.Poll
+	err := json.Unmarshal(response.Payload, &poll)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if len(poll.Options) != 3 {
+		t.Error("There should have been 3 options created for this poll")
+	}
+
+	stub.MockTransactionEnd("GetPoll")
+}
+
+func TestGetPollWithoutPolls(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("GetPoll")
+
+	response := stub.MockInvoke("getPoll", [][]byte{[]byte(""), []byte("getPoll"), []byte("1")})
+
+	if response.Status == shim.OK {
+		t.Error("Poll should not be found as it hasn't been created")
+	}
+
+	stub.MockTransactionEnd("GetPoll")
+}
+
+func TestGetPollWithoutCreatedPollButExistingPolls(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("GetPoll")
+
+	var request = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2017-08-20\",\"options\":[{\"description\":\"option1\"},{\"description\":\"option2\"},{\"description\":\"option3\"}]}"
+	response := stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(request)})
+
+	response = stub.MockInvoke("getPoll", [][]byte{[]byte(""), []byte("getPoll"), []byte("2")})
+
+	if response.Status == shim.OK {
+		t.Error("Poll should not be found as it hasn't been created")
+	}
+
+	stub.MockTransactionEnd("GetPoll")
+}
+
+func TestVote(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("VoteTx")
+
+	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register)})
+
+	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2017-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\", \"description\":\"option2\"},{\"id\":\"4\", \"description\":\"option3\"}]}"
+	response = stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(createPoll)})
+
+	var vote = "{\"id\":\"5\",\"option\":{\"id\":\"2\",\"description\":\"option1\"},\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"richard.holzeis@at.ibm.com\"}"
+
+	response = stub.MockInvoke("vote", [][]byte{[]byte(""), []byte("vote"), []byte(vote)})
+
+	if response.Status != shim.OK {
+		t.Error(response.Message)
+	}
+
+	response = stub.MockInvoke("getPoll", [][]byte{[]byte(""), []byte("getPoll"), []byte("1")})
+
+	var poll entities.Poll
+	err := json.Unmarshal(response.Payload, &poll)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if len(poll.Options) != 3 {
+		t.Error("There should be 3 options in this poll")
+	}
+
+	if len(poll.Votes) != 1 {
+		t.Error("Vote should have been added to the poll")
+	}
+
+	stub.MockTransactionEnd("VoteTx")
+}
+
+func TestVoteForAlreadyVotedPoll(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("VoteTx")
+
+	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register)})
+
+	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2017-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\",\"description\":\"option2\"},{\"id\":\"4\",\"description\":\"option3\"}]}"
+	response = stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(createPoll)})
+
+	var vote1 = "{\"id\":\"1\",\"option\":{\"id\":\"2\",\"description\":\"option1\"},\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"richard.holzeis@at.ibm.com\"}"
+
+	response = stub.MockInvoke("vote", [][]byte{[]byte(""), []byte("vote"), []byte(vote1)})
+
+	var vote2 = "{\"id\":\"2\",\"option\":{\"id\":\"2\",\"description\":\"option1\"},\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"richard.holzeis@at.ibm.com\"}"
+
+	response = stub.MockInvoke("vote", [][]byte{[]byte(""), []byte("vote"), []byte(vote2)})
+
+	if response.Status == shim.OK {
+		t.Error("User shouldn't be able to vote for the same poll twice")
+	}
+
+	stub.MockTransactionEnd("VoteTx")
+}
+
+func TestVoteForExpiredPoll(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("VoteTx")
+
+	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register)})
+
+	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2016-08-13\"," +
+		"\"validTo\":\"2016-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\",\"description\":\"option2\"},{\"id\":\"4\",\"description\":\"option3\"}]}"
+	response = stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(createPoll)})
+
+	var vote = "{\"id\":\"1\",\"option\":{\"id\":\"2\",\"description\":\"option1\"},\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"richard.holzeis@at.ibm.com\"}"
+
+	response = stub.MockInvoke("vote", [][]byte{[]byte(""), []byte("vote"), []byte(vote)})
+
+	if response.Status == shim.OK {
+		t.Error("Vote shouldn't be accepted as it is submitted onto an expired poll.")
+	}
+
+	stub.MockTransactionEnd("VoteTx")
+}
+
+func TestVoteForWithUnregisteredVoter(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("VoteTx")
+
+	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register)})
+
+	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2017-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\",\"description\":\"option2\"},{\"id\":\"4\",\"description\":\"option3\"}]}"
+	response = stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(createPoll)})
+
+	var vote = "{\"id\":\"2\",\"option\":{\"id\":\"2\",\"description\":\"option1\"},\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"holzeis@at.ibm.com\"}"
+
+	response = stub.MockInvoke("vote", [][]byte{[]byte(""), []byte("vote"), []byte(vote)})
+
+	if response.Status == shim.OK {
+		t.Error("Vote shouldn't be accepted as the user hasn't been registered.")
+	}
+
+	stub.MockTransactionEnd("VoteTx")
+}
+
+func TestVoteForInvalidOption(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("VoteTx")
+
+	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register)})
+
+	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2017-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\",\"description\":\"option2\"},{\"id\":\"4\",\"description\":\"option3\"}]}"
+	response = stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(createPoll)})
+
+	var vote = "{\"id\":\"2\",\"option\":{\"id\":\"5\",\"description\":\"option5\"},\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"richard.holzeis@at.ibm.com\"}"
+
+	response = stub.MockInvoke("vote", [][]byte{[]byte(""), []byte("vote"), []byte(vote)})
+
+	if response.Status == shim.OK {
+		t.Error("Vote shouldn't be accepted as the user has voted for an invalid option.")
+	}
+
+	stub.MockTransactionEnd("VoteTx")
 }

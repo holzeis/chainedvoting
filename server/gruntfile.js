@@ -8,6 +8,9 @@ module.exports = function(grunt) {
         }
       }
     },
+    clean: {
+      build: ['dist']
+    },
     ts: {
       default : {
         src: ["**/*.ts", "!node_modules/**"],
@@ -53,7 +56,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-ts");
   grunt.loadNpmTasks("grunt-tslint");
   grunt.loadNpmTasks("grunt-contrib-watch");
+  grunt.loadNpmTasks("grunt-contrib-clean")
   grunt.loadNpmTasks("grunt-concurrent");
   grunt.loadNpmTasks("grunt-nodemon");
-  grunt.registerTask("default", ["ts", "tslint", "concurrent"]);
+  grunt.registerTask("default", ["clean", "ts", "tslint", "concurrent"]);
 };

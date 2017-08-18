@@ -28,10 +28,10 @@ export class PollComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getPoll(+this.pollID);
+    this.getPoll(this.pollID);
   }
 
-  getPoll(pollID: number): void {
+  getPoll(pollID: string): void {
     this.pollService.getPoll(pollID).then(poll => {
       this.getPollStats(poll);
       this.poll = poll;
@@ -39,19 +39,19 @@ export class PollComponent implements OnInit {
   }
 
   getPollStats(poll: Poll): void {
-    this.voteService.getVotes().then(votes => {
-      votes = votes.filter(vote => String(vote.pollID) === this.pollID && vote.option);
-        for (const option of poll.options) {
-          this.pollStats.push({option: option.description, count: 0});
-        }
-        for (const pollStat of this.pollStats) {
-            for (const vote of votes) {
-              if (vote.option === pollStat.option) {
-                pollStat.count++;
-              }
-            }
-        }
-    });
+    // this.voteService.getVotes().then(votes => {
+    //   votes = votes.filter(vote => String(vote.pollID) === this.pollID && vote.option);
+    //     for (const option of poll.options) {
+    //       this.pollStats.push({option: option.description, count: 0});
+    //     }
+    //     for (const pollStat of this.pollStats) {
+    //         for (const vote of votes) {
+    //           if (vote.option === pollStat.option) {
+    //             pollStat.count++;
+    //           }
+    //         }
+    //     }
+    // });
   }
 
   setDelegate(): void {

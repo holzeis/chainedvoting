@@ -422,6 +422,14 @@ export class Channel {
     };
 
     let proposalResponse = await this.channel.sendTransactionProposal(request);
+    if (!proposalResponse || !proposalResponse[0] || !proposalResponse[0][0]) {
+      return Promise.reject(new Error("Error during endorsment!"));
+    }
+    if (!proposalResponse || !proposalResponse[0] || !proposalResponse[0][0] ||
+            !proposalResponse[0][0].response || proposalResponse[0][0].response.status !== 200) {
+      const errmsg = proposalResponse[0][0].message;
+		  return Promise.reject(new Error(errmsg.substring(errmsg.lastIndexOf(":") + 2, errmsg.lastIndexOf(")"))));
+    }
 
     let processedProposal: ProcessInvokeProposalResponse = this.processInvokeProposal(proposalResponse);
 

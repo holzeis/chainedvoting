@@ -1,8 +1,10 @@
-export class Vote {
-  id: number;
-  pollID: number;
-  voter: number;
-  option: string;
-  delegate: number;
-  timestamp: number;
+import { ID } from "./id";
+import { Option } from "./poll";
+
+export class Vote extends ID {
+  pollID: string;
+  voter: string;
+  option: Option;
+  delegate: string;
+  timestamp: Date;
 }

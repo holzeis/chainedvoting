@@ -19,29 +19,30 @@ func RegisterUser(stub shim.ChaincodeStubInterface, args []string) error {
 	if err != nil {
 		return err
 	}
-	if user.Email == "" {
+	if user.ID() == "" {
 		return errors.New("user email must not be null")
 	}
 
 	// check if user is already registered
-	userAsBytes, err := util.GetUserAsBytesByID(stub, user.Email)
+	userAsBytes, err := util.GetUserAsBytesByID(stub, user.ID())
 	if err != nil {
 		return err
 	}
 
 	if len(userAsBytes) != 0 {
-		return errors.New("A user with the email: " + user.Email + " has already been registered.")
+		return errors.New("A user with the email: " + user.ID() + " has already been registered.")
 	}
 
-	fmt.Println("Going to register " + user.Email)
-	util.StoreObjectInChain(stub, user.Email, util.UsersIndexName, []byte(args[0]))
+	fmt.Println("Going to register " + user.ID())
+	util.StoreObjectInChain(stub, user.ID(), util.UsersIndexName, []byte(args[0]))
 
-	fmt.Println("Successfully registered " + user.Email)
+	fmt.Println("Successfully registered " + user.ID())
 	return nil
 }
 
 // GetUser a user
 func GetUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	fmt.Println("Getting user with email: " + args[0])
 	if len(args) != 1 {
 		return []byte{}, errors.New("email is required")
 	}
@@ -90,7 +91,7 @@ func LoginUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) 
 	}
 
 	fmt.Println("Updating user to the blockchain.")
-	err = util.UpdateObjectInChain(stub, user.Email, util.UsersIndexName, userAsBytes)
+	err = util.UpdateObjectInChain(stub, user.ID(), util.UsersIndexName, userAsBytes)
 	if err != nil {
 		return []byte{}, err
 	}

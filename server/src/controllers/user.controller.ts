@@ -1,5 +1,5 @@
 "use strict";
-import {JsonController, Post, Body, Req} from "routing-controllers";
+import {JsonController, Param, Post, Get, Body, Req} from "routing-controllers";
 import {BlockchainClient} from "../blockchain/client/blockchain.client";
 import {InvokeReponse} from "../blockchain/channel";
 
@@ -19,16 +19,16 @@ export class UserController {
         return this.blockchainClient.invoke("default", "register", [JSON.stringify(user)], "Admin");
     }
 
-    @Post("/login")
-    public async login(@Body() user: User, @Req() req) : Promise<User> {
-        console.log("performing login for " + user.email);
+    @Get("/login/:email")
+    public async login(@Param("email") email: string, @Req() req) : Promise<User> {
+        console.log("performing login for " + email);
 
-        var response: InvokeReponse = await this.blockchainClient.invoke("default", "loginUser", [user.email], "Admin");
+        var response: InvokeReponse = await this.blockchainClient.invoke("default", "loginUser", [email], "Admin");
         if (!response.success) {
             Promise.reject(response.message);
         }
 
-        return this.blockchainClient.query("default", "getUser", [user.email], "Admin");
+        return this.blockchainClient.query("default", "getUser", [email], "Admin");
     }
 }
 
