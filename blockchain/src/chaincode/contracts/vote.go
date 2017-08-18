@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -81,6 +82,11 @@ func validateVote(stub shim.ChaincodeStubInterface, vote entities.Vote) (entitie
 		if pVote.Voter == vote.Voter {
 			return entities.Poll{}, errors.New("The user has already voted for this poll")
 		}
+	}
+
+	fmt.Println("check if the poll is already expired.")
+	if poll.ValidTo.Before(time.Now()) {
+		return entities.Poll{}, errors.New("Poll is already expired")
 	}
 
 	return poll, nil
