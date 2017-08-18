@@ -67,6 +67,9 @@ func (t *Option) ID() string {
 	return t.OptionID
 }
 
+// TimeFormat time layout
+const TimeFormat = "2006-01-02"
+
 // UnmarshalJSON custom time layout
 func (t *Time) UnmarshalJSON(b []byte) error {
 	s := string(b)
@@ -75,11 +78,23 @@ func (t *Time) UnmarshalJSON(b []byte) error {
 	// before parsing.
 	s = strings.Trim(s, "\"")
 
-	ret, err := time.Parse("2006-01-02", s)
+	fmt.Println("Unmarshaling time: " + s)
+
+	ret, err := time.Parse(TimeFormat, s)
 	if err != nil {
 		fmt.Println("Error at parsing time: " + err.Error())
 		return err
 	}
 	t.Time = ret
 	return nil
+}
+
+// MarshalJSON custom time layout
+func (t Time) MarshalJSON() ([]byte, error) {
+	if t.Time.UnixNano() == (time.Time{}).UnixNano() {
+		return []byte("null"), nil
+	}
+	s := fmt.Sprintf(`"%s"`, t.Time.Format(TimeFormat))
+	fmt.Println("Marshalling time to " + s)
+	return []byte(s), nil
 }
