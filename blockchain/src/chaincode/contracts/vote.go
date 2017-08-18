@@ -89,5 +89,14 @@ func validateVote(stub shim.ChaincodeStubInterface, vote entities.Vote) (entitie
 		return entities.Poll{}, errors.New("Poll is already expired")
 	}
 
+	fmt.Println("check if the voter is a registered user.")
+	userAsBytes, err := util.GetUserAsBytesByID(stub, vote.Voter)
+	if err != nil {
+		return entities.Poll{}, err
+	}
+	if len(userAsBytes) == 0 {
+		return entities.Poll{}, errors.New("Voter is no registered user")
+	}
+
 	return poll, nil
 }
