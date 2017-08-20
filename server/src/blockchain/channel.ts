@@ -41,23 +41,29 @@ export class Channel {
     await this.addOrderer();
     await this.addEventHubsAndPeers();
 
-    let deployPolicy : DeployPolicy;
-    deployPolicy = await this.determineDeployPolicy();
 
-    switch (deployPolicy) {
-      case DeployPolicy.ALWAYS:
+    let deployPolicy : DeployPolicy;
+    // deployPolicy = await this.determineDeployPolicy();
+
+    // switch (deployPolicy) {
+    //   case DeployPolicy.ALWAYS:
+        console.log("creating channel.")
         await this.createChannel();
+        console.log("joining channel.")
         await this.joinChannel();
+        console.log("installing chaincode.")
         await this.installChaincode(this.config.chaincode.chaincodePath,
                   this.config.chaincode.chaincodeID, this.config.chaincode.chaincodeVersion);
+        console.log("initializing channel.")
         await this.channel.initialize();
+        console.log("instantiating chaincode.")
         await this.instantiateChaincode(this.config.chaincode.chaincodePath,
                   this.config.chaincode.chaincodeID, this.config.chaincode.chaincodeVersion, []);
-        break;
-      case DeployPolicy.NEVER:
-        await this.channel.initialize();
-        break;
-    }
+    //     break;
+    //   case DeployPolicy.NEVER:
+    //     await this.channel.initialize();
+    //     break;
+    // }
   }
 
   private async determineDeployPolicy(): Promise<DeployPolicy> {
@@ -106,6 +112,9 @@ export class Channel {
   private async addOrderer(): Promise<void> {
     console.log("Adding orderer");
     let caRootsPath = this.config.network.orderer.tls_cacerts;
+
+    console.log(caRootsPath);
+
     let data = await fs.readFileSync(path.join(__dirname, caRootsPath));
     let caroots = Buffer.from(data).toString();
     let hostname = this.config.network.orderer.server_hostname;
@@ -151,6 +160,7 @@ export class Channel {
               "ssl-target-name-override": hostname
             }
           );
+
           eh.connect();
           this.eventHubs.push(eh);
         }
@@ -171,7 +181,6 @@ export class Channel {
   }
 
   private async createChannel(): Promise<void> {
-
     let data = await fs.readFileSync(path.join(__dirname, "../../resources", this.channelConfig.path));
 
     let envelope = this._commonProto.Envelope.decode(data);

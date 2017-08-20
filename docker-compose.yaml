@@ -14,12 +14,10 @@ services:
       - FABRIC_CA_SERVER_CA_NAME=ca-org
       - FABRIC_CA_SERVER_TLS_ENABLED=true
       - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org.chained-voting.com-cert.pem
-      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/aa0b26a31c4d050f42ae9c50ca56d89f7f014477acef0f5c97a272918fa5f8a3_sk
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/aa0b26a31c4d050f42ae9c50ca56d89f7f014477acef0f5c97a272918fa5f8a3_sk
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org.chained-voting.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/a9401d462cfaefcf08313a3c75e96b5cb8b84f43328f380f274f49113c188693_sk
     ports:
       - "7054:7054"
-    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org.chained-voting.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/a9401d462cfaefcf08313a3c75e96b5cb8b84f43328f380f274f49113c188693_sk -b admin:adminpw -d'
     volumes:
       - ./blockchain/crypto-config/peerOrganizations/org.chained-voting.com/ca/:/etc/hyperledger/fabric-ca-server-config
 
@@ -29,28 +27,23 @@ services:
       - basic
     image: hyperledger/fabric-orderer:x86_64-1.0.0
     environment:
-      - GRPC_TRACE=ALL
-      - GRPC_VERBOSITY=DEBUG
       - ORDERER_GENERAL_LOGLEVEL=debug
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
-      - ORDERER_GENERAL_LISTENPORT=7050
-      - ORDERER_RAMLEDGER_HISTORY_SIZE=100
-      - CONFIGTX_ORDERER_ORDERERTYPE=solo
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      # enabled TLS
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
-      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt, /var/hyperledger/peer/tls/ca.crt]
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
     - ./blockchain/channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
     - ./blockchain/crypto-config/ordererOrganizations/chained-voting.com/orderers/orderer.chained-voting.com/msp:/var/hyperledger/orderer/msp
     - ./blockchain/crypto-config/ordererOrganizations/chained-voting.com/orderers/orderer.chained-voting.com/tls:/var/hyperledger/orderer/tls
-    - ./blockchain/crypto-config/peerOrganizations/org.chained-voting.com/peers/peer0.org.chained-voting.com/tls:/var/hyperledger/peer/tls
     ports:
       - 7050:7050
 
@@ -58,25 +51,23 @@ services:
     container_name: peer0.org.chained-voting.com
     networks:
       - basic
-    image: hyperledger/fabric-peer:x86_64-1.0.0-beta
+    image: hyperledger/fabric-peer:x86_64-1.0.0
     environment:
+      - CORE_PEER_ID=peer0.org.chained-voting.com
+      - CORE_PEER_ADDRESS=peer0.org.chained-voting.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.chained-voting.com:7051
+      - CORE_PEER_LOCALMSPID=OrgMSP
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=chainedvoting_basic
+      #- CORE_LOGGING_LEVEL=ERROR
       - CORE_LOGGING_LEVEL=DEBUG
       - CORE_PEER_TLS_ENABLED=true
-      - CORE_NEXT=true
-      - CORE_PEER_ENDORSER_ENABLED=true
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false
-      - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true
       - CORE_PEER_PROFILE_ENABLED=true
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
-      - CORE_PEER_ID=peer0.org.chained-voting.com
-      - CORE_PEER_ADDRESS=peer0.org.chained-voting.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org.chained-voting.com:7051
-      - CORE_PEER_LOCALMSPID=OrgMSP
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start --peer-defaultchain=false -o orderer.chained-voting.com:7050
     volumes:

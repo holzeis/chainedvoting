@@ -12,7 +12,7 @@ export class ChaincodeLocalConfig {
             events: "grpcs://peer0.org.chained-voting.com:7053",
             server_hostname: "peer0.org.chained-voting.com",
             tls_cacerts: "../../resources/crypto-config/peerOrganizations/org.chained-voting.com/peers/" +
-                    "peer0.org.chained-voting.com/msp/cacerts/ca.org.chained-voting.com-cert.pem"
+                    "peer0.org.chained-voting.com/msp/tlscacerts/tlsca.org.chained-voting.com-cert.pem"
           }
         ],
         ca:    {
@@ -25,7 +25,7 @@ export class ChaincodeLocalConfig {
           url: "grpcs://orderer.chained-voting.com:7050",
           server_hostname: "orderer.chained-voting.com",
           tls_cacerts: "../../resources/crypto-config/ordererOrganizations/chained-voting.com/" +
-                    "orderers/orderer.chained-voting.com/msp/cacerts/ca.chained-voting.com-cert.pem"
+                    "orderers/orderer.chained-voting.com/msp/tlscacerts/tlsca.chained-voting.com-cert.pem"
         },
         organization: {
           name: organization,
