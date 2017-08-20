@@ -11,16 +11,15 @@
         <label for="poll-description" class="control-label">Description</label>
         <span>{{poll.description}}</span><br>
         <label for="poll-options" class="control-label">Poll options</label>
-        <div *ngFor="let option of poll.options">
-          <div>{{option}}</div>
-        </div>
-        <div *ngIf="pollStats">
-          <label for="poll-stats" class="control-label">Current votes</label>
-          <div *ngFor="let stat of pollStats">
-            <div>{{stat.option}}</div>
-            <div>{{stat.count}}</div>
+        <li *ngFor="let option of poll.options">
+          <div class="label offset1 label-info">{{option.description}}</div>
+        </li>
+        <label for="poll-votes" class="control-label">Poll votes</label>
+        <li *ngFor="let vote of poll.votes">
+          <div class="label label-default">{{vote.timestamp}} {{vote.voter}}
+            <span class="label offset1 label-info">{{vote.option.description}}</span>
           </div>
-        </div>
+        </li>
       </div>
     </div>
     <div class="row">
