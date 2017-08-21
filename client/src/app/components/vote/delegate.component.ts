@@ -17,10 +17,8 @@ import {AlertService} from '../../services/alert.service';
 })
 
 export class DelegateComponent {
-
-  users: User[];
-  pollId: string;
-  mockUserID = '1';
+  public users: User[];
+  public pollId: string;
 
   constructor(
     private voteService: VoteService,
@@ -33,10 +31,10 @@ export class DelegateComponent {
   }
 
   onSubmit(f: NgForm) {
-    this.checkForUser(f.value.delegateemail);
+    console.log(f);
   }
 
-  setDelegate(delegate: string): void {
+  delegate(delegate: string): void {
     // this.voteService.getVotes().then(votes => {
     //   const filteredVote = votes.filter(vote => String(vote.pollID) === this.pollId
     //   && String(vote.voter) === this.mockUserID);
@@ -47,17 +45,6 @@ export class DelegateComponent {
     //     this.alertService.success('Delegate submited successfuly', true);
     //     this.goBack();
     //   }).catch(error => this.alertService.error(error));
-    // });
-  }
-
-  checkForUser(userEmail: string): void {
-    // this.userService.getUsers().then(users => {
-    //   const filteredUsers = users.filter(user => user.email === userEmail);
-    //   if (filteredUsers.length === 1) {
-    //     this.setDelegate(filteredUsers[0].email);
-    //   } else {
-    //     this.alertService.error('User not found');
-    //   }
     // });
   }
 

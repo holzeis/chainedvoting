@@ -6,7 +6,6 @@ import { AlertService } from '../../services/alert.service';
   selector: 'app-alert',
   templateUrl: './alert.component.html'
 })
-
 export class AlertComponent implements OnInit {
     message: any;
 

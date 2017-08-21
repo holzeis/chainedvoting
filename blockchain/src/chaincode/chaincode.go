@@ -43,10 +43,12 @@ func (t *Chaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		response, err = contracts.LoginUser(stub, args)
 	case "getUser":
 		response, err = contracts.GetUser(stub, args)
+	case "allUsers":
+		response, err = contracts.GetAllUsers(stub)
 	case "createPoll":
 		err = contracts.CreatePoll(stub, args)
 	case "allPolls":
-		response, err = contracts.RetrieveAllPolls(stub)
+		response, err = contracts.GetAllPolls(stub)
 	case "getPoll":
 		response, err = contracts.GetPoll(stub, args)
 	case "vote":

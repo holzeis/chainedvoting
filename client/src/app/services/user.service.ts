@@ -40,6 +40,10 @@ export class UserService {
         localStorage.removeItem('currentUser');
     }
 
+    public getAllUsers(): Promise<User[]> {
+        return this._http.get(this.userUrl, {headers: this.headers}).toPromise().then(response => response.json() as User[]).catch(this.handleError);
+    }
+
     private handleError(error: any): Promise<any> {
       console.error('An error occurred', error);
       return Promise.reject(error.json().message || error);

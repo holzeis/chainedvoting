@@ -1,10 +1,7 @@
 package util
 
 import (
-	"encoding/json"
 	"errors"
-
-	"chaincode/entities"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -37,31 +34,4 @@ func GetPollAsBytesByID(stub shim.ChaincodeStubInterface, pollID string) ([]byte
 	}
 
 	return pollAsBytes, nil
-}
-
-// GetAllPollsAsBytes gets all polls as bytes
-func GetAllPollsAsBytes(stub shim.ChaincodeStubInterface) ([]byte, error) {
-	pollsResultsIterator, err := stub.GetStateByPartialCompositeKey(PollsIndexName, []string{})
-	if err != nil {
-		return []byte{}, err
-	}
-	defer pollsResultsIterator.Close()
-
-	polls := []entities.Poll{}
-	for pollsResultsIterator.HasNext() {
-		result, err := pollsResultsIterator.Next()
-		if err != nil {
-			return []byte{}, err
-		}
-
-		var poll entities.Poll
-		err = json.Unmarshal(result.Value, &poll)
-		if err != nil {
-			return []byte{}, err
-		}
-
-		polls = append(polls, poll)
-	}
-
-	return json.Marshal(polls)
 }
