@@ -19,7 +19,7 @@ export class AutocompleteComponent {
         this.elementRef = myElement;
         userService.getAllUsers().then(res => {
             console.log(res);
-            this.users = res.map(user => user.email)
+            this.users = res.map(user => user.email);
         }).catch(error => this.alertService.error(error));
     }
 
