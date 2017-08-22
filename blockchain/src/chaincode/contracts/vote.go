@@ -99,6 +99,13 @@ func Vote(stub shim.ChaincodeStubInterface, args []string) error {
 		return err
 	}
 
+	votes, err := voteForDelegates(stub, &poll.Votes, vote)
+	if err != nil {
+		return err
+	}
+
+	poll.Votes = votes
+
 	err = addVoteToPoll(stub, poll, vote)
 	if err != nil {
 		return err
@@ -212,4 +219,32 @@ func addVoteToPoll(stub shim.ChaincodeStubInterface, poll entities.Poll, vote en
 	}
 
 	return nil
+}
+
+func voteForDelegates(stub shim.ChaincodeStubInterface, votes *[]entities.Vote, vote entities.Vote) ([]entities.Vote, error) {
+	fmt.Println("vote for delegates")
+
+	tmp := make([]entities.Vote, 0)
+
+	for _, pVote := range *votes {
+		if pVote.Delegate != vote.Voter {
+			tmp = append(tmp, pVote)
+			continue
+		}
+		fmt.Println("Voting as delegate for " + pVote.Voter + " on " + vote.Option.Description)
+		pVote.Option = vote.Option
+		pVote.Timestamp = vote.Timestamp
+
+		tmp = append(tmp, pVote)
+
+		voteAsBytes, err := json.Marshal(pVote)
+		if err != nil {
+			return nil, err
+		}
+		err = util.UpdateObjectInChain(stub, pVote.ID(), util.VotesIndexName, voteAsBytes)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return tmp, nil
 }

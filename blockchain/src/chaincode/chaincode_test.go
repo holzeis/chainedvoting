@@ -661,4 +661,24 @@ func TestVoteForDelegatedVoteWithDelegate(t *testing.T) {
 	if response.Status != shim.OK {
 		t.Error(response.Message)
 	}
+
+	response = stub.MockInvoke("getPoll", [][]byte{[]byte(""), []byte("getPoll"), []byte("1")})
+
+	var poll entities.Poll
+	err := json.Unmarshal(response.Payload, &poll)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if len(poll.Votes) != 2 {
+		t.Error("The delegated vote should also be voted.")
+	}
+
+	if poll.Votes[0].Option.ID() != "3" {
+		t.Error("Vote should be for option 2")
+	}
+
+	if poll.Votes[1].Option.ID() != "3" {
+		t.Error("Vote should be for option 2")
+	}
 }
