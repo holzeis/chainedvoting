@@ -43,6 +43,7 @@ func Delegate(stub shim.ChaincodeStubInterface, args []string) error {
 		util.UpdateObjectInChain(stub, vote.ID(), util.VotesIndexName, []byte(args[0]))
 	}
 
+	fmt.Println("successfully delegated vote to " + vote.Delegate + "!")
 	return nil
 }
 
@@ -179,9 +180,6 @@ func userIsRegistered(stub shim.ChaincodeStubInterface, user string) bool {
 
 func userAlreadyVoted(stub shim.ChaincodeStubInterface, poll entities.Poll, user string) bool {
 	fmt.Println("check if user already voted for the poll")
-
-	fmt.Println(poll)
-	fmt.Println(user)
 
 	for _, pVote := range poll.Votes {
 		// check if user has already voted
