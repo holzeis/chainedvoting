@@ -576,6 +576,38 @@ func TestDelegateToUnregisteredUser(t *testing.T) {
 }
 
 func TestMultipleDelegatesToDifferentUsers(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("DelegateTx")
+
+	var register1 = "{\"email\":\"user1@at.ibm.com\", \"surname\":\"Test\", \"lastname\":\"User1\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
+
+	var register2 = "{\"email\":\"user2@at.ibm.com\", \"surname\":\"Test\", \"lastname\":\"User2\"}"
+	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
+
+	var register3 = "{\"email\":\"user3@at.ibm.com\", \"surname\":\"Test\", \"lastname\":\"User3\"}"
+	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register3)})
+
+	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2099-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\", \"description\":\"option2\"},{\"id\":\"4\", \"description\":\"option3\"}]}"
+	response = stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(createPoll)})
+
+	var delegate1 = "{\"id\":\"5\",\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"user1@at.ibm.com\", \"delegate\":\"user2@at.ibm.com\"}"
+	response = stub.MockInvoke("delegate", [][]byte{[]byte(""), []byte("delegate"), []byte(delegate1)})
+	if response.Status != shim.OK {
+		t.Error(response.Message)
+	}
+
+	var delegate2 = "{\"id\":\"5\",\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"user1@at.ibm.com\", \"delegate\":\"user3@at.ibm.com\"}"
+	response = stub.MockInvoke("delegate", [][]byte{[]byte(""), []byte("delegate"), []byte(delegate2)})
+	if response.Status != shim.OK {
+		t.Error(response.Message)
+	}
+}
+
+func TestDelegateVoteOfUnparticipatedUser(t *testing.T) {
 
 }
 
