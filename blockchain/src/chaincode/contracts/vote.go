@@ -24,24 +24,13 @@ func Delegate(stub shim.ChaincodeStubInterface, args []string) error {
 		return err
 	}
 
-	fmt.Println("check if vote already exists")
-	voteAsBytes, err := util.GetVoteAsBytesByID(stub, vote.ID())
-	if err != nil {
-		return err
-	}
-
 	err = addVoteToPoll(stub, poll, vote)
 	if err != nil {
 		return err
 	}
 
-	if len(voteAsBytes) == 0 {
-		fmt.Println("creating delegate vote")
-		util.StoreObjectInChain(stub, vote.ID(), util.VotesIndexName, []byte(args[0]))
-	} else {
-		fmt.Println("updating delegate vote")
-		util.UpdateObjectInChain(stub, vote.ID(), util.VotesIndexName, []byte(args[0]))
-	}
+	fmt.Println("saving delegate vote")
+	util.UpdateObjectInChain(stub, vote.ID(), util.VotesIndexName, []byte(args[0]))
 
 	fmt.Println("successfully delegated vote to " + vote.Delegate + "!")
 	return nil
@@ -83,6 +72,10 @@ func validateDelegate(stub shim.ChaincodeStubInterface, vote entities.Vote) (ent
 
 	if pollHasExpired(poll) {
 		return entities.Poll{}, errors.New("Poll is already expired")
+	}
+
+	if userAlreadyVoted(stub, poll, vote.Voter) {
+		return entities.Poll{}, errors.New("The Voter has already voted for this poll")
 	}
 
 	if userAlreadyVoted(stub, poll, vote.Delegate) {
@@ -183,7 +176,7 @@ func userAlreadyVoted(stub shim.ChaincodeStubInterface, poll entities.Poll, user
 
 	for _, pVote := range poll.Votes {
 		// check if user has already voted
-		if pVote.Voter == user {
+		if pVote.Voter == user && pVote.Option != (entities.Option{}) {
 			return true
 		}
 	}

@@ -71,3 +71,22 @@ func GetVoteAsBytesByID(stub shim.ChaincodeStubInterface, voteID string) ([]byte
 
 	return voteAsBytes, nil
 }
+
+//GetVoteByID gets a poll by id
+func GetVoteByID(stub shim.ChaincodeStubInterface, voteID string) (entities.Vote, error) {
+	voteAsBytes, err := GetPollAsBytesByID(stub, voteID)
+	if err != nil {
+		return entities.Vote{}, err
+	}
+
+	if len(voteAsBytes) == 0 {
+		return entities.Vote{}, errors.New("Could not find vote by vote id " + voteID)
+	}
+
+	var vote entities.Vote
+	err = json.Unmarshal(voteAsBytes, &vote)
+	if err != nil {
+		return entities.Vote{}, err
+	}
+	return vote, nil
+}
