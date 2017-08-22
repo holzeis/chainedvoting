@@ -1,7 +1,7 @@
 <div class="container" >
     <div class="input-field col s12">
-        <label for="eMailAuto">eMail</label>
-        <input id="eMailAuto" type="text" class="validate filter-input" [(ngModel)]=query (keyup)=filter()>
+        <label for="eMail">eMail</label>
+        <input id="eMail" type="text" autocomplete="off" class="validate filter-input" [(ngModel)]=query (keyup)=filter()>
     </div>
     <div *ngIf="filteredList.length > 0">
         <ul *ngFor="let item of filteredList" >

@@ -17,10 +17,8 @@ export class AutocompleteComponent {
 
     constructor(myElement: ElementRef, private userService: UserService, private alertService: AlertService) {
         this.elementRef = myElement;
-        userService.getAllUsers().then(res => {
-            console.log(res);
-            this.users = res.map(user => user.email);
-        }).catch(error => this.alertService.error(error));
+        userService.getAllUsers().then(res => this.users = res.map(user => user.email))
+            .catch(error => this.alertService.error(error));
     }
 
     public filter() {
