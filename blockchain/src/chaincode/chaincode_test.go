@@ -606,11 +606,3 @@ func TestMultipleDelegatesToDifferentUsers(t *testing.T) {
 		t.Error(response.Message)
 	}
 }
-
-func TestDelegateVoteOfUnparticipatedUser(t *testing.T) {
-
-}
-
-func TestDelegateVoteWithOption(t *testing.T) {
-
-}
