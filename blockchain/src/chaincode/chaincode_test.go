@@ -386,3 +386,69 @@ func TestVoteForInvalidOption(t *testing.T) {
 
 	stub.MockTransactionEnd("VoteTx")
 }
+
+func TestDelegate(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("DelegateTx")
+
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
+
+	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
+
+	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2099-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\", \"description\":\"option2\"},{\"id\":\"4\", \"description\":\"option3\"}]}"
+	response = stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(createPoll)})
+
+	var delegate = "{\"id\":\"5\",\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"richard.holzeis@at.ibm.com\", \"delegate\":\"holzeis@at.ibm.com\"}"
+
+	response = stub.MockInvoke("delegate", [][]byte{[]byte(""), []byte("delegate"), []byte(delegate)})
+
+	if response.Status != shim.OK {
+		t.Error(response.Message)
+	}
+
+	response = stub.MockInvoke("getPoll", [][]byte{[]byte(""), []byte("getPoll"), []byte("1")})
+
+	var poll entities.Poll
+	err := json.Unmarshal(response.Payload, &poll)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if len(poll.Options) != 3 {
+		t.Error("There should be 3 options in this poll")
+	}
+
+	if len(poll.Votes) != 1 {
+		t.Error("Vote should have been added to the poll")
+	}
+
+	stub.MockTransactionEnd("DelegateTx")
+}
+
+func TestDelegateToAlreadyVotedVoter(t *testing.T) {
+	// delegated voter did already vote.
+}
+
+func TestDelegateVoteOnExpiredPoll(t *testing.T) {
+
+}
+
+func TestDelegateToVoter(t *testing.T) {
+	// returning vote to the original voter shouldn't be possible
+}
+
+func TestDelegateOfAlreadyVotedVote(t *testing.T) {
+	// vote has already been given to an option
+}
+
+func TestDelegateToUnregisteredUser(t *testing.T) {
+
+}
+
+func TestMultipleDelegatesToDifferentUsers(t *testing.T) {
+
+}

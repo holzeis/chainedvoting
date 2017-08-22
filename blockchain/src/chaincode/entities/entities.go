@@ -16,12 +16,12 @@ type User struct {
 
 // Vote represents the vote
 type Vote struct {
-	VoteID         string    `json:"id"`
-	Timestamp      time.Time `json:"timestamp"`
-	Voter          string    `json:"voter"`
-	Option         Option    `json:"option"`
-	PollID         string    `json:"pollID"`
-	DelegatedVoter string    `json:"delegatedVoter"`
+	VoteID    string    `json:"id"`
+	Timestamp time.Time `json:"timestamp"`
+	Voter     string    `json:"voter"`
+	Option    Option    `json:"option"`
+	PollID    string    `json:"pollID"`
+	Delegate  string    `json:"delegate"`
 }
 
 // Time wrapped time for custom date layouts
