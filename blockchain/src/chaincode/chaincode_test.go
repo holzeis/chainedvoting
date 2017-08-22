@@ -426,6 +426,15 @@ func TestDelegate(t *testing.T) {
 		t.Error("Vote should have been added to the poll")
 	}
 
+	var vote = poll.Votes[0]
+	if vote.Delegate != "holzeis@at.ibm.com" {
+		t.Error("Vote should be delegated")
+	}
+
+	if vote.Option != (entities.Option{}) {
+		t.Error("Vote shouldn't be set after delegation")
+	}
+
 	stub.MockTransactionEnd("DelegateTx")
 }
 
