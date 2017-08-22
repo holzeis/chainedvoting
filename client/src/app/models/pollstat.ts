@@ -1,4 +1,5 @@
 export class PollStat {
-  option: string;
+  optionID: string;
+  description: string;
   count: number;
 }

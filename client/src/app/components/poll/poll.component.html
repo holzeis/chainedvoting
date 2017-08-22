@@ -20,6 +20,12 @@
             <span class="label offset1 label-info">{{vote.option.description}}</span>
           </div>
         </li>
+        <label for="pollStats" class="control-label">Poll stats</label>
+        <li *ngFor="let pollStat of pollStats">
+          <div class="label label-default">{{pollStat.description}}
+            <span class="label offset1 label-info">{{pollStat.count}}</span>
+          </div>
+        </li>
       </div>
     </div>
     <div class="row">

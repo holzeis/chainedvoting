@@ -29,29 +29,29 @@ export class PollComponent implements OnInit {
 
   ngOnInit() {
     this.getPoll(this.pollID);
+    this.getPollStats();
   }
 
   getPoll(pollID: string): void {
     this.pollService.getPoll(pollID).then(poll => {
-      this.getPollStats(poll);
+      for (const option of poll.options) {
+        this.pollStats.push({optionID: option.id, description: option.description, count: 0});
+      }
       this.poll = poll;
     });
   }
 
-  getPollStats(poll: Poll): void {
-    // this.voteService.getVotes().then(votes => {
-    //   votes = votes.filter(vote => String(vote.pollID) === this.pollID && vote.option);
-    //     for (const option of poll.options) {
-    //       this.pollStats.push({option: option.description, count: 0});
-    //     }
-    //     for (const pollStat of this.pollStats) {
-    //         for (const vote of votes) {
-    //           if (vote.option === pollStat.option) {
-    //             pollStat.count++;
-    //           }
-    //         }
-    //     }
-    // });
+  getPollStats(): void {
+    this.voteService.getVotes().then(votes => {
+      votes = votes.filter(vote => vote.pollID === this.pollID);
+      for (const pollStat of this.pollStats) {
+        for (const vote of votes) {
+          if (vote.option.id === pollStat.optionID) {
+            pollStat.count++;
+          }
+        }
+      }
+    });
   }
 
   setDelegate(): void {
