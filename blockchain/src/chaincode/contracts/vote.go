@@ -84,6 +84,10 @@ func validateDelegate(stub shim.ChaincodeStubInterface, vote entities.Vote) (ent
 		return entities.Poll{}, errors.New("Poll is already expired")
 	}
 
+	if userAlreadyVoted(stub, poll, vote.Delegate) {
+		return entities.Poll{}, errors.New("The delegated user has already voted for this poll")
+	}
+
 	return poll, nil
 }
 
@@ -135,11 +139,8 @@ func validateVote(stub shim.ChaincodeStubInterface, vote entities.Vote) (entitie
 		return entities.Poll{}, err
 	}
 
-	for _, pVote := range poll.Votes {
-		// check if vote with the same user has already been submitted.
-		if pVote.Voter == vote.Voter {
-			return entities.Poll{}, errors.New("The user has already voted for this poll")
-		}
+	if userAlreadyVoted(stub, poll, vote.Voter) {
+		return entities.Poll{}, errors.New("The user has already voted for this poll")
 	}
 
 	if pollHasExpired(poll) {
@@ -174,6 +175,21 @@ func userIsRegistered(stub shim.ChaincodeStubInterface, user string) bool {
 		return false
 	}
 	return true
+}
+
+func userAlreadyVoted(stub shim.ChaincodeStubInterface, poll entities.Poll, user string) bool {
+	fmt.Println("check if user already voted for the poll")
+
+	fmt.Println(poll)
+	fmt.Println(user)
+
+	for _, pVote := range poll.Votes {
+		// check if user has already voted
+		if pVote.Voter == user {
+			return true
+		}
+	}
+	return false
 }
 
 func addVoteToPoll(stub shim.ChaincodeStubInterface, poll entities.Poll, vote entities.Vote) error {
