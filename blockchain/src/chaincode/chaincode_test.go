@@ -606,3 +606,59 @@ func TestMultipleDelegatesToDifferentUsers(t *testing.T) {
 		t.Error(response.Message)
 	}
 }
+
+func TestVoteForDelegatedVoteWithVoter(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("DelegateTx")
+
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
+
+	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
+
+	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2099-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\", \"description\":\"option2\"},{\"id\":\"4\", \"description\":\"option3\"}]}"
+	response = stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(createPoll)})
+
+	var delegate = "{\"id\":\"5\",\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"richard.holzeis@at.ibm.com\", \"delegate\":\"holzeis@at.ibm.com\"}"
+
+	response = stub.MockInvoke("delegate", [][]byte{[]byte(""), []byte("delegate"), []byte(delegate)})
+
+	var vote = "{\"id\":\"2\",\"option\":{\"id\":\"3\",\"description\":\"option2\"},\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"richard.holzeis@at.ibm.com\"}"
+	response = stub.MockInvoke("vote", [][]byte{[]byte(""), []byte("vote"), []byte(vote)})
+
+	if response.Status == shim.OK {
+		t.Error("Vote shouldn't be accepted as the user isn't the delegated voter")
+	}
+}
+
+func TestVoteForDelegatedVoteWithDelegate(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("DelegateTx")
+
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
+
+	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
+
+	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2099-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\", \"description\":\"option2\"},{\"id\":\"4\", \"description\":\"option3\"}]}"
+	response = stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(createPoll)})
+
+	var delegate = "{\"id\":\"5\",\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"richard.holzeis@at.ibm.com\", \"delegate\":\"holzeis@at.ibm.com\"}"
+
+	response = stub.MockInvoke("delegate", [][]byte{[]byte(""), []byte("delegate"), []byte(delegate)})
+
+	var vote = "{\"id\":\"2\",\"option\":{\"id\":\"3\",\"description\":\"option2\"},\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"holzeis@at.ibm.com\"}"
+	response = stub.MockInvoke("vote", [][]byte{[]byte(""), []byte("vote"), []byte(vote)})
+
+	if response.Status != shim.OK {
+		t.Error(response.Message)
+	}
+}
