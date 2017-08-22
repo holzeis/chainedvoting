@@ -553,7 +553,26 @@ func TestDelegateOfAlreadyVotedVote(t *testing.T) {
 }
 
 func TestDelegateToUnregisteredUser(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("DelegateTx")
 
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
+
+	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2099-08-20\",\"options\":[{\"id\":\"2\", \"description\":\"option1\"},{\"id\":\"3\", \"description\":\"option2\"},{\"id\":\"4\", \"description\":\"option3\"}]}"
+	response = stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(createPoll)})
+
+	var delegate = "{\"id\":\"5\",\"pollID\":\"1\",\"timestamp\":\"2017-08-18T11:57:35.071Z\"," +
+		"\"voter\":\"richard.holzeis@at.ibm.com\", \"delegate\":\"holzeis@at.ibm.com\"}"
+
+	response = stub.MockInvoke("delegate", [][]byte{[]byte(""), []byte("delegate"), []byte(delegate)})
+
+	if response.Status == shim.OK {
+		t.Error("Delegate shouldn't be accepted as the delgate voter hasn't been registered")
+	}
+
+	stub.MockTransactionEnd("DelegateTx")
 }
 
 func TestMultipleDelegatesToDifferentUsers(t *testing.T) {
