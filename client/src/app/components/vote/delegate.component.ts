@@ -19,7 +19,7 @@ import {AutocompleteComponent} from '../_utils/autocomplete.component';
 })
 export class DelegateComponent {
   public users: User[];
-  public pollId: string;
+  public pollID: string;
 
   @ViewChild(AutocompleteComponent) autocmp: AutocompleteComponent;
 
@@ -30,10 +30,21 @@ export class DelegateComponent {
     private alertService: AlertService,
     private location: Location
   ) {
-      this.route.params.subscribe(params => this.pollId = params['id']);
+      this.route.params.subscribe(params => this.pollID = params['id']);
   }
 
   onSubmit(f: NgForm) {
-    console.log(this.autocmp.query);
+    console.log('delegated to ' + this.autocmp.query);
+
+    const user: User = JSON.parse(localStorage.getItem('currentUser'));
+    const vote = new Vote();
+    vote.pollID = this.pollID;
+    vote.timestamp = new Date();
+    vote.voter = user.email;
+    vote.delegate = this.autocmp.query;
+
+    this.voteService.delegate(vote).then(res => {
+      this.alertService.success('Your vote has been successfully delegated to ' + this.autocmp.query + '!');
+    }).catch(error => this.alertService.error(error));
   }
 }

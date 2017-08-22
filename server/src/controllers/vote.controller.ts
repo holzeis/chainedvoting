@@ -12,11 +12,18 @@ export class VoteController {
 
     }
 
-    @Post("/create")
+    @Post("/vote")
     public async vote(@Body() vote: Vote, @Req() req) : Promise<InvokeReponse> {
         console.log("processing vote for " + vote.option.description + " of poll with id: " + vote.pollID);
 
         return this.blockchainClient.invoke("default", "vote", [JSON.stringify(vote)], "Admin");
+    }
+
+    @Post("/delegate")
+    public async delegate(@Body() delegate: Vote, @Req() req) : Promise<InvokeReponse> {
+        console.log("delegating vote from " + delegate.voter + " to " + delegate.delegate);
+
+        return this.blockchainClient.invoke("default", "delegate", [JSON.stringify(delegate)], "Admin")
     }
 }
 
