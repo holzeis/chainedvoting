@@ -80,7 +80,7 @@ $CONFIGTXGEN -profile OrdererGenesis -outputBlock ./channel-artifacts/genesis.bl
 $CONFIGTXGEN -profile Channel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID default
 ```
 
-5. Generating anchor peer update for Org1MSP
+5. Generating anchor peer update for Org1MSP (only needed for cross peer communication - as we aren't doing that, you may skip that step.)
 ```bash
 $CONFIGTXGEN -profile Channel -outputAnchorPeersUpdate ./channel-artifacts/OrgMSPanchors.tx -channelID default -asOrg OrgMSP
 ```
