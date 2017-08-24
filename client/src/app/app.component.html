@@ -1,8 +1,21 @@
-<nav class="navbar navbar-default">
+
+<nav class="nav-wrapper teal lighten-2">
+  <div class="container">
+    <a href="#" class="brand-logo">{{title}}</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li *ngIf="currentUser"><a routerLink="/dashboard">Home</a></li>
+      <li *ngIf="currentUser"><a routerLink="/create">Create poll</a></li>
+      <li *ngIf="currentUser"><a (click)="logout()">Logout</a></li>
+    </ul>
+  </div>
+</nav>
+
+
+<!--<nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
       <div class="navbar-brand">
-        <b>{{title}}</b>
+        <b></b>
       </div>
     </div>
     <button *ngIf="currentUser" class="btn btn-success navbar-btn" routerLink="/dashboard">My Dashboard</button>
@@ -11,8 +24,13 @@
       <p class="vcenter" *ngIf="currentUser">Logged in as {{currentUser.surname}} {{currentUser.lastname}} | <a *ngIf="currentUser" (click)="logout()" class="btn btn-link">Logout</a></p>
     </div>
   </div>
-</nav>
-<br />
-<app-alert></app-alert>
-<router-outlet></router-outlet>
+</nav>-->
+
+<div class="row container">
+  <app-alert></app-alert>
+</div>
+
+<div class="row container">
+  <router-outlet></router-outlet>
+</div>
 
