@@ -1,3 +1,5 @@
+import { MaterializeModule } from 'angular2-materialize';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -53,6 +55,7 @@ const appRoutes: Routes = [
     LoginComponent
   ],
   imports: [
+    MaterializeModule,
     BrowserModule,
     FormsModule,
     HttpModule,
