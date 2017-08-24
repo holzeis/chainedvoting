@@ -1,41 +1,53 @@
-<div *ngIf="polls">
-  <h4>Open polls</h4>
-  <div class="row">
-    <div class="col-xs-6 col-sm-1"><b>ID</b></div>
-    <div class="col-xs-6 col-sm-3"><b>Name</b></div>
-    <div class="col-xs-6 col-sm-2"><b>Description</b></div>
-    <div class="col-xs-6 col-sm-2"><b>Valid till</b></div>
-    <div class="col-xs-6 col-sm-4"><b></b></div>
-  </div>
-  <br>
-  <div class="row" *ngFor="let poll of polls">
-    <div class="col-xs-6 col-sm-1">{{poll.id}}</div>
-    <div class="col-xs-6 col-sm-3">{{poll.name}}</div>
-    <div class="col-xs-6 col-sm-2">{{poll.description}}</div>
-    <div class="col-xs-6 col-sm-2">{{poll.validTo}}</div>
-    <div class="col-xs-6 col-sm-4">
-      <button type="button" class="btn btn-primary" (click)="view(poll.id)">View</button>
-      <button type="button" class="btn btn-primary" (click)="vote(poll.id)">Vote</button>
-    </div>
-  </div>
-</div>
+
+<h4>Open polls</h4>
+<table>
+  <thead>
+    <tr>
+      <td>ID</td>
+      <td>Name</td>
+      <td>Description</td>
+      <td>Valid to</td>
+      <td></td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let poll of polls">
+      <td>{{poll.id}}</td>
+      <td>{{poll.name}}</td>
+      <td>{{poll.description}}</td>
+      <td>{{poll.validTo}}</td>
+      <td>
+        <div class="right">
+          <button type="button" class="btn" (click)="view(poll.id)">View</button>
+          <button type="button" class="btn" (click)="vote(poll.id)">Vote</button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <h4>Fabric Blockchain Transactions</h4>
-<div class="row">
-  <div class="col-xs-6 col-sm-1"><b>Block</b></div>
-  <div class="col-xs-6 col-sm-2"><b>Transaction Id</b></div>
-  <div class="col-xs-6 col-sm-3"><b>Timestamp</b></div>
-  <div class="col-xs-6 col-sm-1"><b>Channel</b></div>
-  <div class="col-xs-6 col-sm-2"><b>Block Hash</b></div>
-  <div class="col-xs-6 col-sm-1"><b>Type</b></div>
-</div>
-<div *ngFor="let transaction of transactions" class="row">
-  <div class="col-xs-6 col-sm-1">{{transaction.number}}</div>
-  <div class="col-xs-6 col-sm-2">{{transaction.txId}}</div>
-  <div class="col-xs-6 col-sm-3">{{transaction.timestamp | date:'medium'}}</div>
-  <div class="col-xs-6 col-sm-1">{{transaction.channel}}</div>
-  <div class="col-xs-6 col-sm-2">{{transaction.blockhash}}</div>
-  <div class="col-xs-6 col-sm-1">{{transaction.type}}</div>
-</div>
+<table>
+  <thead>
+    <tr>
+      <td>Block</td>
+      <td>Transaction Id</td>
+      <td>Timestamp</td>
+      <td>Channel</td>
+      <td>Block Hash</td>
+      <td>Type</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let transaction of transactions">
+      <td>{{transaction.number}}</td>
+      <td>{{transaction.txId}}</td>
+      <td>{{transaction.timestamp | date:'medium'}}</td>
+      <td>{{transaction.channel}}</td>
+      <td>{{transaction.blockhash}}</td>
+      <td>{{transaction.type}}</td>
+    </tr>
+  </tbody>
+</table>
 
 <router-outlet></router-outlet>

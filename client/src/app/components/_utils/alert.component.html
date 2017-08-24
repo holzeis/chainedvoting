@@ -1,8 +1,7 @@
 ﻿<div class="section">
     <div class="row">
-        <div class="col s12 m3"></div>
-        <div class="col s12 m6">
-            <div *ngIf="message" [ngClass]="{ 'card': message, 'green lighten-1': message.type === 'success', 'red lighten-1': message.type === 'error' }">
+        <div class="col s12">
+            <div *ngIf="message" [ngClass]="{ 'card': message, 'teal lighten-1': message.type === 'success', 'red lighten-1': message.type === 'error' }">
                 <div class="row">
                     <div class="col s12 m10"><div class="card-content white-text">{{message.text}}</div></div>
                 </div>

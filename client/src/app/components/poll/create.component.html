@@ -1,44 +1,46 @@
-<div class="container">
-  <div class= "row">
-    <h3>Create a poll</h3>
 
-    <form class="form-horizontal" #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
-      <div class="form-group">
-        <label for="input-poll-name" class="col-sm-2 control-label">Poll name</label>
-        <div class="col-sm-10">
-          <input name="name" class="form-control" id="input-poll-name" placeholder="Poll name" ngModel required>
+<div class="section">
+  <div class="row">
+      <div class="col s12 m3"></div>
+      <form class="col s12 m6" name="form" (ngSubmit)="f.form.valid && createPoll()" #f="ngForm" novalidate>
+         <div class="row">
+          <div class="input-field col s12">
+            <input id="name" type="text" name="name" [(ngModel)]="model.name" #name="ngModel" class="validate" required>
+            <label for="name">Poll name</label>
+            <div *ngIf="f.submitted && !name.valid" class="help-block">Poll name is required</div>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="input-description" class="col-sm-2 control-label">Description</label>
-        <div class="col-sm-10">
-          <input name="description" class="form-control" ngModel id="input-description" placeholder="Description">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="description" type="text" name="description" [(ngModel)]="model.description" class="validate" required>
+            <label for="description">Description</label>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="input-poll-from" class="col-sm-2 control-label">From</label>
-        <div class="col-sm-10">
-          <input name="validfrom" class="form-control" ngModel id="input-poll-from" placeholder="From">
+        <div class="row">
+          <div class="input-field col s6">
+            <input id="validFrom" type="text" name="validFrom" [(ngModel)]="model.validFrom" #validFrom="ngModel" class="validate" required>
+            <label for="validFrom">Valid from</label>
+             <div *ngIf="f.submitted && !validFrom.valid" class="help-block">Valid from is required</div>
+          </div>
+          <div class="input-field col s6">
+            <input id="validTo" type="text" name="validTo" [(ngModel)]="model.validTo" #validTo="ngModel" class="validate" required>
+            <label for="validTo">Valid to</label>
+            <div *ngIf="f.submitted && !validTo.valid" class="help-block">Valid to is required</div>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="input-poll-till" class="col-sm-2 control-label">Till</label>
-        <div class="col-sm-10">
-          <input name="validto" class="form-control" ngModel id="input-poll-till" placeholder="Till">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="options" type="text" name="options" [(ngModel)]="model.options" #options="ngModel" class="validate" required>
+            <label for="options">Options</label>
+            <div *ngIf="f.submitted && !options.valid" class="help-block">Options are required</div>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="input-poll-options" class="col-sm-2 control-label">Options</label>
-        <div class="col-sm-10">
-          <input name="options" class="form-control" ngModel id="input-poll-options" placeholder="Options1;Option2;Option3">
+        <div class="row">
+          <a [routerLink]="['/dashboard']" class="btn blue">Cancel</a>
+          <button class="btn waves-effect waves-light right" type="submit">Create Poll
+              <i class="material-icons right">send</i>
+          </button>
         </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-primary">Create poll</button>
-          <a [routerLink]="['/']" class="btn btn-link">Cancel</a>
-        </div>
-      </div>
-    </form>
+      </form>
   </div>
 </div>

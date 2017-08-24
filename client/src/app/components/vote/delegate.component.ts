@@ -18,6 +18,7 @@ import {AutocompleteComponent} from '../_utils/autocomplete.component';
   styleUrls: ['./delegate.component.css']
 })
 export class DelegateComponent {
+
   public users: User[];
   public pollID: string;
 
@@ -33,7 +34,7 @@ export class DelegateComponent {
       this.route.params.subscribe(params => this.pollID = params['id']);
   }
 
-  onSubmit(f: NgForm) {
+  public delegate() {
     console.log('delegated to ' + this.autocmp.query);
 
     const user: User = JSON.parse(localStorage.getItem('currentUser'));

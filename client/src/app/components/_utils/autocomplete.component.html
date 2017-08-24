@@ -7,8 +7,8 @@
 </div>-->
 
 <div class="row">
-    <div class="input-field col s10">
-        <input type="text" id="email" [(ngModel)]=query (keyup)=filter() placeholder="delegate@email.com" autocomplete="off">
+    <div class="input-field col s12">
+        <input type="text" id="email" [(ngModel)]=query (keyup)=filter() materialize="dropdown" data-activates='emails' placeholder="delegate@email.com" autocomplete="off">
         <label class="active" for="email">eMail: </label>
     </div>
     <div *ngIf="filteredList.length > 0">

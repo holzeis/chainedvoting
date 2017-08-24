@@ -17,6 +17,7 @@ import { VoteService } from '../../services/vote.service';
 })
 export class CreateComponent {
 
+  public model: any = {};
   public poll: Poll;
 
   constructor(
@@ -37,16 +38,18 @@ export class CreateComponent {
     return options;
   }
 
-  public onSubmit(f: NgForm) {
+  public createPoll() {
     const currentUser: User = JSON.parse(localStorage.getItem('currentUser'));
 
+    console.log(this.model);
+
     this.poll = new Poll();
-    this.poll.name = f.value.name;
-    this.poll.description = f.value.description;
+    this.poll.name = this.model.name;
+    this.poll.description = this.model.description;
     this.poll.owner = currentUser.email;
-    this.poll.validFrom = f.value.validfrom;
-    this.poll.validTo = f.value.validto;
-    this.poll.options = this.splitString(f.value.options);
+    this.poll.validFrom = this.model.validFrom;
+    this.poll.validTo = this.model.validTo;
+    this.poll.options = this.splitString(this.model.options);
 
     this.pollService.createPoll(this.poll).then(res => {
       }).then(() => {

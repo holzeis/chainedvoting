@@ -570,7 +570,7 @@ export class Channel {
         transactions.push(transaction);
       }
     }
-    return transactions;
+    return transactions.reverse();
   }
 
 }

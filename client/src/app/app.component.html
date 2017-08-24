@@ -4,7 +4,7 @@
       <a href="#" class="brand-logo">{{title}}</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li *ngIf="currentUser"><a routerLink="/dashboard">Home</a></li>
-        <li *ngIf="currentUser"><a routerLink="/create">Create poll</a></li>
+        <li *ngIf="currentUser"><a routerLink="/create">Poll</a></li>
         <li *ngIf="currentUser"><a (click)="logout()">Logout</a></li>
       </ul>
     </div>
