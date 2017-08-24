@@ -1,36 +1,38 @@
-
-<nav class="nav-wrapper blue">
+<header>
+  <nav class="nav-wrapper blue">
+    <div class="container">
+      <a href="#" class="brand-logo">{{title}}</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li *ngIf="currentUser"><a routerLink="/dashboard">Home</a></li>
+        <li *ngIf="currentUser"><a routerLink="/create">Create poll</a></li>
+        <li *ngIf="currentUser"><a (click)="logout()">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+<main>
   <div class="container">
-    <a href="#" class="brand-logo">{{title}}</a>
-    <ul id="nav-mobile" class="right hide-on-med-and-down">
-      <li *ngIf="currentUser"><a routerLink="/dashboard">Home</a></li>
-      <li *ngIf="currentUser"><a routerLink="/create">Create poll</a></li>
-      <li *ngIf="currentUser"><a (click)="logout()">Logout</a></li>
-    </ul>
+    <div class="row">
+      <app-alert></app-alert>
+    </div>
+
+    <div class="row">
+      <router-outlet></router-outlet>
+    </div>
   </div>
-</nav>
-
-
-<!--<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <div class="navbar-brand">
-        <b></b>
+</main>
+<footer class="page-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <p class="grey-text text-lighten-4"><p class="right" *ngIf="currentUser">Logged in as {{currentUser.surname}} {{currentUser.lastname}}.</p>
       </div>
     </div>
-    <button *ngIf="currentUser" class="btn btn-success navbar-btn" routerLink="/dashboard">My Dashboard</button>
-    <button *ngIf="currentUser" class="btn btn-success navbar-btn" routerLink="/create">Create poll</button>
-    <div class="pull-right">
-      <p class="vcenter" *ngIf="currentUser">Logged in as {{currentUser.surname}} {{currentUser.lastname}} | <a *ngIf="currentUser" (click)="logout()" class="btn btn-link">Logout</a></p>
+  </div>
+  <div class="footer-copyright">
+    <div class="container">
+      © 2017 Copyright IBM
     </div>
   </div>
-</nav>-->
-
-<div class="row container">
-  <app-alert></app-alert>
-</div>
-
-<div class="row container">
-  <router-outlet></router-outlet>
-</div>
+</footer>
 
