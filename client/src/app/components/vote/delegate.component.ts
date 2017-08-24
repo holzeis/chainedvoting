@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
 
 import {Vote} from '../../models/vote';
@@ -29,7 +29,8 @@ export class DelegateComponent {
     private route: ActivatedRoute,
     private userService: UserService,
     private alertService: AlertService,
-    private location: Location
+    private location: Location, 
+    private router: Router
   ) {
       this.route.params.subscribe(params => this.pollID = params['id']);
   }
@@ -46,6 +47,7 @@ export class DelegateComponent {
 
     this.voteService.delegate(vote).then(res => {
       this.alertService.success('Your vote has been successfully delegated to ' + this.autocmp.query + '!');
+      this.router.navigate(['/dashboard']);
     }).catch(error => this.alertService.error(error));
   }
 }
