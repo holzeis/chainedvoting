@@ -2,8 +2,8 @@
 
 <div class="section">
   <div class="row">
-      <div class="col s12 m4"></div>
-      <form class="col s12 m4" name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" novalidate>
+      <div class="col s12 m3"></div>
+      <form class="col s12 m6" name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" novalidate>
         <div class="row">
           <div class="input-field col s6">
             <input id="surname" type="text" name="surname" [(ngModel)]="user.surname" class="validate">
@@ -16,8 +16,9 @@
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <input id="email" type="text" name="email" [(ngModel)]="user.email" class="validate" required>
+            <input id="email" type="text" name="email" [(ngModel)]="user.email" #email="ngModel" class="validate" required>
             <label for="email">email</label>
+            <div *ngIf="f.submitted && !email.valid" class="help-block">email is required</div>
           </div>
         </div>
         <div class="row">
