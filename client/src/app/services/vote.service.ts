@@ -15,8 +15,14 @@ export class VoteService {
     this.votesUrl = `${_configuration.host}/api/votes`;
   }
 
-  public createVote(vote: Vote): Promise<Vote> {
-    const url = this.votesUrl + '/create';
+  public vote(vote: Vote): Promise<Vote> {
+    const url = this.votesUrl + '/vote';
+    return this.http.post(url, JSON.stringify(vote), {headers: this.headers})
+        .toPromise().then(res => res.json() as Vote).catch(this.handleError);
+  }
+
+  public delegate(vote: Vote): Promise<Vote> {
+    const url = this.votesUrl + '/delegate';
     return this.http.post(url, JSON.stringify(vote), {headers: this.headers})
         .toPromise().then(res => res.json() as Vote).catch(this.handleError);
   }

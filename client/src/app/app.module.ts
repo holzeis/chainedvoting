@@ -12,6 +12,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { VoteComponent } from './components/vote/vote.component';
 import { DelegateComponent } from './components/vote/delegate.component';
 import { AlertComponent } from './components/_utils/alert.component';
+import { AutocompleteComponent } from './components/_utils/autocomplete.component';
 import { LoginComponent } from './components/user/login.component';
 
 import { Configuration } from './app.constants';
@@ -48,6 +49,7 @@ const appRoutes: Routes = [
     CreateComponent,
     UserComponent,
     AlertComponent,
+    AutocompleteComponent,
     LoginComponent
   ],
   imports: [

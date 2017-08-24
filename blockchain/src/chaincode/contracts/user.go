@@ -60,6 +60,33 @@ func GetUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	return userAsBytes, err
 }
 
+// GetAllUsers gets all users
+func GetAllUsers(stub shim.ChaincodeStubInterface) ([]byte, error) {
+	iterator, err := stub.GetStateByPartialCompositeKey(util.UsersIndexName, []string{})
+	if err != nil {
+		return []byte{}, err
+	}
+	defer iterator.Close()
+
+	users := []entities.User{}
+	for iterator.HasNext() {
+		result, err := iterator.Next()
+		if err != nil {
+			return []byte{}, err
+		}
+
+		var user entities.User
+		err = json.Unmarshal(result.Value, &user)
+		if err != nil {
+			return []byte{}, err
+		}
+
+		users = append(users, user)
+	}
+
+	return json.Marshal(users)
+}
+
 // LoginUser a user
 func LoginUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	if len(args) != 1 {

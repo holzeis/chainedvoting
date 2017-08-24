@@ -31,8 +31,8 @@ func CreatePoll(stub shim.ChaincodeStubInterface, args []string) error {
 	return nil
 }
 
-// RetrieveAllPolls retrieves all polls stored to the blockchain
-func RetrieveAllPolls(stub shim.ChaincodeStubInterface) ([]byte, error) {
+// GetAllPolls retrieves all polls stored to the blockchain
+func GetAllPolls(stub shim.ChaincodeStubInterface) ([]byte, error) {
 	iterator, err := stub.GetStateByPartialCompositeKey(util.PollsIndexName, []string{})
 	if err != nil {
 		return []byte{}, err

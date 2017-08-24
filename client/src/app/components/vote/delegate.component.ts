@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
@@ -10,17 +10,18 @@ import {VoteService} from '../../services/vote.service';
 import {UserService} from '../../services/user.service';
 import {AlertService} from '../../services/alert.service';
 
+import {AutocompleteComponent} from '../_utils/autocomplete.component';
+
 @Component({
   selector: 'app-delegate',
   templateUrl: './delegate.component.html',
   styleUrls: ['./delegate.component.css']
 })
-
 export class DelegateComponent {
+  public users: User[];
+  public pollID: string;
 
-  users: User[];
-  pollId: string;
-  mockUserID = '1';
+  @ViewChild(AutocompleteComponent) autocmp: AutocompleteComponent;
 
   constructor(
     private voteService: VoteService,
@@ -29,39 +30,21 @@ export class DelegateComponent {
     private alertService: AlertService,
     private location: Location
   ) {
-      this.route.params.subscribe(params => this.pollId = params['id']);
+      this.route.params.subscribe(params => this.pollID = params['id']);
   }
 
   onSubmit(f: NgForm) {
-    this.checkForUser(f.value.delegateemail);
-  }
+    console.log('delegated to ' + this.autocmp.query);
 
-  setDelegate(delegate: string): void {
-    // this.voteService.getVotes().then(votes => {
-    //   const filteredVote = votes.filter(vote => String(vote.pollID) === this.pollId
-    //   && String(vote.voter) === this.mockUserID);
-    //   // TODO: implement direct vote route as user could have more than one vote (delegate)
-    //   filteredVote[0].delegate = delegate;
+    const user: User = JSON.parse(localStorage.getItem('currentUser'));
+    const vote = new Vote();
+    vote.pollID = this.pollID;
+    vote.timestamp = new Date();
+    vote.voter = user.email;
+    vote.delegate = this.autocmp.query;
 
-    //   this.voteService.updateVote(filteredVote[0]).then( () => {
-    //     this.alertService.success('Delegate submited successfuly', true);
-    //     this.goBack();
-    //   }).catch(error => this.alertService.error(error));
-    // });
-  }
-
-  checkForUser(userEmail: string): void {
-    // this.userService.getUsers().then(users => {
-    //   const filteredUsers = users.filter(user => user.email === userEmail);
-    //   if (filteredUsers.length === 1) {
-    //     this.setDelegate(filteredUsers[0].email);
-    //   } else {
-    //     this.alertService.error('User not found');
-    //   }
-    // });
-  }
-
-  goBack() {
-    this.location.back();
+    this.voteService.delegate(vote).then(res => {
+      this.alertService.success('Your vote has been successfully delegated to ' + this.autocmp.query + '!');
+    }).catch(error => this.alertService.error(error));
   }
 }

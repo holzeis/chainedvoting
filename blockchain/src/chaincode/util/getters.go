@@ -1,10 +1,9 @@
 package util
 
 import (
+	"chaincode/entities"
 	"encoding/json"
 	"errors"
-
-	"chaincode/entities"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -39,29 +38,55 @@ func GetPollAsBytesByID(stub shim.ChaincodeStubInterface, pollID string) ([]byte
 	return pollAsBytes, nil
 }
 
-// GetAllPollsAsBytes gets all polls as bytes
-func GetAllPollsAsBytes(stub shim.ChaincodeStubInterface) ([]byte, error) {
-	pollsResultsIterator, err := stub.GetStateByPartialCompositeKey(PollsIndexName, []string{})
+//GetPollByID gets a poll by id
+func GetPollByID(stub shim.ChaincodeStubInterface, pollID string) (entities.Poll, error) {
+	pollAsBytes, err := GetPollAsBytesByID(stub, pollID)
 	if err != nil {
-		return []byte{}, err
-	}
-	defer pollsResultsIterator.Close()
-
-	polls := []entities.Poll{}
-	for pollsResultsIterator.HasNext() {
-		result, err := pollsResultsIterator.Next()
-		if err != nil {
-			return []byte{}, err
-		}
-
-		var poll entities.Poll
-		err = json.Unmarshal(result.Value, &poll)
-		if err != nil {
-			return []byte{}, err
-		}
-
-		polls = append(polls, poll)
+		return entities.Poll{}, err
 	}
 
-	return json.Marshal(polls)
+	if len(pollAsBytes) == 0 {
+		return entities.Poll{}, errors.New("Could not find poll by poll id " + pollID)
+	}
+
+	var poll entities.Poll
+	err = json.Unmarshal(pollAsBytes, &poll)
+	if err != nil {
+		return entities.Poll{}, err
+	}
+	return poll, nil
+}
+
+// GetVoteAsBytesByID gets a vote as bytes by id
+func GetVoteAsBytesByID(stub shim.ChaincodeStubInterface, voteID string) ([]byte, error) {
+	voteCompositeKey, err := stub.CreateCompositeKey(VotesIndexName, []string{voteID})
+	if err != nil {
+		return nil, errors.New("Create composite key error: " + err.Error())
+	}
+
+	voteAsBytes, err := stub.GetState(voteCompositeKey)
+	if err != nil {
+		return nil, errors.New("Getstate error: " + err.Error())
+	}
+
+	return voteAsBytes, nil
+}
+
+//GetVoteByID gets a poll by id
+func GetVoteByID(stub shim.ChaincodeStubInterface, voteID string) (entities.Vote, error) {
+	voteAsBytes, err := GetPollAsBytesByID(stub, voteID)
+	if err != nil {
+		return entities.Vote{}, err
+	}
+
+	if len(voteAsBytes) == 0 {
+		return entities.Vote{}, errors.New("Could not find vote by vote id " + voteID)
+	}
+
+	var vote entities.Vote
+	err = json.Unmarshal(voteAsBytes, &vote)
+	if err != nil {
+		return entities.Vote{}, err
+	}
+	return vote, nil
 }
