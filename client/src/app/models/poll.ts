@@ -1,4 +1,5 @@
 import { ID } from './id';
+import { Vote } from './vote';
 
 export class Poll extends ID {
   name: string;
@@ -7,6 +8,7 @@ export class Poll extends ID {
   validFrom: number;
   validTo: number;
   options: Option[];
+  votes: Vote[];
 }
 
 export class Option extends ID {

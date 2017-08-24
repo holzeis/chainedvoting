@@ -248,3 +248,30 @@ func voteForDelegates(stub shim.ChaincodeStubInterface, votes *[]entities.Vote, 
 	}
 	return tmp, nil
 }
+
+// RetrieveAllVotes retrieves all votes stored to the blockchain
+func RetrieveAllVotes(stub shim.ChaincodeStubInterface) ([]byte, error) {
+	iterator, err := stub.GetStateByPartialCompositeKey(util.VotesIndexName, []string{})
+	if err != nil {
+		return []byte{}, err
+	}
+	defer iterator.Close()
+
+	votes := []entities.Vote{}
+	for iterator.HasNext() {
+		result, err := iterator.Next()
+		if err != nil {
+			return []byte{}, err
+		}
+
+		var vote entities.Vote
+		err = json.Unmarshal(result.Value, &vote)
+		if err != nil {
+			return []byte{}, err
+		}
+
+		votes = append(votes, vote)
+	}
+
+	return json.Marshal(votes)
+}

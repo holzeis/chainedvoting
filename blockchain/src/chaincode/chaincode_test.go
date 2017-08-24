@@ -92,6 +92,30 @@ func TestRetrieveAllPolls(t *testing.T) {
 	stub.MockTransactionEnd("RetrieveAllPolls")
 }
 
+func TestRetrieveAllVotes(t *testing.T) {
+	stub := shim.NewMockStub("chaincode", new(Chaincode))
+	stub.MockTransactionStart("RetrieveAllVotes")
+
+	var request = "{\"id\":\"1\", \"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
+		"\"validTo\":\"2017-08-20\",\"options\":[{\"description\":\"option1\"},{\"description\":\"option2\"},{\"description\":\"option3\"}]}"
+	response := stub.MockInvoke("createPoll", [][]byte{[]byte(""), []byte("createPoll"), []byte(request)})
+
+	response = stub.MockInvoke("allVotes", [][]byte{[]byte(""), []byte("allVotes")})
+
+	if response.Status != shim.OK {
+		t.Error(response.Message)
+	}
+
+	votes := []entities.Vote{}
+	json.Unmarshal(response.Payload, &votes)
+
+	if len(votes) != 0 {
+		t.Error("Expected number of polls to be 0 but was " + strconv.Itoa(len(votes)))
+	}
+
+	stub.MockTransactionEnd("RetrieveAllVotes")
+}
+
 func TestLoginUser(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("LoginUser")

@@ -25,5 +25,12 @@ export class VoteController {
 
         return this.blockchainClient.invoke("default", "delegate", [JSON.stringify(delegate)], "Admin")
     }
+    
+    @Get("/")
+    public async retrieve() : Promise<Vote[]> {
+        console.log("retrieving all votes");
+
+        return this.blockchainClient.query("default", "allVotes", [], "Admin");
+    }
 }
 

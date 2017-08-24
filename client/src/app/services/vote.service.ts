@@ -31,4 +31,8 @@ export class VoteService {
     console.error('An error occurred', error);
     return Promise.reject(error.json().message || error);
   }
+
+  public getVotes(): Promise<Vote[]> {
+    return this.http.get(this.votesUrl).toPromise().then(response => response.json() as Vote[]).catch(this.handleError);
+  }
 }

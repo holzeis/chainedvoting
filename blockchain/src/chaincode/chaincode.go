@@ -55,6 +55,8 @@ func (t *Chaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		err = contracts.Vote(stub, args)
 	case "delegate":
 		err = contracts.Delegate(stub, args)
+	case "allVotes":
+		response, err = contracts.RetrieveAllVotes(stub)
 	default:
 		return shim.Error(fmt.Sprintf("Received unknown invoke function name: '%s'", functionName))
 	}
