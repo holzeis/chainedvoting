@@ -439,6 +439,14 @@ export class Channel {
 		  return Promise.reject(new Error(errmsg.substring(errmsg.lastIndexOf(":") + 2, errmsg.lastIndexOf(")"))));
     }
 
+    let finalResult;
+    if (proposalResponse[0][0].response.payload.length > 0) {
+      let formatted_response = JSON.parse(proposalResponse[0][0].response.payload);
+      if (formatted_response != null) {
+        finalResult = formatted_response;
+      }
+    }
+
     let processedProposal: ProcessInvokeProposalResponse = this.processInvokeProposal(proposalResponse);
 
     if (processedProposal.success) {
@@ -452,7 +460,8 @@ export class Channel {
         .then((results) => {
           console.log("Invoke completed");
           return {
-            success: true
+            success: true,
+            payload: finalResult
           };
         }).catch((err) => {
           console.error("Failed to get all notifications within the timeout period.");
@@ -569,6 +578,7 @@ export class Channel {
 export interface InvokeReponse {
   success: boolean;
   message?: string;
+  payload?: any;
 }
 
 interface ProcessInvokeProposalResponse {

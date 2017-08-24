@@ -23,9 +23,9 @@ export class VoteController {
     public async delegate(@Body() delegate: Vote, @Req() req) : Promise<InvokeReponse> {
         console.log("delegating vote from " + delegate.voter + " to " + delegate.delegate);
 
-        return this.blockchainClient.invoke("default", "delegate", [JSON.stringify(delegate)], "Admin")
+        return this.blockchainClient.invoke("default", "delegate", [JSON.stringify(delegate)], "Admin");
     }
-    
+
     @Get("/")
     public async retrieve() : Promise<Vote[]> {
         console.log("retrieving all votes");

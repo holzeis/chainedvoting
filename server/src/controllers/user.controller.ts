@@ -28,14 +28,14 @@ export class UserController {
             Promise.reject(response.message);
         }
 
-        return this.blockchainClient.query("default", "getUser", [email], "Admin");
+        return Promise.resolve(response.payload);
     }
 
     @Get("/")
     public async retrieve() : Promise<User[]> {
         console.log("retrieving all users.");
 
-        return this.blockchainClient.query("default", "allUsers", [], "Admin");        
+        return this.blockchainClient.query("default", "allUsers", [], "Admin");
     }
 }
 
