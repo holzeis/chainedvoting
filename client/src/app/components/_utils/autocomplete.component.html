@@ -1,11 +1,3 @@
-<!--<div class="input-field col s12">
-    <label for="eMail">eMail</label>
-    <input id="eMail" type="text" autocomplete="off" class="validate filter-input" [(ngModel)]=query (keyup)=filter()>
-</div>
-<div class="collection" *ngIf="filteredList.length > 0">
-    <a *ngFor="let item of filteredList" class="collection-item" (click)="select(item)">{{item}}</a>
-</div>-->
-
 <div class="row">
     <div class="input-field col s12">
         <input type="text" id="email" [(ngModel)]=query (keyup)=filter() materialize="dropdown" data-activates='emails' placeholder="delegate@email.com" autocomplete="off">
@@ -13,7 +5,12 @@
     </div>
     <div *ngIf="filteredList.length > 0">
         <ul id="emails" class="dropdown-content">
-            <li *ngFor="let item of filteredList"><a href="#!" (click)="select(item)">{{item}}</a></li>
+            <li *ngFor="let item of filteredList"><a (click)="select(item)">{{item}}</a></li>
         </ul>
     </div>
+</div>
+<div class="row" *ngIf="filteredList.length > 0">
+    <ul id="emails">
+        <li *ngFor="let item of filteredList"><a (click)="select(item)">{{item}}</a></li>
+    </ul>
 </div>
