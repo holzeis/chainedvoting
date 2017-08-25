@@ -29,14 +29,14 @@ export class PollComponent implements OnInit {
   }
 
   public ngOnInit() {
-    let getpoll = this.pollService.getPoll(this.pollID);
-    let votes = this.voteService.getVotes();
+    const getpoll = this.pollService.getPoll(this.pollID);
+    const votes = this.voteService.getVotes();
     Promise.all([getpoll, votes]).then((results) => {
       this.poll = results[0];
       for (const option of this.poll.options) {
         this.pollStats.push({optionID: option.id, description: option.description, count: 0});
       }
-      
+
       this.votes = results[1];
       for (const pollStat of this.pollStats) {
         for (const vote of this.votes) {

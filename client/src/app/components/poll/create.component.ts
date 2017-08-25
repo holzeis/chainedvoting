@@ -10,7 +10,7 @@ import { PollService } from '../../services/poll.service';
 import { AlertService } from '../../services/alert.service';
 import { VoteService } from '../../services/vote.service';
 
-import { DatePickerComponent } from '../_utils/datepicker.component'; 
+import { DatePickerComponent } from '../_utils/datepicker.component';
 
 @Component({
   selector: 'app-create',

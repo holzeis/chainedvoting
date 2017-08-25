@@ -29,7 +29,7 @@ export class DelegateComponent {
     private route: ActivatedRoute,
     private userService: UserService,
     private alertService: AlertService,
-    private location: Location, 
+    private location: Location,
     private router: Router
   ) {
       this.route.params.subscribe(params => this.pollID = params['id']);
