@@ -1,16 +1,9 @@
 <div class="row">
     <div class="input-field col s12">
-        <input type="text" id="email" [(ngModel)]=query (keyup)=filter() materialize="dropdown" data-activates='emails' placeholder="delegate@email.com" autocomplete="off">
+        <input type="text" id="email" [(ngModel)]=query (keyup)=filter() materialize="dropdown" data-beloworigin='true' data-activates='emails' placeholder="delegate@email.com" autocomplete="off">
         <label class="active" for="email">eMail: </label>
-    </div>
-    <div *ngIf="filteredList.length > 0">
         <ul id="emails" class="dropdown-content">
             <li *ngFor="let item of filteredList"><a (click)="select(item)">{{item}}</a></li>
         </ul>
-    </div>
-</div>
-<div class="row" *ngIf="filteredList.length > 0">
-    <ul id="emails">
-        <li *ngFor="let item of filteredList"><a (click)="select(item)">{{item}}</a></li>
-    </ul>
+    </div>  
 </div>
