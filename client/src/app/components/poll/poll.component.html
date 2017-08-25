@@ -5,8 +5,8 @@
       <div  class="col-sm-10">
         <label for="poll-id" class="control-label">Poll ID</label>
         <span>{{poll.id}}</span><br>
-        <button class="btn btn-success" (click)="goToVote(poll)">vote</button>
-        <button class="btn btn-primary" (click)="setDelegate()">delegate</button><br><br>
+        <button class="btn btn-success" (click)="vote(poll)">vote</button>
+        <button class="btn btn-primary" (click)="delegate()">delegate</button><br><br>
         <label for="poll-description" class="control-label">Description</label>
         <span>{{poll.description}}</span><br>
         <label for="poll-options" class="control-label">Poll options</label>
@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="row">
-      <button class="btn btn-default" (click)="goBack()">Back</button>
+      <a [routerLink]="['/dashboard']" class="btn blue">Cancel</a>
     </div>
     
   </div>
