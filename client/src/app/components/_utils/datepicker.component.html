@@ -1,0 +1,12 @@
+
+<div class="input-field col s6">
+    <label for="validFrom">Valid From</label>
+    <input id="validFrom" name="validFrom" [(ngModel)]="validFrom" materialize="pickadate" [materializeActions]="validFromActions" [materializeParams]="[{format: 'yyyy-mm-dd'}]"
+    type="text" />
+</div>
+<div class="input-field col s6">
+    <label for="validTo">Valid To</label>
+    <input id="validTo" name="validTo" [(ngModel)]="validTo" materialize="pickadate" [materializeActions]="validToActions" [materializeParams]="[{format: 'yyyy-mm-dd'}]"
+    type="text" />
+</div>
+

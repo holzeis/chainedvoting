@@ -1,10 +1,19 @@
-<div *ngIf="poll" class="container">
-  <h3>Vote</h3>
-  <div *ngFor="let option of poll.options" class="row">
-    <div class="col-xs-6 col-sm-1"><label for="poll-options" class="control-label">Vote for </label></div>
-    <div class="col-xs-6 col-sm-1"><span>{{option.description}}</span></div>
-    <div class="col-xs-6 col-sm-1"><a class="btn btn-primary" role="button" (click)="submit(option)">vote</a></div>
+<div class="section">
+  <div class="row">
+    <div class="col s12 m3"></div>
+    <form *ngIf="poll" materialize class="col s12 m6" (ngSubmit)="submit()">
+      <div class="row">
+        <div *ngFor="let option of poll.options">
+          <input [name]="option.id" type="radio" [id]="option.id" [(ngModel)]="selection" [value]="option">
+          <label [for]="option.id">{{option.description}}</label>
+        </div>
+      </div>
+      <div class="row">
+        <a [routerLink]="['/dashboard']" class="btn blue">Cancel</a>
+        <button class="btn waves-effect waves-light right" type="submit">Vote
+            <i class="material-icons right">send</i>
+        </button>
+      </div>
+    </form>
   </div>
 </div>
-
-<a [routerLink]="['/']" class="btn btn-default">Cancel</a>

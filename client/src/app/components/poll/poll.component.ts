@@ -8,60 +8,53 @@ import { PollStat } from '../../models/pollstat';
 import { PollService } from '../../services/poll.service';
 import { UserService } from '../../services/user.service';
 import { VoteService } from '../../services/vote.service';
+import { AlertService } from '../../services/alert.service';
+
 
 @Component({
   selector: 'app-poll',
   templateUrl: './poll.component.html',
   styleUrls: ['./poll.component.css']
 })
-
 export class PollComponent implements OnInit {
 
-  poll: Poll;
-  votes: Vote[];
-  pollID: string;
-  pollStats: PollStat[] = [];
+  public poll: Poll;
+  public votes: Vote[];
+  public pollID: string;
+  public pollStats: PollStat[] = [];
 
   public constructor(private voteService: VoteService, private router: Router, private route: ActivatedRoute,
-    private pollService: PollService, private userService: UserService) {
+    private pollService: PollService, private userService: UserService, private alertService: AlertService) {
       this.route.params.subscribe(params => this.pollID = params['id']);
   }
 
-  ngOnInit() {
-    this.getPoll(this.pollID);
-    this.getPollStats();
-  }
-
-  getPoll(pollID: string): void {
-    this.pollService.getPoll(pollID).then(poll => {
-      for (const option of poll.options) {
+  public ngOnInit() {
+    const getpoll = this.pollService.getPoll(this.pollID);
+    const votes = this.voteService.getVotes();
+    Promise.all([getpoll, votes]).then((results) => {
+      this.poll = results[0];
+      for (const option of this.poll.options) {
         this.pollStats.push({optionID: option.id, description: option.description, count: 0});
       }
-      this.poll = poll;
-    });
-  }
 
-  getPollStats(): void {
-    this.voteService.getVotes().then(votes => {
-      votes = votes.filter(vote => vote.pollID === this.pollID);
+      this.votes = results[1];
       for (const pollStat of this.pollStats) {
-        for (const vote of votes) {
+        for (const vote of this.votes) {
           if (vote.option.id === pollStat.optionID) {
             pollStat.count++;
           }
         }
       }
-    });
+
+    }).catch(e => this.alertService.error(e));
   }
 
-  setDelegate(): void {
+  public delegate(): void {
     this.router.navigate(['/delegate', this.poll.id]);
   }
 
-  goToVote(poll: Poll): void {
+  public vote(poll: Poll): void {
     this.router.navigate(['/vote', poll.id]);
   }
-  goBack() {
-    this.router.navigate(['/dashboard']);
-  }
+
 }

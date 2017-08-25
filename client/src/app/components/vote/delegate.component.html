@@ -1,20 +1,17 @@
-<div class="container">
-  <div class= "row">
-    <h3>Delegate vote</h3>
 
-    <form class="form-horizontal" #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
-      <div class="form-group">
-         <div class="col-xs-6 col-sm-3">
-           <app-autocomplete></app-autocomplete>
-         </div>
-        <div class="col-xs-6 col-sm-3">
-          <button type="submit" class="btn btn-primary">delegate</button>
-        </div>
-      </div>
-    </form>
-  </div>
-  <a [routerLink]="['/']" class="btn btn-default">Cancel</a>
-  
-
+<div class="section">
+    <div class="row">
+        <div class="col s12 m3"></div>
+        <form class="col s12 m6" name="form" (ngSubmit)="f.form.valid && delegate()" #f="ngForm" novalidate>
+            <div class="row">
+                <app-autocomplete></app-autocomplete>
+             </div>
+            <div class="row">
+                <a [routerLink]="['/']" class="btn blue">Cancel</a>
+                <button class="btn waves-effect waves-light right" type="submit" name="action">Delegate
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
-

@@ -12,21 +12,14 @@ import { User } from '../../models/user';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit {
+export class UserComponent {
 
-  public user: User;
+  public user: any = {};
 
   constructor(private userService: UserService, private alertService: AlertService, private router: Router) { }
 
-  ngOnInit() {
-  }
-
-  onSubmit(f: NgForm) {
-    this.user = {
-      email: f.value.email,
-      surname: f.value.surname,
-      lastname: f.value.lastname
-    };
+  public register() {
+    console.log(this.user);
     this.userService.register(this.user).then(res => {
       }).then(() => {
         this.alertService.success('User with email: ' + this.user.email + ' has been successfully registered.', true);

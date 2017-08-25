@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
 
 import {Vote} from '../../models/vote';
@@ -18,6 +18,7 @@ import {AutocompleteComponent} from '../_utils/autocomplete.component';
   styleUrls: ['./delegate.component.css']
 })
 export class DelegateComponent {
+
   public users: User[];
   public pollID: string;
 
@@ -28,12 +29,13 @@ export class DelegateComponent {
     private route: ActivatedRoute,
     private userService: UserService,
     private alertService: AlertService,
-    private location: Location
+    private location: Location,
+    private router: Router
   ) {
       this.route.params.subscribe(params => this.pollID = params['id']);
   }
 
-  onSubmit(f: NgForm) {
+  public delegate() {
     console.log('delegated to ' + this.autocmp.query);
 
     const user: User = JSON.parse(localStorage.getItem('currentUser'));
@@ -45,6 +47,7 @@ export class DelegateComponent {
 
     this.voteService.delegate(vote).then(res => {
       this.alertService.success('Your vote has been successfully delegated to ' + this.autocmp.query + '!');
+      this.router.navigate(['/dashboard']);
     }).catch(error => this.alertService.error(error));
   }
 }
