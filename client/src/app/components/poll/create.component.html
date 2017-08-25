@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="input-field col s6">
+          <!--<div class="input-field col s6">
             <input id="validFrom" type="text" name="validFrom" [(ngModel)]="model.validFrom" #validFrom="ngModel" class="validate" required>
             <label for="validFrom">Valid from</label>
              <div *ngIf="f.submitted && !validFrom.valid" class="help-block">Valid from is required</div>
@@ -26,7 +26,8 @@
             <input id="validTo" type="text" name="validTo" [(ngModel)]="model.validTo" #validTo="ngModel" class="validate" required>
             <label for="validTo">Valid to</label>
             <div *ngIf="f.submitted && !validTo.valid" class="help-block">Valid to is required</div>
-          </div>
+          </div>-->
+          <date-picker></date-picker>
         </div>
         <div class="row">
           <div class="input-field col s12">

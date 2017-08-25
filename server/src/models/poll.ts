@@ -4,8 +4,8 @@ export class Poll extends ID {
   name: string;
   description: string;
   owner: string;
-  validFrom: number;
-  validTo: number;
+  validFrom: string;
+  validTo: string;
   options: Option[];
 }
 

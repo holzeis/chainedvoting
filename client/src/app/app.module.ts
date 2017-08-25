@@ -16,6 +16,7 @@ import { DelegateComponent } from './components/vote/delegate.component';
 import { AlertComponent } from './components/_utils/alert.component';
 import { AutocompleteComponent } from './components/_utils/autocomplete.component';
 import { LoginComponent } from './components/user/login.component';
+import { DatePickerComponent } from './components/_utils/datepicker.component';
 
 import { Configuration } from './app.constants';
 import { UserService } from './services/user.service';
@@ -52,7 +53,8 @@ const appRoutes: Routes = [
     UserComponent,
     AlertComponent,
     AutocompleteComponent,
-    LoginComponent
+    LoginComponent,
+    DatePickerComponent
   ],
   imports: [
     MaterializeModule,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -10,12 +10,16 @@ import { PollService } from '../../services/poll.service';
 import { AlertService } from '../../services/alert.service';
 import { VoteService } from '../../services/vote.service';
 
+import { DatePickerComponent } from '../_utils/datepicker.component'; 
+
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.css']
 })
 export class CreateComponent {
+
+  @ViewChild(DatePickerComponent) datepicker: DatePickerComponent;
 
   public model: any = {};
   public poll: Poll;
@@ -41,14 +45,12 @@ export class CreateComponent {
   public createPoll() {
     const currentUser: User = JSON.parse(localStorage.getItem('currentUser'));
 
-    console.log(this.model);
-
     this.poll = new Poll();
     this.poll.name = this.model.name;
     this.poll.description = this.model.description;
     this.poll.owner = currentUser.email;
-    this.poll.validFrom = this.model.validFrom;
-    this.poll.validTo = this.model.validTo;
+    this.poll.validFrom = this.datepicker.validFrom;
+    this.poll.validTo = this.datepicker.validTo;
     this.poll.options = this.splitString(this.model.options);
 
     this.pollService.createPoll(this.poll).then(res => {
