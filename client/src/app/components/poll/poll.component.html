@@ -1,35 +1,88 @@
-<div class="container">
+<div class="section">
   <div class="row">
-    <div *ngIf="poll">
-      <h4>{{poll.name}}</h4>
-      <div  class="col-sm-10">
-        <label for="poll-id" class="control-label">Poll ID</label>
-        <span>{{poll.id}}</span><br>
-        <button class="btn btn-success" (click)="vote(poll)">vote</button>
-        <button class="btn btn-primary" (click)="delegate()">delegate</button><br><br>
-        <label for="poll-description" class="control-label">Description</label>
-        <span>{{poll.description}}</span><br>
-        <label for="poll-options" class="control-label">Poll options</label>
-        <li *ngFor="let option of poll.options">
-          <div class="label offset1 label-info">{{option.description}}</div>
-        </li>
-        <label for="poll-votes" class="control-label">Poll votes</label>
-        <li *ngFor="let vote of poll.votes">
-          <div class="label label-default">{{vote.timestamp}} {{vote.voter}}
-            <span class="label offset1 label-info">{{vote.option.description}}</span>
+      <div class="col s12 m3"></div>
+        <form class="col s12 m6" *ngIf="poll">          
+          <div class="row">
+              <div class="col s6">
+                  <label for="pollname">Poll Name</label>
+                  <input disabled id="pollname" type="text" value="{{poll.name}}" class="validate">
+              </div>
+              <div class="col s6">
+                  <label for="pollid">Poll ID</label>
+                  <input disabled id="pollid" type="text" value="{{poll.id}}" class="validate">
+              </div>
           </div>
-        </li>
-        <label for="pollStats" class="control-label">Poll stats</label>
-        <li *ngFor="let pollStat of pollStats">
-          <div class="label label-default">{{pollStat.description}}
-            <span class="label offset1 label-info">{{pollStat.count}}</span>
+          <div class="row">
+              <div class="col s12">
+                  <textarea disabled id="description" class="materialize-textarea">{{poll.description}}</textarea>
+                  <label for="description">Poll Description</label>
+              </div>
           </div>
-        </li>
+          <div class="row">
+              <div class="col s6">
+                  <label for="validFrom">Valid From</label>
+                  <input disabled id="validFrom" type="text" value="{{poll.validFrom}}" class="validate">
+              </div>
+              <div class="col s6">
+                  <label for="validTo">Valid To</label>
+                  <input disabled id="validTo" type="text" value="{{poll.validTo}}" class="validate">
+              </div>
+          </div>
+          <div class="row">
+            <ul class="collection">
+              <li class="collection-item" *ngFor="let pollStat of pollStats">
+                <span class="badge">{{pollStat.count}}</span>{{pollStat.description}}
+              </li>
+            </ul>
+          </div>
+          <div class="row">
+              <a [routerLink]="['/dashboard']" class="btn blue">Cancel</a>
+              <div class="right">
+                <button type="button" class="btn" (click)="delegate()">Delegate</button>
+                <button type="button" class="btn" (click)="vote(poll)">Vote</button>
+              </div>
+          </div>
+        </form>
       </div>
+  </div>
+
+
+<!--<div class="container">
+  <div class="row">
+    <h4>{{poll.name}}</h4>
+    <div  class="col-sm-10">
+      <label for="poll-id" class="control-label">Poll ID</label>
+      <span>{{poll.id}}</span><br>
+      
+      <label for="poll-description" class="control-label">Description</label>
+      <span>{{poll.description}}</span><br>
+      <label for="poll-options" class="control-label">Poll options</label>
+      <li *ngFor="let option of poll.options">
+        <div class="label offset1 label-info">{{option.description}}</div>
+      </li>
+      <label for="poll-votes" class="control-label">Poll votes</label>
+      <li *ngFor="let vote of poll.votes">
+        <div class="label label-default">{{vote.timestamp}} {{vote.voter}}
+          <span class="label offset1 label-info">{{vote.option.description}}</span>
+        </div>
+      </li>
+      <label for="pollStats" class="control-label">Poll stats</label>
+      <li *ngFor="let pollStat of pollStats">
+        <div class="label label-default">{{pollStat.description}}
+          <span class="label offset1 label-info">{{pollStat.count}}</span>
+        </div>
+      </li>
     </div>
     <div class="row">
-      <a [routerLink]="['/dashboard']" class="btn blue">Cancel</a>
+      <div  class="col-sm-2">
+        <a [routerLink]="['/dashboard']" class="btn blue">Cancel</a>
+      </div>
+      <div  class="col-sm-2">
+        <button class="btn waves-effect waves-light right" (click)="vote(poll)">Vote</button>
+      </div>
+      <div  class="col-sm-2">
+        <button class="btn waves-effect waves-light right" (click)="delegate()">Delegate</button>
+      </div>
     </div>
-    
   </div>
-</div>
+</div>-->
