@@ -1,53 +1,63 @@
 
-<h4>Open polls</h4>
-<table>
-  <thead>
-    <tr>
-      <td>ID</td>
-      <td>Name</td>
-      <td>Description</td>
-      <td>Valid to</td>
-      <td></td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let poll of polls">
-      <td>{{poll.id}}</td>
-      <td>{{poll.name}}</td>
-      <td>{{poll.description}}</td>
-      <td>{{poll.validTo}}</td>
-      <td>
-        <div class="right">
-          <button type="button" class="btn" (click)="view(poll.id)">View</button>
-          <button type="button" class="btn" (click)="vote(poll.id)">Vote</button>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<br/><br/><br/>
-<h4>Fabric Blockchain Transactions</h4>
-<table>
-  <thead>
-    <tr>
-      <td>Block</td>
-      <td>Transaction Id</td>
-      <td>Timestamp</td>
-      <td>Channel</td>
-      <td>Block Hash</td>
-      <td>Type</td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let transaction of transactions">
-      <td>{{transaction.number}}</td>
-      <td>{{transaction.txId}}</td>
-      <td>{{transaction.timestamp | date:'medium'}}</td>
-      <td>{{transaction.channel}}</td>
-      <td>{{transaction.blockhash}}</td>
-      <td>{{transaction.type}}</td>
-    </tr>
-  </tbody>
-</table>
+<br />
+<div class="row">
+  <div class="col s12">
+    <ul class="tabs" materialize="tabs">
+      <li class="tab col s6"><a class="active" href="#openpolls">Open Polls</a></li>
+      <li class="tab col s6"><a href="#fabric">Fabric Blockchain Transactions</a></li>
+    </ul>
+  </div>
+  <div id="openpolls" class="col s12">
+    <table>
+      <thead>
+        <tr>
+          <td>ID</td>
+          <td>Name</td>
+          <td>Description</td>
+          <td>Valid to</td>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let poll of polls">
+          <td>{{poll.id}}</td>
+          <td>{{poll.name}}</td>
+          <td>{{poll.description}}</td>
+          <td>{{poll.validTo}}</td>
+          <td>
+            <div class="right">
+              <button type="button" class="btn" (click)="view(poll.id)">View</button>
+              <button type="button" class="btn" (click)="vote(poll.id)">Vote</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="fabric" class="col s12">
+    <table>
+      <thead>
+        <tr>
+          <td>Block</td>
+          <td>Transaction Id</td>
+          <td>Timestamp</td>
+          <td>Channel</td>
+          <td>Block Hash</td>
+          <td>Type</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of transactions">
+          <td>{{transaction.number}}</td>
+          <td>{{transaction.txId}}</td>
+          <td>{{transaction.timestamp | date:'medium'}}</td>
+          <td>{{transaction.channel}}</td>
+          <td>{{transaction.blockhash}}</td>
+          <td>{{transaction.type}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 <router-outlet></router-outlet>
