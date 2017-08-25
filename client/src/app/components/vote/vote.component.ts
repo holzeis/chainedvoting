@@ -17,6 +17,8 @@ import {AlertService} from '../../services/alert.service';
 })
 export class VoteComponent implements OnInit {
 
+  public selection: Option;
+
   public poll: Poll;
   public pollID: string;
   public vote: Vote;
@@ -39,12 +41,12 @@ export class VoteComponent implements OnInit {
     this.pollService.getPoll(pollID).then(poll => this.poll = poll);
   }
 
-  public submit(option: Option): void {
-    console.log('voted for ' + JSON.stringify(option));
+  public submit(): void {
+    console.log('voted for ' + JSON.stringify(this.selection));
 
     const user: User = JSON.parse(localStorage.getItem('currentUser'));
     const vote = new Vote();
-    vote.option = option;
+    vote.option = this.selection;
     vote.pollID = this.pollID;
     vote.timestamp = new Date();
     vote.voter = user.email;
