@@ -6,8 +6,8 @@
       <form class="col s12 m6" name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" novalidate>
         <div class="row">
           <div class="input-field col s6">
-            <input id="surname" type="text" name="surname" [(ngModel)]="user.surname" class="validate">
-            <label for="surname">Surname</label>
+            <input id="firstname" type="text" name="firstname" [(ngModel)]="user.firstname" class="validate">
+            <label for="firstname">First Name</label>
           </div>
           <div class="input-field col s6">
             <input id="lastname" type="text" name="lastname" [(ngModel)]="user.lastname" class="validate">
