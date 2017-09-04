@@ -9,7 +9,7 @@ import (
 // User represents the user
 type User struct {
 	Email     string    `json:"email"`
-	Surname   string    `json:"surname"`
+	Firstname string    `json:"firstname"`
 	Lastname  string    `json:"lastname"`
 	LastLogin time.Time `json:"lastlogin"`
 }

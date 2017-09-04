@@ -14,7 +14,7 @@ func TestRegisterUser(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("CreateUserTx")
 
-	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(request)})
 
 	if response.Status != shim.OK {
@@ -28,7 +28,7 @@ func TestAlreadyRegisteredUser(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("CreateUserTx")
 
-	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(request)})
 
 	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(request)})
@@ -120,7 +120,7 @@ func TestLoginUser(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("LoginUser")
 
-	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(request)})
 
 	response = stub.MockInvoke("loginUser", [][]byte{[]byte(""), []byte("loginUser"), []byte("richard.holzeis@at.ibm.com")})
@@ -172,7 +172,7 @@ func TestGetUser(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("GetUser")
 
-	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var request = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(request)})
 
 	response = stub.MockInvoke("getUser", [][]byte{[]byte(""), []byte("getUser"), []byte("richard.holzeis@at.ibm.com")})
@@ -279,7 +279,7 @@ func TestVote(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("VoteTx")
 
-	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
@@ -318,7 +318,7 @@ func TestVoteForAlreadyVotedPoll(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("VoteTx")
 
-	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
@@ -346,7 +346,7 @@ func TestVoteForExpiredPoll(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("VoteTx")
 
-	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2016-08-13\"," +
@@ -369,7 +369,7 @@ func TestVoteForWithUnregisteredVoter(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("VoteTx")
 
-	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
@@ -392,7 +392,7 @@ func TestVoteForInvalidOption(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("VoteTx")
 
-	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
@@ -415,10 +415,10 @@ func TestDelegate(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("DelegateTx")
 
-	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
 
-	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
@@ -467,10 +467,10 @@ func TestDelegateToAlreadyVotedVoter(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("DelegateTx")
 
-	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
 
-	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
@@ -496,10 +496,10 @@ func TestDelegateVoteOnExpiredPoll(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("DelegateTx")
 
-	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
 
-	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2016-08-13\"," +
@@ -523,10 +523,10 @@ func TestDelegateToVoter(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("DelegateTx")
 
-	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
 
-	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
@@ -550,10 +550,10 @@ func TestDelegateOfAlreadyVotedVote(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("DelegateTx")
 
-	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
 
-	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
@@ -580,7 +580,7 @@ func TestDelegateToUnregisteredUser(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("DelegateTx")
 
-	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
@@ -603,13 +603,13 @@ func TestMultipleDelegatesToDifferentUsers(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("DelegateTx")
 
-	var register1 = "{\"email\":\"user1@at.ibm.com\", \"surname\":\"Test\", \"lastname\":\"User1\"}"
+	var register1 = "{\"email\":\"user1@at.ibm.com\", \"firstname\":\"Test\", \"lastname\":\"User1\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
 
-	var register2 = "{\"email\":\"user2@at.ibm.com\", \"surname\":\"Test\", \"lastname\":\"User2\"}"
+	var register2 = "{\"email\":\"user2@at.ibm.com\", \"firstname\":\"Test\", \"lastname\":\"User2\"}"
 	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
 
-	var register3 = "{\"email\":\"user3@at.ibm.com\", \"surname\":\"Test\", \"lastname\":\"User3\"}"
+	var register3 = "{\"email\":\"user3@at.ibm.com\", \"firstname\":\"Test\", \"lastname\":\"User3\"}"
 	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register3)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
@@ -635,10 +635,10 @@ func TestVoteForDelegatedVoteWithVoter(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("DelegateTx")
 
-	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
 
-	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
@@ -663,10 +663,10 @@ func TestVoteForDelegatedVoteWithDelegate(t *testing.T) {
 	stub := shim.NewMockStub("chaincode", new(Chaincode))
 	stub.MockTransactionStart("DelegateTx")
 
-	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register1 = "{\"email\":\"richard.holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response := stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register1)})
 
-	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"surname\":\"Richard\", \"lastname\":\"Holzeis\"}"
+	var register2 = "{\"email\":\"holzeis@at.ibm.com\", \"firstname\":\"Richard\", \"lastname\":\"Holzeis\"}"
 	response = stub.MockInvoke("register", [][]byte{[]byte(""), []byte("register"), []byte(register2)})
 
 	var createPoll = "{\"id\":\"1\",\"name\":\"Test Poll\",\"description\":\"this is a test poll\",\"owner\":\"richard.holzeis@at.ibm.com\",\"validFrom\":\"2017-08-13\"," +
