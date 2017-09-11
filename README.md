@@ -26,17 +26,15 @@ start services
 npm start
 ```
 
-This will start 5 containers
+This will start 7 containers
 
 1. ca0 - fabric certification authority
 2. orderer.chained-voting.com - orderer service
 3. peer0.org.chained-voting.com - endorser for chaincode
-4. client - container to host web app
-5. server - container to host REST API (for client)
-
-Check the (client) angular js application on `http://<docker-machine-ip>:4200/`
-
-Check the (server) node js application on `http://<docker-machine-ip>:3000/`
+4. client - container to host web app - on `http://<docker-machine-ip>:4200/`
+5. server - container to host REST API (for client) - on `http://<docker-machine-ip>:3000/`
+6. mysql - contains the fabric data stored for performance
+7. fabric-explorer - container to host fabric monitoring - on `http://<docker-machine-ip>:8080/`
 
 ### Stop the project
 
