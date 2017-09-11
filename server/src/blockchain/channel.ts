@@ -294,7 +294,15 @@ export class Channel {
       chaincodeVersion: chaincodeVersion,
       txId: txId,
       fcn: "init",
-      args: args
+      args: args,
+      "endorsement-policy": {
+        identities: [
+          { role: { name: "member", mspId: "org" }}
+        ],
+        policy: {
+          "1-of": [{ "signed-by": 1 }]
+        }
+      }
     };
 
     let proposalResponse = await this.channel.sendInstantiateProposal(request);
