@@ -297,10 +297,10 @@ export class Channel {
       args: args,
       "endorsement-policy": {
         identities: [
-          { role: { name: "member", mspId: "org" }}
+          { role: { name: "member", mspId: "OrgMSP" }}
         ],
         policy: {
-          "1-of": [{ "signed-by": 1 }]
+          "1-of": [{ "signed-by": 0 }]
         }
       }
     };
