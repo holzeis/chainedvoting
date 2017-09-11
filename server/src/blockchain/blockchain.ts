@@ -22,7 +22,7 @@ export class Blockchain {
     await this.setKeyStore();
     await this.setCertificateAuthority();
     await this.registerAdminUser();
-    // await this.registerAndEnrollUsers();
+    await this.registerAndEnrollUsers();
     await this.setupChannels();
   }
 
@@ -101,6 +101,11 @@ export class Blockchain {
     let users = this.config.network.appUsers;
 
     let registerAndEnrollUserPromises: Promise<void>[] = [];
+
+    if (Object.keys(users).length === 0) {
+      return;
+    }
+
     users.forEach((userToRegisterAndEnroll: any) => {
       registerAndEnrollUserPromises.push(this.registerAndEnrollUser(userToRegisterAndEnroll));
     });
