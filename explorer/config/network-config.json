@@ -1,0 +1,24 @@
+{
+	"network-config": {
+		"orderer": [{
+			"url": "grpcs://orderer.chained-voting.com:7050",
+			"server-hostname": "orderer.chained-voting.com",
+			"tls_cacerts": "/artifacts/crypto-config/ordererOrganizations/chained-voting.com/orderers/orderer.chained-voting.com/msp/tlscacerts/tlsca.chained-voting.com-cert.pem"
+		}],
+		"org1": {
+			"name": "org",
+			"mspid": "OrgMSP",
+			"ca": "https://ca0:7054",
+			"peer1": {
+				"requests": "grpcs://peer0.org.chained-voting.com:7051",
+				"events": "grpcs://peer0.org.chained-voting.com:7053",
+				"server-hostname": "peer0.org.chained-voting.com",
+				"tls_cacerts": "/artifacts/crypto-config/peerOrganizations/org.chained-voting.com/peers/peer0.org.chained-voting.com/msp/tlscacerts/tlsca.org.chained-voting.com-cert.pem"
+			},
+			"admin": {
+				"key": "/artifacts/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/keystore",
+				"cert": "/artifacts/crypto-config/peerOrganizations/org.chained-voting.com/users/Admin@org.chained-voting.com/msp/signcerts"
+			}
+		}
+	}
+}
